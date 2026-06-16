@@ -48,7 +48,7 @@
   <section class="panel" data-panel="2">
     <span class="kicker" style="color:var(--v)">Step 02 — Self-Balancing</span>
     <h2>넣을 때마다 스스로 균형</h2>
-    <p class="lead">균형트리에 1,2,3,…을 <b>정렬된 순서로</b> 넣어봐요. 쏠릴 만하면 즉시 회전이 일어나 <b>높이가 log n 근처로 유지</b>돼요. ▶로 삽입과 회전이 번갈아 일어나며 트리가 납작하게 자라는 걸 보고, 같은 입력의 일반 BST 높이와 비교하세요.</p>
+    <p class="lead">균형트리에 1,2,3,…을 <b>정렬된 순서로</b> 넣어봐요. <b>한쪽이 다른 쪽보다 2층 이상 높아지면</b> 즉시 회전이 일어나 <b>높이가 log n 근처로 유지</b>돼요. ▶로 삽입과 회전이 번갈아 일어나며 트리가 납작하게 자라는 걸 보고, 같은 입력의 일반 BST 높이와 비교하세요.</p>
     <div id="transport2"></div>
     <div class="chart-wrap" id="chart2" style="margin-top:6px"></div>
     <div id="info2" class="callout v" style="margin-top:8px"></div>
@@ -121,8 +121,8 @@ function strip(n){ return n?{v:n.v,left:strip(n.left),right:strip(n.right)}:null
   const skew={v:1,left:null,right:{v:2,left:null,right:{v:3,left:null,right:null}}};
   const bal={v:2,left:{v:1,left:null,right:null},right:{v:3,left:null,right:null}};
   rec.snap({root:strip(skew)},{note:`1→2→3 순서로 넣어 오른쪽으로 쏠림 (높이 3, 불균형!)`, hi:{1:'excl'}});
-  rec.snap({root:strip(skew)},{note:`가운데 값 2를 위로 끌어올리는 '왼쪽 회전' 적용`, hi:{2:'special'}});
-  rec.snap({root:strip(bal)},{note:`균형! 2가 뿌리, 1·3이 자식 — 높이 3→2로 낮아짐 ✓`, hi:{2:'done'}});
+  rec.snap({root:strip(skew)},{note:`가운데 값 2를 위로 끌어올려요 — 1은 2의 왼쪽 자식, 3은 오른쪽 자식이 될 거예요`, hi:{2:'special'}});
+  rec.snap({root:strip(bal)},{note:`균형! 2가 뿌리, 1·3이 양옆 자식 — 높이 3→2로 낮아짐 ✓ (왼쪽<뿌리<오른쪽 규칙은 그대로!)`, hi:{2:'done'}});
   const render=f=>{ document.getElementById('chart1').innerHTML=bstSVG(f.state.root, f.meta.hi, 480, 260); };
   AL.transport('#transport1', rec.frames, render, {interval:1100});
 })();

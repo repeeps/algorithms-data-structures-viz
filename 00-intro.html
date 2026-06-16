@@ -49,8 +49,8 @@
   <section class="panel" data-panel="1">
     <span class="kicker" style="color:var(--q)">Step 01 — Fast vs Slow</span>
     <h2>입력이 커질수록 갈린다</h2>
-    <p class="lead">정렬된 카드 더미에서 한 장을 찾아요. <b>한 장씩</b> 넘기면(선형) 운 나쁘면 전부 봐야 하지만, 매번 <b>반씩 버리면</b>(이진) 몇 번이면 끝나죠. 카드 수 n을 키워보세요 — <b>2배로 올리기 전에, 횟수가 어떻게 변할지 먼저 예측</b>해보세요.</p>
-    <div class="ctrl"><label>카드 수 n</label><input type="range" id="nexp" min="3" max="10" value="6"><span class="val" id="nexpv">64</span></div>
+    <p class="lead">정렬된 카드 더미에서 한 장을 찾아요. <b>한 장씩</b> 넘기는 방법(선형)은 운 나쁘면 전부 봐야 하지만, 매번 <b>반씩 버리는</b> 방법(이진)은 몇 번이면 끝나죠. 카드 수 <b>n</b>(=카드 개수)을 키워보세요 — 슬라이더 한 칸마다 n이 <b>2배</b>로 뛰어요. <b>올리기 전에, 횟수가 어떻게 변할지 먼저 예측</b>해보세요.</p>
+    <div class="ctrl"><label>카드 수 n (한 칸 = ×2)</label><input type="range" id="nexp" min="3" max="10" value="6"><span class="val" id="nexpv">64</span></div>
     <div id="search1" class="callout q"></div>
     <p class="note" style="margin-top:12px">→ n을 2배로 올리면 <b>한 장씩은 횟수도 2배</b>로 뛰지만, <b>반씩은 딱 1번만</b> 늘어요. 이 <b>벌어지는 격차</b>가 "느린 앱"과 "즉답 앱"의 차이예요. 다음 챕터(01·02)에서 이 성장 속도를 더 파봐요.</p>
   </section>

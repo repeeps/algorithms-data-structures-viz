@@ -146,7 +146,11 @@ function recInsertion(arr){
   const recs={bubble:recBubble, selection:recSelection, insertion:recInsertion};
   const descs={bubble:'버블: 이웃을 비교해 왼쪽이 크면 교환, 큰 값이 오른쪽으로 떠오름.', selection:'선택: 남은 것 중 최솟값을 찾아 앞자리에 하나씩 확정.', insertion:'삽입: 한 장씩 뽑아 이미 정렬된 왼쪽 구간의 제자리에 끼움.'};
   const render=f=>{ document.getElementById('chart1').innerHTML=AL.bars(f.state,{state:f.meta.colors||{},maxV,W:540,H:230}); };
-  function build(algo){ document.getElementById('algoDesc').textContent=descs[algo]; AL.transport('#transport1', recs[algo](arr), render, {interval:600}); }
+  function build(algo){
+    const leg = AL.legend(algo==='selection' ? [['비교 중','compare'],['최솟값 후보','min'],['자리 확정','sorted']] : [['비교 중','compare'],['교환','swap'],['자리 확정','sorted']]);
+    document.getElementById('algoDesc').innerHTML=descs[algo]+leg;
+    AL.transport('#transport1', recs[algo](arr), render, {interval:600});
+  }
   document.getElementById('algoSeg').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b)return;
     document.querySelectorAll('#algoSeg .btn').forEach(x=>x.classList.toggle('on',x===b)); build(b.dataset.algo); });
   build('bubble');

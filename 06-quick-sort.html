@@ -33,7 +33,7 @@
   <section class="panel show" data-panel="0">
     <span class="kicker" style="color:var(--hot)">Step 00 — One Partition</span>
     <h2>피벗보다 작은 건 왼쪽으로</h2>
-    <p class="lead">맨 오른쪽을 <b style="color:var(--v)">피벗</b>으로 골라요. 왼쪽부터 훑으며(<span style="color:var(--q)">청록</span>) 피벗보다 <b>작은 값</b>을 만나면 <b style="color:var(--pink)">"작은 값 구역"</b> 경계로 보내요. 다 훑은 뒤 피벗을 그 경계에 놓으면, <b>왼쪽엔 작은 값·오른쪽엔 큰 값</b>만 남고 피벗은 영원히 제자리예요. ▶로 보세요.</p>
+    <p class="lead">맨 오른쪽을 <b style="color:var(--v)">피벗</b>으로 골라요. 왼쪽부터 훑으며(<span style="color:var(--q)">청록</span>) 피벗보다 <b>작은 값</b>을 만나면 <b style="color:var(--pink)">"작은 값 구역"</b> 경계로 보내요. 다 훑은 뒤 피벗을 그 경계에 놓으면, <b>왼쪽엔 작은 값·오른쪽엔 큰 값</b>만 남고 피벗은 영원히 제자리예요. ▶로 보세요. <span style="color:var(--faint)">(여기 분홍은 03장의 '최솟값'이 아니라 "작은 값 구역"의 경계 표시예요.)</span></p>
     <div id="transport0"></div>
     <div class="chart-wrap" id="chart0" style="margin-top:6px"></div>
     <p class="note" style="margin-top:12px">→ 한 번 파티션하면 피벗 하나가 <b>최종 위치에 확정</b>(<span style="color:var(--good)">초록</span>)돼요. 그리고 문제가 "피벗 왼쪽"과 "피벗 오른쪽" 두 개의 더 작은 정렬 문제로 쪼개지죠.</p>
@@ -111,6 +111,7 @@ function recQuick(arr){
   const arr=[3,7,2,6,4]; const maxV=Math.max(...arr);
   const render=f=>{ document.getElementById('chart0').innerHTML=AL.bars(f.state,{state:f.meta.colors||{},maxV,W:520,H:210}); };
   AL.transport('#transport0', recQuick(arr), render, {interval:700});
+  document.getElementById('transport0').insertAdjacentHTML('afterend', AL.legend([['피벗','pivot'],['비교 중','compare'],['작은값 경계','min'],['확정','sorted']]));
 })();
 
 // ---------- STEP 1 : 전체 재생 ----------
@@ -118,6 +119,7 @@ function recQuick(arr){
   const arr=[6,2,8,3,9,1,7,4]; const maxV=Math.max(...arr);
   const render=f=>{ document.getElementById('chart1').innerHTML=AL.bars(f.state,{state:f.meta.colors||{},maxV,W:540,H:230}); };
   AL.transport('#transport1', recQuick(arr), render, {interval:550});
+  document.getElementById('transport1').insertAdjacentHTML('afterend', AL.legend([['피벗','pivot'],['비교 중','compare'],['작은값 경계','min'],['확정','sorted']]));
 })();
 
 // ---------- STEP 2 : 피벗 운 ----------

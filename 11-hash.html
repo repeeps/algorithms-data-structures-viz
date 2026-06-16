@@ -33,10 +33,10 @@
   <section class="panel show" data-panel="0">
     <span class="kicker" style="color:var(--hot)">Step 00 — Key to Slot</span>
     <h2>이름을 사물함 번호로 바꾼다</h2>
-    <p class="lead">칸이 <b>5개(버킷 0~4)</b>인 사물함이 있어요. 키를 넣을 땐 <b>칸 번호 = 키 ÷ 5의 나머지</b>로 정해요(해시함수). 그러면 어디 넣을지 <b>계산</b>으로 바로 나오죠. ▶로 키들이 자기 칸으로 날아가는 걸 보세요.</p>
+    <p class="lead">칸이 <b>5개(버킷 0~4)</b>인 사물함(=버킷)이 있어요. 키를 넣을 땐 <b>칸 번호 = 키 ÷ 5의 나머지</b>로 정해요(해시함수). <span style="color:var(--faint)">(기호로는 키%5 — 여기서 %는 백분율이 아니라 "나눈 나머지"예요.)</span> 그러면 어디 넣을지 <b>계산</b>으로 바로 나오죠. ▶로 키들이 자기 칸으로 날아가는 걸 보세요.</p>
     <div id="transport0"></div>
     <div id="chart0" class="stage" style="margin-top:8px;min-height:170px;background:var(--panel-2);border:1px solid var(--line);border-radius:14px;padding:14px"></div>
-    <p class="note" style="margin-top:12px">→ 찾을 때도 똑같이 계산해요: "23은 어디?" → 23%5=3 → <b>버킷 3만</b> 보면 돼요. 전체를 뒤질 필요가 없죠. 넣기·찾기 모두 <b>평균 O(1)</b>! 이게 딕셔너리·맵·캐시의 원리예요.</p>
+    <p class="note" style="margin-top:12px">→ 찾을 때도 똑같이 계산해요: "14는 어디?" → 14%5=4 → <b>버킷 4만</b> 보면 돼요. 전체를 뒤질 필요가 없죠. 넣기·찾기 모두 <b>평균 O(1)</b>! 이게 딕셔너리·맵·캐시의 원리예요.</p>
   </section>
 
   <!-- STEP 1 -->
@@ -109,7 +109,7 @@ function renderBuckets(elId, f){
 })();
 // ---------- STEP 1 : 충돌·체이닝 ----------
 (function(){
-  AL.transport('#transport1', recHashInsert([10,7,3,14,12,2]), f=>renderBuckets('chart1',f), {interval:800});
+  AL.transport('#transport1', recHashInsert([7,12,2,10,3,14]), f=>renderBuckets('chart1',f), {interval:800});
 })();
 
 // ---------- STEP 2 : 왜 빠른가 ----------
@@ -122,7 +122,7 @@ function renderBuckets(elId, f){
       `<div class="ttl" style="color:var(--v)">n = ${n}개 중 한 키 찾기 (평균)</div>`+
       VZ.barRow('선형탐색 ≈ n/2', linear/maxv, {color:'var(--k)', pctText: linear+'번'})+
       VZ.barRow('해시 ≈ 1', hash/maxv, {color:'var(--good)', pctText:'≈ 1번'})+
-      `<p style="margin:8px 0 0">약 <b>${linear}배</b> 차이. 해시는 n이 아무리 커져도 평균 <b>거의 그대로(1번)</b> — O(1)의 위력이에요.</p>`;
+      `<p style="margin:8px 0 0">해시가 약 <b>${linear}배</b> 빨라요. 해시는 n이 아무리 커져도 평균 <b>거의 그대로(1번)</b> — O(1)의 위력이에요.</p>`;
   }
   document.getElementById('n2').oninput=e=>{ const n=+e.target.value; document.getElementById('n2v').textContent=n; render(n); };
   render(100);

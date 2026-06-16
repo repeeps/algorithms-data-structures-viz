@@ -14,7 +14,7 @@
   <header>
     <div class="tag">PART 3 · Chapter 08</div>
     <h1>선형 vs 이진탐색 — 한 칸씩 vs 반씩</h1>
-    <p class="intro">목록에서 값 하나를 찾는 두 방법. <b>선형탐색</b>은 앞에서부터 한 칸씩 훑어요(최악 n번). <b>이진탐색</b>은 <b>정렬된</b> 목록에서 가운데를 보고 <b>매번 절반을 버려요</b>(약 log n번). 사전에서 단어 찾듯, 펼친 곳이 뒤면 앞으로·앞이면 뒤로. 단, 이진탐색은 <b>정렬</b>이라는 전제가 꼭 필요해요.</p>
+    <p class="intro">목록에서 값 하나를 찾는 두 방법. <b>선형탐색</b>은 앞에서부터 한 칸씩 훑어요(최악 n번). <b>이진탐색</b>은 <b>정렬된</b> 목록에서 가운데를 보고 <b>매번 절반을 버려요</b>(약 log n번 — 절반씩 줄어 아주 빨라요). 사전에서 단어 찾듯, 펼친 곳이 뒤면 앞으로·앞이면 뒤로. 단, 이진탐색은 <b>정렬</b>이라는 전제가 꼭 필요해요.</p>
   </header>
 
   <nav class="stepper" id="stepper">
@@ -38,7 +38,7 @@
   <section class="panel" data-panel="1">
     <span class="kicker" style="color:var(--q)">Step 01 — Binary</span>
     <h2>가운데를 보고, 절반을 버린다</h2>
-    <p class="lead"><b>정렬된</b> 목록에서 <b>가운데(mid)</b> 값을 봐요. 찾는 값보다 작으면 왼쪽 절반을, 크면 오른쪽 절반을 통째로 버려요. 남은 구간(<b>low~high</b>)에서 또 가운데를… ▶로 보세요. <b>⏭ 누르기 전에 "다음 가운데는 어느 쪽?" 예측</b>해보세요.</p>
+    <p class="lead"><b>정렬된</b> 목록에서 <b>가운데(mid)</b> 값을 봐요. 찾는 값보다 작으면 왼쪽 절반을, 크면 오른쪽 절반을 통째로 버려요. 남은 구간(<b>low</b>=아래끝 ~ <b>high</b>=위끝)에서 또 가운데를… ▶로 보세요. <b>⏭ 누르기 전에 "다음 가운데는 어느 쪽?" 예측</b>해보세요.</p>
     <div id="transport1"></div>
     <div class="chart-wrap" id="chart1" style="margin-top:6px"></div>
     <p class="note" style="margin-top:12px">→ 한 번 볼 때마다 후보가 <b>절반</b>으로 줄어요. 1024개도 10번이면 끝(2배 늘 때마다 +1번) — 이게 <b>O(log n)</b>이에요. 단, 이렇게 "절반 버리기"가 통하려면 목록이 <b>정렬</b>돼 있어야 해요(다음 단계).</p>
@@ -59,7 +59,7 @@
     <span class="kicker" style="color:var(--good)">Step 03 — Race</span>
     <h2>둘의 격차, 숫자로</h2>
     <p class="lead">정렬된 목록에서 한 값을 찾을 때 <b>최악 확인 횟수</b>를 비교해요. n을 키울수록 선형은 따라 늘지만 이진은 거의 안 늘죠.</p>
-    <div class="ctrl"><label>목록 크기 n</label><input type="range" id="n3" min="3" max="20" value="10"><span class="val" id="n3v">1024</span></div>
+    <div class="ctrl"><label>목록 크기 n (2의 거듭제곱)</label><input type="range" id="n3" min="3" max="20" value="10"><span class="val" id="n3v">1024</span></div>
     <div id="bars3" class="callout v"></div>
     <div class="callout good" style="margin-top:14px">
       <p style="margin:0">이진탐색은 "정렬 + 절반 버리기"의 위력을 보여줘요. 이 아이디어는 <b>이진트리·BST</b>(12장)로 자라나, 자료를 <b>늘 정렬된 모양</b>으로 담아 빠르게 찾게 합니다. 다음은 자료를 <b>어떻게 담느냐</b>에 따라 속도가 갈리는 자료구조예요.</p>

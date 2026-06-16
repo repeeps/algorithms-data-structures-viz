@@ -40,7 +40,7 @@
     <p class="lead">크루스칼은 단순해요: 간선을 <b>거리 싼 순</b>으로 정렬한 뒤, 하나씩 보며 — <b>두 덩어리를 새로 잇는 간선이면 채택</b>(<span style="color:var(--good)">초록</span>), <b>이미 연결된 둘을 잇는(=사이클) 간선이면 거부</b>(<span style="color:var(--k)">빨강</span>). ▶로 보세요. <b>⏭ 전에 "이 간선은 채택? 거부?" 예측</b>해보세요.</p>
     <div id="transport1"></div>
     <div class="chart-wrap" id="chart1"></div>
-    <p class="note" style="margin-top:12px">→ "두 덩어리를 잇나, 한 덩어리 안인가"만 보면 돼요(같은 덩어리를 또 이으면 사이클). 노드 수−1개를 채택하면 모두 연결돼 끝나죠. 싼 것부터 고르니 자연히 총합이 최소가 돼요.</p>
+    <p class="note" style="margin-top:12px">→ "두 덩어리를 잇나, 한 덩어리 안인가"만 보면 돼요(같은 덩어리를 또 이으면 사이클). 노드 수−1개를 채택하면 모두 연결돼 끝나죠. 이렇게 싼 것부터 안전하게 고르면 총합이 최소가 되는데, 왜 그런지는 다음 스텝에서 봐요.</p>
   </section>
 
   <!-- STEP 2 -->
@@ -59,7 +59,7 @@
     <h2>최소신장트리</h2>
     <div class="twocol">
       <div class="callout q"><div class="ttl">크루스칼</div><p style="margin:0">간선을 싼 순으로 정렬 → 사이클 안 만드는 것만 채택 → 노드−1개면 끝. 그리디.</p></div>
-      <div class="callout v"><div class="ttl">사이클 판별</div><p style="margin:0">"두 끝이 이미 같은 덩어리인가"로 사이클을 감지(유니온-파인드 자료구조). 같으면 거부.</p></div>
+      <div class="callout v"><div class="ttl">사이클 판별</div><p style="margin:0">"두 끝이 이미 같은 덩어리인가"로 사이클을 감지해요(두 원소가 같은 덩어리인지 빠르게 확인·합치는 자료구조 — <b>유니온-파인드</b>). 같으면 거부.</p></div>
     </div>
     <div class="callout good" style="margin-top:14px">
       <p style="margin:0">통신·전력·배관망을 최소 비용으로 까는 데 써요. 이로써 PART 5(그래프)를 마칩니다 — 표현법·BFS/DFS·최단경로·MST까지. 마지막 PART 6은 <b>동적계획법</b>: 겹치는 부분문제를 기억해 폭발하는 계산을 잘라내는 강력한 기법이에요.</p>
@@ -103,7 +103,8 @@ function edgeStates(s){ const o={}; Object.keys(s.mst).forEach(k=>{ const [a,b]=
 // ---------- STEP 1 ----------
 (function(){
   const render=f=>{ document.getElementById('chart1').innerHTML=AL.graph(NODES, WEDGES, {W:480,H:300, edgeState:edgeStates(f.state)}); };
-  AL.transport('#transport1', recKruskal(), render, {interval:950});
+  AL.transport('#transport1', recKruskal(), render, {interval:1000});
+  document.getElementById('transport1').insertAdjacentHTML('afterend', AL.legend([['검토 중','visiting'],['채택(MST)','path'],['거부(사이클)','excl']]));
 })();
 
 // ---------- STEP 2 ----------

@@ -34,7 +34,7 @@
     <p class="lead">계수가 큰 <b>100n</b>(선형이지만 무거움)과 <b>n²</b>(제곱)을 비교해요. n이 작을 땐 100n이 훨씬 크지만, n이 커지면 <b>n²이 따라잡고 추월</b>해요. 즉 큰 입력에선 <b>모양(제곱)</b>이 <b>계수(100)</b>를 이겨요 — 그래서 상수는 버리고 모양만 봅니다.</p>
     <div class="ctrl"><label>입력 크기 n</label><input type="range" id="n0" min="10" max="200" value="40"><span class="val" id="n0v">40</span></div>
     <div id="bars0" class="callout q"></div>
-    <p class="note" style="margin-top:12px">→ 두 곡선은 <b>n=100</b>에서 만나요(100n = n²). 그 전엔 100n이, 그 후엔 n²이 더 커지죠. 아무리 계수가 커도 <b>모양이 한 단계 위면</b> 결국 진다 — 이게 Big-O가 계수를 무시하는 이유예요.</p>
+    <p class="note" style="margin-top:12px">→ 두 막대는 <b>n=100</b>에서 같아져요(100n = n²). 그 전엔 100n이, 그 후엔 n²이 더 커지죠. 아무리 계수가 커도 <b>모양이 한 단계 위면</b> 결국 진다 — 이게 Big-O가 계수를 무시하는 이유예요.</p>
   </section>
 
   <!-- STEP 1 -->
@@ -44,14 +44,14 @@
     <p class="lead">대표적인 다섯 가지 성장 곡선을 겹쳐 그려요. 보는 범위(n의 최대값)를 늘려보세요. 작은 범위에선 엇비슷하지만, 범위가 커질수록 <b>제곱(n²)</b>이 하늘로 치솟고 나머지는 바닥에 깔리며 <b>서열</b>이 뚜렷해져요.</p>
     <div class="ctrl"><label>보는 범위 n</label><input type="range" id="nmax" min="6" max="40" value="16"><span class="val" id="nmaxv">16</span></div>
     <div class="chart-wrap" id="chart1" style="margin-top:6px"></div>
-    <p class="note" style="margin-top:12px">→ 위에서 아래로: <b style="color:var(--k)">n²</b>(제곱) > <b style="color:var(--pink)">n log n</b> > <b style="color:var(--hot)">n</b>(선형) > <b style="color:var(--q)">log n</b>(로그) > <b style="color:var(--good)">1</b>(상수). 좋은 알고리즘은 가능한 <b>아래쪽 곡선</b>에 살려고 해요.</p>
+    <p class="note" style="margin-top:12px">→ 위에서 아래로: <b style="color:var(--k)">n²</b>(제곱) > <b style="color:var(--pink)">n log n</b> > <b style="color:var(--hot)">n</b>(선형) > <b style="color:var(--q)">log n</b>(로그) > <b style="color:var(--good)">1</b>(상수). (<b>n log n</b>은 빠른 정렬들의 속도 — 05장에서 봐요.) 좋은 알고리즘은 가능한 <b>아래쪽 곡선</b>에 살려고 해요.</p>
   </section>
 
   <!-- STEP 2 -->
   <section class="panel" data-panel="2">
     <span class="kicker" style="color:var(--v)">Step 02 — The Ranking</span>
     <h2>큰 입력에서의 서열</h2>
-    <p class="lead">충분히 큰 n에서 각 Big-O가 실제로 몇 번 일하는지 줄세워 봐요. 맨 아래 <b>지수 O(2ⁿ)</b>도 넣었어요 — 이건 n이 조금만 커져도 우주적으로 폭발해서, <b>무슨 수를 써서라도 피해야 할</b> 모양이에요.</p>
+    <p class="lead">충분히 큰 n에서 각 Big-O가 실제로 몇 번 일하는지 줄세워 봐요. 맨 아래 <b>지수 O(2ⁿ)</b>도 넣었어요 — 이건 <b>n이 1 늘 때마다 일이 2배</b>로 뛰어요(비밀번호 자릿수 하나 늘리면 경우의 수가 폭발하듯). 조금만 커져도 우주적으로 폭발해서 <b>무슨 수를 써서라도 피해야 할</b> 모양이죠.</p>
     <div class="ctrl"><label>입력 크기 n</label><input type="range" id="n2" min="4" max="30" value="16"><span class="val" id="n2v">16</span></div>
     <div id="bars2" class="callout v"></div>
     <p class="note" style="margin-top:12px">→ 서열은 <b>O(1) &lt; O(log n) &lt; O(n) &lt; O(n log n) &lt; O(n²) &lt; O(2ⁿ)</b>로 굳어져 있어요. 알고리즘을 고를 때 "이건 이 줄에서 어디쯤?"을 먼저 묻는 게 시작이에요.</p>

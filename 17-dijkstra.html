@@ -30,7 +30,7 @@
   <section class="panel show" data-panel="0">
     <span class="kicker" style="color:var(--hot)">Step 00 — Weighted Graph</span>
     <h2>간선마다 거리가 다르면 BFS로는 안 된다</h2>
-    <p class="lead">아래 그래프는 간선에 <b>거리(숫자)</b>가 붙어 있어요. "A에서 E까지 최단"은 단순히 <b>간선 수</b>가 아니라 <b>거리 합</b>이 가장 작은 길이에요. 칸 수만 세는 BFS로는 못 풀죠. 그래서 거리를 누적해 비교하는 방법이 필요해요.</p>
+    <p class="lead">아래 그래프는 간선마다 <b>숫자(가중치)</b>가 붙어 있어요 — <b>가중치 = 그 길의 거리·비용·시간</b>이에요. "A에서 E까지 최단"은 단순히 <b>간선 수</b>가 아니라 <b>거리 합</b>이 가장 작은 길이에요. 칸 수만 세는 BFS로는 못 풀죠. 그래서 거리를 누적해 비교하는 방법이 필요해요.</p>
     <div class="chart-wrap" id="chart0" style="margin-top:6px"></div>
     <p class="note" style="margin-top:12px">→ 예: A→B는 직접 가면 4지만, A→C(1)→B(2)로 돌아가면 3! <b>간선 수는 늘어도 거리 합은 짧을</b> 수 있어요. 그래서 "가장 가까운 곳부터 차근차근 확정"하는 다익스트라가 필요합니다.</p>
   </section>
@@ -39,7 +39,7 @@
   <section class="panel" data-panel="1">
     <span class="kicker" style="color:var(--q)">Step 01 — Relax & Confirm</span>
     <h2>가장 가까운 곳을 확정하고, 이웃을 갱신</h2>
-    <p class="lead">각 노드에 "<b>현재까지 알아낸 A로부터의 최단거리</b>"를 적어요(처음엔 A만 0, 나머지 ∞). 매 단계: <b>미확정 중 가장 가까운 노드를 확정</b>(<span style="color:var(--good)">초록</span>)하고, 그를 거쳐 이웃 거리를 줄일 수 있으면 <b>갱신</b>해요. ▶로 거리 숫자가 줄며 확정되는 걸 보세요.</p>
+    <p class="lead">각 노드에 "<b>현재까지 알아낸 A로부터의 최단거리</b>"를 적어요(처음엔 A만 0, 나머지 ∞). 매 단계: <b>미확정 중 가장 가까운 노드를 확정</b>(<span style="color:var(--good)">초록</span>)하고, 그를 거쳐 이웃 거리를 줄일 수 있으면 <b>갱신</b>(=더 짧은 길을 찾으면 거리 숫자를 줄여 적는 것, "완화")해요. <b>⏭ 누르기 전에 "다음에 확정될(가장 가까운) 노드는?"</b> 맞혀보세요.</p>
     <div id="transport1"></div>
     <div class="chart-wrap" id="chart1"></div>
     <div class="dtab" id="dtab1"></div>
@@ -107,7 +107,8 @@ function treeEdgeState(tree){ const o={}; Object.keys(tree).forEach(to=>{ o[ekey
   const render=f=>{ const s=f.state; const ns={}; Object.keys(s.done).forEach(id=>ns[id]='done'); if(s.cur)ns[s.cur]='visiting';
     document.getElementById('chart1').innerHTML=AL.graph(NODES, WEDGES, {W:480,H:300, nodeState:ns, distances:s.dist, edgeState:treeEdgeState(s.tree)});
     document.getElementById('dtab1').innerHTML='거리: '+IDS.map(id=>`<span style="color:${s.done[id]?'var(--good)':'var(--faint)'}">${id}=${s.dist[id]}</span>`).join(''); };
-  AL.transport('#transport1', frames, render, {interval:850});
+  AL.transport('#transport1', frames, render, {interval:950});
+  document.getElementById('transport1').insertAdjacentHTML('afterend', AL.legend([['지금 확정','visiting'],['확정 완료','done'],['최단경로 트리','path']]));
 })();
 
 // ---------- STEP 2 : 최단경로 트리 ----------

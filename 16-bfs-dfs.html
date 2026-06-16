@@ -36,7 +36,7 @@
     <div id="transport0"></div>
     <div class="chart-wrap" id="g0"></div>
     <div class="qsbox" id="q0"></div>
-    <p class="note" style="margin-top:12px">→ 방문 순서가 곧 <b>거리 순</b>이라, BFS는 "몇 칸 만에 닿나" = <b>최단 거리</b>(간선 가중치가 같을 때)를 자연히 줘요. 그래서 미로 최단경로·SNS "몇 다리 건너"에 써요.</p>
+    <p class="note" style="margin-top:12px">→ 노드 위 숫자는 <b>방문 순서</b>(1·2·3…)예요 — 거리값 자체는 아니지만, BFS는 <b>가까운 곳부터</b> 방문하므로 그 순서가 곧 <b>거리(레벨) 순</b>이에요. 그래서 BFS는 "몇 칸 만에 닿나" = <b>최단 거리</b>(간선 길이가 모두 같을 때)를 자연히 줘요. 미로 최단경로·SNS "몇 다리 건너"에 써요(거리가 다른 경우는 17장).</p>
   </section>
 
   <!-- STEP 1 -->
@@ -117,10 +117,12 @@ function gRender(elId, f){ const s=f.state;
 // ---------- STEP 0 : BFS ----------
 (function(){
   AL.transport('#transport0', recBFS(), f=>{ gRender('g0',f); document.getElementById('q0').innerHTML=tokRow('큐(앞→뒤)', f.state.q); }, {interval:850});
+  document.getElementById('transport0').insertAdjacentHTML('afterend', AL.legend([['지금 방문','visiting'],['큐에서 대기','frontier'],['방문 완료','done'],['지나온 길','tree']]));
 })();
 // ---------- STEP 1 : DFS ----------
 (function(){
   AL.transport('#transport1', recDFS(), f=>{ gRender('g1',f); document.getElementById('s1').innerHTML=tokRow('스택(아래→위)', f.state.st); }, {interval:850});
+  document.getElementById('transport1').insertAdjacentHTML('afterend', AL.legend([['지금 방문','visiting'],['스택에서 대기','frontier'],['방문 완료','done'],['지나온 길','tree']]));
 })();
 // ---------- STEP 2 : 비교 (최종 순서) ----------
 (function(){

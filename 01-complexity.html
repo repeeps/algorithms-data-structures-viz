@@ -33,10 +33,10 @@
   <section class="panel show" data-panel="0">
     <span class="kicker" style="color:var(--hot)">Step 00 — Four Speeds</span>
     <h2>같은 일도 방법마다 커지는 속도가 다르다</h2>
-    <p class="lead">대표적인 네 가지 "커지는 속도"가 있어요. 입력 크기 <b>n</b>을 키우며 각 방법이 하는 <b>일의 양(연산 횟수)</b>을 막대로 비교해 보세요. (막대 길이는 가장 큰 것 기준 비율, 옆 숫자가 실제 횟수예요.)</p>
+    <p class="lead">대표적인 네 가지 "커지는 속도"가 있어요. 입력 크기 <b>n</b>을 키우며 각 방법이 하는 <b>일의 양(연산 횟수)</b>을 막대로 비교해 보세요. (막대 길이는 가장 큰 것 기준 비율, 옆 숫자가 실제 횟수예요.) <span style="color:var(--faint)">※ <b>O(…) 같은 기호는 지금 몰라도 돼요</b> — 다음 02장에서 풀어드려요. 막대 길이만 따라오세요.</span></p>
     <div class="ctrl"><label>입력 크기 n</label><input type="range" id="n0" min="1" max="10" value="6"><span class="val" id="n0v">64</span></div>
     <div id="bars0" class="callout q"></div>
-    <p class="note" style="margin-top:12px">→ n이 작을 땐 다 비슷해 보여요. 그런데 n을 키우면 <b>제곱(n²)</b>이 다른 셋을 압도하며 폭발하고, <b>로그(log n)</b>는 거의 늘지 않죠. 이 차이가 큰 데이터에서 "즉답 vs 멈춤"을 가릅니다.</p>
+    <p class="note" style="margin-top:12px">→ n이 작을 땐 다 비슷해 보여요. 그런데 n을 키우면 <b>제곱(n²)</b>이 다른 셋을 압도하며 폭발하고, <b>로그(log n)</b>는 거의 늘지 않죠(로그 = "반씩 줄여 나가" 거의 안 느는 속도). 이 차이가 큰 데이터에서 "즉답 vs 멈춤"을 가릅니다.</p>
   </section>
 
   <!-- STEP 1 -->

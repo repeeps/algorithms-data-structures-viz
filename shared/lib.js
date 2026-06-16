@@ -389,5 +389,11 @@
     return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="max-width:100%;display:block">${edgesSvg}${nodesSvg}</svg>`;
   }
 
-  VZ.AL = { heatColor, recorder, player, transport, bars, grid, dpTable, graph, layoutCircle, tree, STATE };
+  // 색 범례: items = [['비교','compare'], ['교환','swap'], ...] → 작은 칩 줄
+  function legend(items) {
+    return '<div class="al-legend">' + items.map(([label, st]) =>
+      `<span class="al-leg"><i style="background:${col(st)}"></i>${label}</span>`).join('') + '</div>';
+  }
+
+  VZ.AL = { heatColor, recorder, player, transport, bars, grid, dpTable, graph, layoutCircle, tree, legend, STATE };
 })(window);

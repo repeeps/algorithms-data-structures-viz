@@ -182,3 +182,8 @@ svg .gridline{stroke:rgba(255,255,255,.05);}
 .al-transport input.al-scrub{accent-color:var(--hot); min-width:90px;}
 .al-stepinfo{font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--muted); min-height:20px; margin:2px 0 8px; line-height:1.5;}
 .al-stepinfo .al-stepnum{display:inline-block; min-width:46px; color:var(--faint); margin-right:6px;}
+
+/* ---- VZ.AL 색 범례 ---- */
+.al-legend{display:flex; flex-wrap:wrap; gap:12px; margin:6px 0 2px; font-size:12px; color:var(--muted); font-family:'JetBrains Mono',monospace;}
+.al-leg{display:inline-flex; align-items:center; gap:5px;}
+.al-leg i{width:12px; height:12px; border-radius:3px; display:inline-block; border:1px solid rgba(255,255,255,.15);}
