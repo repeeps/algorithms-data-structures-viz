@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>11 해시테이블 · 알고리즘·자료구조, 눈으로 보기</title>
+<link rel="stylesheet" href="shared/theme.css">
+<style>
+  .twocol{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px;}
+  .tok{min-width:30px; text-align:center; padding:7px 11px; border-radius:8px; font-family:'JetBrains Mono',monospace; font-weight:700; background:var(--panel-2); color:var(--ink); border:1px solid var(--line);}
+  .brow{display:flex; align-items:center; gap:8px; margin:4px 0;}
+  .blab{width:64px; font-family:'JetBrains Mono',monospace; font-size:12px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topnav" id="topnav"></div>
+
+  <header>
+    <div class="tag">PART 3 · Chapter 11</div>
+    <h1>해시테이블 — 뒤지지 않고 한 번에 찾기</h1>
+    <p class="intro">선형탐색은 한 칸씩 뒤지고, 이진탐색은 정렬이 필요했죠. <b>해시테이블</b>은 다른 길을 가요: <b>값(키)을 칸 번호로 바꾸는 규칙(해시함수)</b>을 두고, 그 번호의 <b>사물함</b>에 곧장 넣고 꺼내요. 그래서 <b>평균 한 번</b>에 찾죠. 비밀은 "찾기"를 "계산"으로 바꾸는 거예요. 단, 두 키가 같은 칸을 받으면 <b>충돌</b>이 나죠.</p>
+  </header>
+
+  <nav class="stepper" id="stepper">
+    <button data-s="0" class="active">00 · 키 → 칸 번호</button>
+    <button data-s="1">01 · 충돌과 체이닝</button>
+    <button data-s="2">02 · 왜 빠른가</button>
+    <button data-s="3">03 · 정리</button>
+  </nav>
+
+  <!-- STEP 0 -->
+  <section class="panel show" data-panel="0">
+    <span class="kicker" style="color:var(--hot)">Step 00 — Key to Slot</span>
+    <h2>이름을 사물함 번호로 바꾼다</h2>
+    <p class="lead">칸이 <b>5개(버킷 0~4)</b>인 사물함이 있어요. 키를 넣을 땐 <b>칸 번호 = 키 ÷ 5의 나머지</b>로 정해요(해시함수). 그러면 어디 넣을지 <b>계산</b>으로 바로 나오죠. ▶로 키들이 자기 칸으로 날아가는 걸 보세요.</p>
+    <div id="transport0"></div>
+    <div id="chart0" class="stage" style="margin-top:8px;min-height:170px;background:var(--panel-2);border:1px solid var(--line);border-radius:14px;padding:14px"></div>
+    <p class="note" style="margin-top:12px">→ 찾을 때도 똑같이 계산해요: "23은 어디?" → 23%5=3 → <b>버킷 3만</b> 보면 돼요. 전체를 뒤질 필요가 없죠. 넣기·찾기 모두 <b>평균 O(1)</b>! 이게 딕셔너리·맵·캐시의 원리예요.</p>
+  </section>
+
+  <!-- STEP 1 -->
+  <section class="panel" data-panel="1">
+    <span class="kicker" style="color:var(--q)">Step 01 — Collision</span>
+    <h2>두 키가 같은 칸이면? 줄을 세운다</h2>
+    <p class="lead">서로 다른 키가 <b>같은 칸 번호</b>를 받을 수 있어요(예: 7%5=2, 12%5=2). 이게 <b>충돌</b>이에요. 해결법 하나는 <b>체이닝</b> — 같은 칸에 작은 줄(연결리스트)을 만들어 매달아요. ▶로 충돌이 생기고 줄이 늘어나는 걸 보세요.</p>
+    <div id="transport1"></div>
+    <div id="chart1" class="stage" style="margin-top:8px;min-height:170px;background:var(--panel-2);border:1px solid var(--line);border-radius:14px;padding:14px"></div>
+    <p class="note" style="margin-top:12px">→ 충돌이 적으면 줄이 짧아 여전히 빠르지만(평균 O(1)), 한 칸에 다 몰리면 줄이 길어져 <b>최악엔 O(n)</b>까지 느려져요. 그래서 칸을 넉넉히 두고 좋은 해시함수를 써서 <b>고르게 흩어지게</b> 하는 게 중요해요.</p>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="panel" data-panel="2">
+    <span class="kicker" style="color:var(--v)">Step 02 — Why Fast</span>
+    <h2>뒤지기 vs 계산해서 바로 가기</h2>
+    <p class="lead">n개 중에서 한 키를 찾을 때, 선형탐색은 평균 <b>n/2번</b> 뒤지지만, 해시는 <b>계산 한 번 + 짧은 줄 확인</b>으로 평균 거의 <b>1번</b>이에요. n을 키워 비교하세요.</p>
+    <div class="ctrl"><label>저장된 키 수 n</label><input type="range" id="n2" min="8" max="512" value="100"><span class="val" id="n2v">100</span></div>
+    <div id="bars2" class="callout v"></div>
+    <p class="note" style="margin-top:12px">→ 정렬도 필요 없고(이진탐색과 달리) 평균 한 번에 찾아요. 그래서 해시는 거의 <b>모든 언어의 기본 자료구조</b>(파이썬 dict, JS object/Map)이고, 중복 제거·캐시·DB 인덱스의 핵심이에요. 대가는 "순서가 없다"와 "최악 충돌"이죠.</p>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="panel" data-panel="3">
+    <span class="kicker" style="color:var(--good)">Step 03 — Recap</span>
+    <h2>해시테이블</h2>
+    <div class="twocol">
+      <div class="callout q"><div class="ttl">계산으로 찾기</div><p style="margin:0">키 → 해시함수 → 칸 번호. 그 칸만 보면 됨 → <b>평균 O(1)</b> 넣기·찾기. 정렬 불필요.</p></div>
+      <div class="callout v"><div class="ttl">충돌 주의</div><p style="margin:0">두 키가 같은 칸이면 충돌 → 체이닝으로 줄 세움. 몰리면 <b>최악 O(n)</b>. 고르게 흩어야.</p></div>
+    </div>
+    <div class="callout good" style="margin-top:14px">
+      <p style="margin:0">"찾기를 계산으로 바꾼다"는 발상이 해시의 힘이에요. 이로써 PART 3(탐색·자료구조)를 마쳐요 — 배열·리스트·스택·큐·해시까지 데이터를 담고 찾는 도구들을 봤어요. 다음 PART 4에선 <b>트리</b>로 넘어가, 자료를 <b>늘 정렬된 모양</b>으로 담아 탐색·삽입을 함께 빠르게 하는 BST를 봅니다.</p>
+    </div>
+    <p class="note" style="margin-top:16px">→ <a href="12-bst.html" style="color:var(--q);font-weight:700">CH 12 · 이진트리·BST</a> · <a href="index.html">목차</a></p>
+  </section>
+
+  <p class="foot">// 코드 없는 직관 입문 · 모든 과정은 브라우저에서 실시간 기록·재생 · <a href="index.html">목차</a></p>
+</div>
+
+<script src="shared/lib.js"></script>
+<script>
+VZ.mountTopnav('#topnav', 'CH 11 · 해시');
+VZ.setupStepper();
+const AL = VZ.AL;
+const B = 5;
+
+function recHashInsert(keys){
+  const rec=AL.recorder(); const buckets=Array.from({length:B},()=>[]);
+  const snap=(note,hi)=>rec.snap({buckets:buckets.map(x=>x.slice()), hi:hi||null},{note});
+  snap(`${B}개 버킷(0~4). 칸 번호 = 키 % ${B}`);
+  keys.forEach(k=>{ const b=k%B;
+    snap(`${k} % ${B} = ${b} → 버킷 ${b}으로 보냄`, {bucket:b});
+    const collided=buckets[b].length>0; buckets[b].push(k);
+    snap(collided?`버킷 ${b}에 이미 값이 있어 충돌! 같은 칸에 줄로 매닮(체이닝)`:`버킷 ${b}에 ${k} 저장`, {bucket:b, key:k});
+  });
+  return rec.frames;
+}
+function renderBuckets(elId, f){
+  const {buckets, hi}=f.state;
+  document.getElementById(elId).innerHTML = '<div>'+buckets.map((ch,i)=>
+    `<div class="brow"><div class="blab" style="color:${hi&&hi.bucket===i?'var(--hot)':'var(--faint)'}">버킷 ${i}${hi&&hi.bucket===i?' ◀':''}</div>
+      <div style="display:flex;gap:4px;align-items:center">`+
+      (ch.length? ch.map((k,j)=>`${j>0?'<span style="color:var(--faint)">→</span>':''}<span class="tok" style="${(hi&&hi.bucket===i&&hi.key===k)?'background:var(--hot);color:#1a1206;border-color:var(--hot)':''}">${k}</span>`).join('') : '<span style="color:var(--faint);font-family:JetBrains Mono;font-size:12px">(빈 칸)</span>')+
+      `</div></div>`).join('')+'</div>';
+}
+
+// ---------- STEP 0 : 키 → 칸 (충돌 없음) ----------
+(function(){
+  AL.transport('#transport0', recHashInsert([10,7,3,14]), f=>renderBuckets('chart0',f), {interval:850});
+})();
+// ---------- STEP 1 : 충돌·체이닝 ----------
+(function(){
+  AL.transport('#transport1', recHashInsert([10,7,3,14,12,2]), f=>renderBuckets('chart1',f), {interval:800});
+})();
+
+// ---------- STEP 2 : 왜 빠른가 ----------
+(function(){
+  function render(n){
+    const linear=Math.round(n/2);         // 평균 절반
+    const hash=1;                          // 평균 거의 1
+    const maxv=linear;
+    document.getElementById('bars2').innerHTML=
+      `<div class="ttl" style="color:var(--v)">n = ${n}개 중 한 키 찾기 (평균)</div>`+
+      VZ.barRow('선형탐색 ≈ n/2', linear/maxv, {color:'var(--k)', pctText: linear+'번'})+
+      VZ.barRow('해시 ≈ 1', hash/maxv, {color:'var(--good)', pctText:'≈ 1번'})+
+      `<p style="margin:8px 0 0">약 <b>${linear}배</b> 차이. 해시는 n이 아무리 커져도 평균 <b>거의 그대로(1번)</b> — O(1)의 위력이에요.</p>`;
+  }
+  document.getElementById('n2').oninput=e=>{ const n=+e.target.value; document.getElementById('n2v').textContent=n; render(n); };
+  render(100);
+})();
+</script>
+</body>
+</html>

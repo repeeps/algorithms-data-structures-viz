@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>09 배열 vs 연결리스트 · 알고리즘·자료구조, 눈으로 보기</title>
+<link rel="stylesheet" href="shared/theme.css">
+<style>
+  .twocol{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px;}
+  table.cmp{width:100%; border-collapse:collapse; font-size:13.5px; margin-top:4px;}
+  table.cmp th,table.cmp td{padding:8px; border-bottom:1px solid var(--line); text-align:center;}
+  table.cmp th{color:var(--faint); font-size:11px; font-family:'JetBrains Mono',monospace;}
+  table.cmp td:first-child,table.cmp th:first-child{text-align:left;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topnav" id="topnav"></div>
+
+  <header>
+    <div class="tag">PART 3 · Chapter 09</div>
+    <h1>배열 vs 연결리스트 — 담는 방식이 속도를 가른다</h1>
+    <p class="intro">같은 데이터라도 <b>어떻게 담느냐</b>에 따라 잘하는 일이 달라요. <b>배열</b>은 칸이 <b>한 줄로 붙어</b> 있어 "n번째"를 단번에 집지만, 중간에 끼우려면 <b>뒤를 다 밀어야</b> 해요. <b>연결리스트</b>는 칸마다 "다음 칸 주소"를 들고 흩어져 있어, 끼우기는 <b>화살표만 고치면</b> 되지만 "n번째"를 찾으려면 <b>처음부터 따라가야</b> 하죠.</p>
+  </header>
+
+  <nav class="stepper" id="stepper">
+    <button data-s="0" class="active">00 · 배열 삽입</button>
+    <button data-s="1">01 · 연결리스트 삽입</button>
+    <button data-s="2">02 · 접근 비교</button>
+    <button data-s="3">03 · 정리</button>
+  </nav>
+
+  <!-- STEP 0 -->
+  <section class="panel show" data-panel="0">
+    <span class="kicker" style="color:var(--hot)">Step 00 — Array Insert</span>
+    <h2>배열 중간에 끼우려면, 뒤를 다 민다</h2>
+    <p class="lead">배열은 칸이 빈틈없이 붙어 있어요. 앞쪽(예: 1번)에 새 값을 끼우려면, <b>그 뒤의 모든 칸을 한 칸씩 오른쪽으로 밀어야</b> 자리가 나요. ▶로 밀어내는 과정을 보세요 — 뒤가 길수록 일이 많아져요(O(n)).</p>
+    <div id="transport0"></div>
+    <div id="chart0" style="margin-top:10px"></div>
+    <p class="note" style="margin-top:12px">→ 대신 배열의 강점은 <b>"n번째 칸"을 단번에</b> 집는 거예요(주소 = 시작 + n칸). 한 줄로 붙어 있으니 계산만으로 바로 가죠. 접근은 O(1), 중간 삽입·삭제는 O(n).</p>
+  </section>
+
+  <!-- STEP 1 -->
+  <section class="panel" data-panel="1">
+    <span class="kicker" style="color:var(--q)">Step 01 — Linked List Insert</span>
+    <h2>연결리스트는 화살표만 고친다</h2>
+    <p class="lead">연결리스트는 칸(노드)마다 "<b>다음 노드</b>"를 가리키는 화살표를 들고 있어요. 중간에 끼울 땐 밀 필요 없이, <b>새 노드가 다음을 가리키게</b> 하고 <b>앞 노드가 새 노드를 가리키게</b> — 화살표 <b>두 개만</b> 바꾸면 끝(O(1)). ▶로 보세요.</p>
+    <div id="transport1"></div>
+    <div id="chart1" style="margin-top:10px"></div>
+    <p class="note" style="margin-top:12px">→ 밀어내기가 없어 삽입·삭제가 싸요. 대신 약점은 <b>"n번째"를 단번에 못 집는다</b>는 것 — 화살표를 처음부터 n번 따라가야 해요(접근 O(n)). 칸들이 메모리에 흩어져 있거든요.</p>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="panel" data-panel="2">
+    <span class="kicker" style="color:var(--v)">Step 02 — Access Compared</span>
+    <h2>"n번째 집기" — 누가 빠른가</h2>
+    <p class="lead">반대 상황이에요. 배열은 n번째를 <b>한 번에</b>, 연결리스트는 <b>n번 따라가</b> 도착해요. 리스트 크기를 키워 "끝 칸 접근" 비용을 비교하세요.</p>
+    <div class="ctrl"><label>크기 n</label><input type="range" id="n2" min="4" max="64" value="16"><span class="val" id="n2v">16</span></div>
+    <div id="bars2" class="callout v"></div>
+    <p class="note" style="margin-top:12px">→ 정답은 "상황에 따라 다르다"예요. <b>자주 끼우고 지우면</b> 연결리스트, <b>자주 임의 위치를 읽으면</b> 배열. 자료구조 선택은 "무슨 연산을 많이 하나"에 달렸어요.</p>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="panel" data-panel="3">
+    <span class="kicker" style="color:var(--good)">Step 03 — Recap</span>
+    <h2>한 표로</h2>
+    <div class="colbox" style="background:var(--panel-2);border:1px solid var(--line);border-radius:14px;padding:14px">
+      <table class="cmp">
+        <tr><th>연산</th><th>배열</th><th>연결리스트</th></tr>
+        <tr><td>n번째 접근</td><td style="color:var(--good)">O(1) 단번에</td><td style="color:var(--k)">O(n) 따라가기</td></tr>
+        <tr><td>중간 삽입·삭제</td><td style="color:var(--k)">O(n) 밀기</td><td style="color:var(--good)">O(1) 화살표만</td></tr>
+        <tr><td>메모리 배치</td><td>한 줄로 붙음</td><td>흩어짐(+화살표 저장)</td></tr>
+      </table>
+    </div>
+    <div class="callout good" style="margin-top:14px">
+      <p style="margin:0">"빠른 자료구조"는 없어요 — <b>잘하는 연산</b>이 다를 뿐. 이 둘은 더 복잡한 자료구조의 부품이 돼요: 다음 <b>10장 스택·큐</b>는 이 둘 위에 "넣고 빼는 순서 규칙"을 얹은 것이고, 해시·트리·그래프도 배열과 연결을 섞어 만들어집니다.</p>
+    </div>
+    <p class="note" style="margin-top:16px">→ <a href="10-stack-queue.html" style="color:var(--q);font-weight:700">CH 10 · 스택·큐</a> · <a href="index.html">목차</a></p>
+  </section>
+
+  <p class="foot">// 코드 없는 직관 입문 · 모든 과정은 브라우저에서 실시간 기록·재생 · <a href="index.html">목차</a></p>
+</div>
+
+<script src="shared/lib.js"></script>
+<script>
+VZ.mountTopnav('#topnav', 'CH 09 · 배열/리스트');
+VZ.setupStepper();
+const AL = VZ.AL;
+const C = s => s ? (AL.STATE[s] || s) : 'var(--panel-2)';
+
+function boxes(arr, hi){ hi=hi||{};
+  return '<div style="display:flex;gap:4px;justify-content:center;flex-wrap:wrap">'+arr.map((v,i)=>{
+    const st=hi[i]; return `<div style="min-width:30px;text-align:center;padding:9px 8px;border-radius:8px;background:${C(st)};color:${st?'#0b0e14':'var(--ink)'};border:1px solid var(--line);font-family:JetBrains Mono;font-weight:700">${v===null?'·':v}<div style="font-size:9px;color:${st?'#0b0e14':'var(--faint)'};font-weight:400">${i}</div></div>`;
+  }).join('')+'</div>';
+}
+function llboxes(nodes, hi){ hi=hi||{};
+  return '<div style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap">'+nodes.map((nd,i)=>{
+    const st=hi[i]; const box=`<div style="min-width:30px;text-align:center;padding:9px 11px;border-radius:8px;background:${C(st)};color:${st?'#0b0e14':'var(--ink)'};border:1px solid var(--line);font-family:JetBrains Mono;font-weight:700">${nd}</div>`;
+    const arr = i<nodes.length-1 ? `<span style="color:${hi['e'+i]?'var(--hot)':'var(--faint)'};padding:0 5px;font-size:17px">→</span>` : `<span style="color:var(--faint);padding:0 5px;font-size:12px">→∅</span>`;
+    return box+arr; }).join('')+'</div>';
+}
+
+// ---------- STEP 0 : 배열 삽입 (밀기) ----------
+(function(){
+  function recArrInsert(base, pos, val){ const rec=AL.recorder(); const a=base.slice(); a.push(null);
+    rec.snap(a.slice(),{note:`${pos}번 자리에 ${val} 삽입 — 끝에 빈칸을 만들고 뒤부터 밀어요`, colors:{[a.length-1]:'compare'}});
+    for(let i=a.length-1;i>pos;i--){ a[i]=a[i-1]; rec.snap(a.slice(),{note:`${a[i]} 를 오른쪽으로 한 칸 밀기`, colors:{[i]:'swap'}}); }
+    a[pos]=val; rec.snap(a.slice(),{note:`빈자리에 ${val} 넣기 — 완료! ${base.length-pos}칸이나 밀었어요`, colors:{[pos]:'done'}}); return rec.frames;
+  }
+  const render=f=>{ document.getElementById('chart0').innerHTML=boxes(f.state, f.meta.colors); };
+  AL.transport('#transport0', recArrInsert([3,7,2,8,5,1], 1, 9), render, {interval:650});
+})();
+
+// ---------- STEP 1 : 연결리스트 삽입 (화살표 두 개) ----------
+(function(){
+  const rec=AL.recorder();
+  // [3]→[7]→[2]→[8] 에 1번 뒤(7 다음)에 9 삽입
+  rec.snap({nodes:['3','7','2','8'], hi:{}},{note:'7 다음에 9를 끼우고 싶어요 (밀 필요 없음!)'});
+  rec.snap({nodes:['3','7','9','2','8'], hi:{2:'special','e2':1}},{note:'① 새 노드 9가 "다음(2)"을 가리키게 함', });
+  rec.snap({nodes:['3','7','9','2','8'], hi:{2:'special','e1':1}},{note:'② 앞 노드 7이 9를 가리키게 함 — 화살표 둘만 바꿈'});
+  rec.snap({nodes:['3','7','9','2','8'], hi:{2:'done'}},{note:'완료! 아무것도 밀지 않았어요 (O(1))'});
+  const frames=rec.frames;
+  const render=f=>{ document.getElementById('chart1').innerHTML=llboxes(f.state.nodes, f.state.hi); };
+  AL.transport('#transport1', frames, render, {interval:900});
+})();
+
+// ---------- STEP 2 : 접근 비교 ----------
+(function(){
+  function render(n){
+    document.getElementById('bars2').innerHTML=
+      `<div class="ttl" style="color:var(--v)">n = ${n} · 마지막(n번째) 칸 집기</div>`+
+      VZ.barRow('배열 (주소 계산)', 1/n, {color:'var(--good)', pctText:'1번'})+
+      VZ.barRow('연결리스트 (따라가기)', 1, {color:'var(--k)', pctText:n+'번'})+
+      `<p style="margin:8px 0 0">배열은 어디든 <b>1번</b>에 가요. 연결리스트는 끝 칸까지 화살표를 <b>${n}번</b> 따라가야 해요.</p>`;
+  }
+  document.getElementById('n2').oninput=e=>{ const n=+e.target.value; document.getElementById('n2v').textContent=n; render(n); };
+  render(16);
+})();
+</script>
+</body>
+</html>

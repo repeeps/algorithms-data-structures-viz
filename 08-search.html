@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>08 선형 vs 이진탐색 · 알고리즘·자료구조, 눈으로 보기</title>
+<link rel="stylesheet" href="shared/theme.css">
+<style>.twocol{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px;}</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topnav" id="topnav"></div>
+
+  <header>
+    <div class="tag">PART 3 · Chapter 08</div>
+    <h1>선형 vs 이진탐색 — 한 칸씩 vs 반씩</h1>
+    <p class="intro">목록에서 값 하나를 찾는 두 방법. <b>선형탐색</b>은 앞에서부터 한 칸씩 훑어요(최악 n번). <b>이진탐색</b>은 <b>정렬된</b> 목록에서 가운데를 보고 <b>매번 절반을 버려요</b>(약 log n번). 사전에서 단어 찾듯, 펼친 곳이 뒤면 앞으로·앞이면 뒤로. 단, 이진탐색은 <b>정렬</b>이라는 전제가 꼭 필요해요.</p>
+  </header>
+
+  <nav class="stepper" id="stepper">
+    <button data-s="0" class="active">00 · 선형탐색</button>
+    <button data-s="1">01 · 이진탐색</button>
+    <button data-s="2">02 · 정렬이 전제</button>
+    <button data-s="3">03 · 경주·정리</button>
+  </nav>
+
+  <!-- STEP 0 -->
+  <section class="panel show" data-panel="0">
+    <span class="kicker" style="color:var(--hot)">Step 00 — Linear</span>
+    <h2>앞에서부터 한 칸씩</h2>
+    <p class="lead">가장 단순한 방법: 첫 칸부터 차례로 <b>찾는 값과 같은지</b> 확인해요. 운 나쁘면 끝까지 다 봐야 하죠(최악 n번). 정렬돼 있지 않아도 쓸 수 있다는 게 장점. ▶로 <b>12</b>를 찾아보세요. (<span style="color:var(--q)">청록</span>=확인 중, <span style="color:var(--line);background:var(--line);padding:0 4px;border-radius:3px">회색</span>=지나침)</p>
+    <div id="transport0"></div>
+    <div class="chart-wrap" id="chart0" style="margin-top:6px"></div>
+    <p class="note" style="margin-top:12px">→ 본 칸은 회색으로 지워져요. 목록 크기가 2배면 최악 확인 횟수도 2배 — 전형적인 <b>O(n)</b>이에요. 작은 목록엔 충분하지만, 큰 목록엔 느리죠.</p>
+  </section>
+
+  <!-- STEP 1 -->
+  <section class="panel" data-panel="1">
+    <span class="kicker" style="color:var(--q)">Step 01 — Binary</span>
+    <h2>가운데를 보고, 절반을 버린다</h2>
+    <p class="lead"><b>정렬된</b> 목록에서 <b>가운데(mid)</b> 값을 봐요. 찾는 값보다 작으면 왼쪽 절반을, 크면 오른쪽 절반을 통째로 버려요. 남은 구간(<b>low~high</b>)에서 또 가운데를… ▶로 보세요. <b>⏭ 누르기 전에 "다음 가운데는 어느 쪽?" 예측</b>해보세요.</p>
+    <div id="transport1"></div>
+    <div class="chart-wrap" id="chart1" style="margin-top:6px"></div>
+    <p class="note" style="margin-top:12px">→ 한 번 볼 때마다 후보가 <b>절반</b>으로 줄어요. 1024개도 10번이면 끝(2배 늘 때마다 +1번) — 이게 <b>O(log n)</b>이에요. 단, 이렇게 "절반 버리기"가 통하려면 목록이 <b>정렬</b>돼 있어야 해요(다음 단계).</p>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="panel" data-panel="2">
+    <span class="kicker" style="color:var(--v)">Step 02 — Why Sorted</span>
+    <h2>정렬 안 됐으면 이진탐색은 깨진다</h2>
+    <p class="lead">이진탐색의 "절반 버리기"는 "<b>버린 절반엔 절대 없다</b>"가 보장돼야 해요. 그 보장은 <b>정렬</b>에서 나오죠. 정렬 안 된 목록에 이진탐색을 시키면 — 분명히 있는 값도 <b>엉뚱한 절반을 버려 놓쳐요</b>. ▶로 확인하세요(목록에 <b>9</b>가 있는데도!).</p>
+    <div id="transport2"></div>
+    <div class="chart-wrap" id="chart2" style="margin-top:6px"></div>
+    <p class="note" style="margin-top:12px">→ 가운데 값만 보고 "왼쪽/오른쪽을 버린다"는 판단이, 정렬이 안 되면 근거를 잃어요. 그래서 이진탐색을 쓰려면 <b>먼저 정렬</b>해야 하고 — 그래서 정렬(PART 2)이 그렇게 중요했던 거예요. DB 인덱스가 정렬을 유지하는 이유이기도 하죠.</p>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="panel" data-panel="3">
+    <span class="kicker" style="color:var(--good)">Step 03 — Race</span>
+    <h2>둘의 격차, 숫자로</h2>
+    <p class="lead">정렬된 목록에서 한 값을 찾을 때 <b>최악 확인 횟수</b>를 비교해요. n을 키울수록 선형은 따라 늘지만 이진은 거의 안 늘죠.</p>
+    <div class="ctrl"><label>목록 크기 n</label><input type="range" id="n3" min="3" max="20" value="10"><span class="val" id="n3v">1024</span></div>
+    <div id="bars3" class="callout v"></div>
+    <div class="callout good" style="margin-top:14px">
+      <p style="margin:0">이진탐색은 "정렬 + 절반 버리기"의 위력을 보여줘요. 이 아이디어는 <b>이진트리·BST</b>(12장)로 자라나, 자료를 <b>늘 정렬된 모양</b>으로 담아 빠르게 찾게 합니다. 다음은 자료를 <b>어떻게 담느냐</b>에 따라 속도가 갈리는 자료구조예요.</p>
+    </div>
+    <p class="note" style="margin-top:16px">→ <a href="09-array-list.html" style="color:var(--q);font-weight:700">CH 09 · 배열 vs 연결리스트</a> · <a href="index.html">목차</a></p>
+  </section>
+
+  <p class="foot">// 코드 없는 직관 입문 · 모든 탐색 과정은 브라우저에서 실시간 기록·재생 · <a href="index.html">목차</a></p>
+</div>
+
+<script src="shared/lib.js"></script>
+<script>
+VZ.mountTopnav('#topnav', 'CH 08 · 탐색');
+VZ.setupStepper();
+const AL = VZ.AL;
+const DIM = 'var(--line)';
+
+function recLinear(arr, target){
+  const rec=AL.recorder();
+  rec.snap(arr,{note:`${target} 찾기 — 앞에서부터 한 칸씩`, pointers:{i:0}});
+  for(let i=0;i<arr.length;i++){ const c={}; for(let s=0;s<i;s++)c[s]=DIM; c[i]='compare';
+    rec.snap(arr,{note:`${i}번 값 ${arr[i]} = ${target}? ${arr[i]===target?'예!':'아니오 → 다음'}`, colors:c, pointers:{i}});
+    if(arr[i]===target){ const f={}; for(let s=0;s<i;s++)f[s]=DIM; f[i]='done';
+      rec.snap(arr,{note:`찾았다! ${target}는 ${i}번 (${i+1}번 확인)`, colors:f, pointers:{i}}); return rec.frames; } }
+  rec.snap(arr,{note:`${target} 없음 — 끝까지 봤지만 못 찾음`, colors:{}}); return rec.frames;
+}
+function recBinary(arr, target){
+  const rec=AL.recorder(); const n=arr.length; let lo=0,hi=n-1;
+  const disc=(lo,hi)=>{ const c={}; for(let s=0;s<n;s++) if(s<lo||s>hi)c[s]=DIM; return c; };
+  rec.snap(arr,{note:`${target} 찾기 — 후보 구간 전체`, colors:disc(lo,hi), pointers:{low:lo,high:hi}});
+  while(lo<=hi){ const mid=(lo+hi)>>1; const c=disc(lo,hi); c[mid]='compare';
+    rec.snap(arr,{note:`가운데 ${mid}번 값 ${arr[mid]} 확인`, colors:c, pointers:{low:lo,mid,high:hi}});
+    if(arr[mid]===target){ const f={}; for(let s=0;s<n;s++)if(s!==mid)f[s]=DIM; f[mid]='done';
+      rec.snap(arr,{note:`찾았다! ${target}는 ${mid}번`, colors:f, pointers:{mid}}); return rec.frames; }
+    if(arr[mid]<target){ lo=mid+1; rec.snap(arr,{note:`${arr[mid]} < ${target} → 왼쪽 절반 버림`, colors:disc(lo,hi), pointers:{low:lo,high:hi}}); }
+    else { hi=mid-1; rec.snap(arr,{note:`${arr[mid]} > ${target} → 오른쪽 절반 버림`, colors:disc(lo,hi), pointers:{low:lo,high:hi}}); }
+  }
+  rec.snap(arr,{note:`${target} 없음 — 후보 구간이 비었어요`, colors:{}}); return rec.frames;
+}
+
+// ---------- STEP 0 : 선형 ----------
+(function(){
+  const arr=[8,3,15,6,1,12,9,4]; const maxV=Math.max(...arr);
+  const render=f=>{ document.getElementById('chart0').innerHTML=AL.bars(f.state,{state:f.meta.colors||{},pointers:f.meta.pointers||{},maxV,W:540,H:230}); };
+  AL.transport('#transport0', recLinear(arr,12), render, {interval:650});
+})();
+
+// ---------- STEP 1 : 이진 (정렬됨) ----------
+(function(){
+  const arr=[1,3,4,6,8,9,12,15,18,21]; const maxV=Math.max(...arr);
+  const render=f=>{ document.getElementById('chart1').innerHTML=AL.bars(f.state,{state:f.meta.colors||{},pointers:f.meta.pointers||{},maxV,W:560,H:230}); };
+  AL.transport('#transport1', recBinary(arr,12), render, {interval:750});
+})();
+
+// ---------- STEP 2 : 정렬 안 된 곳에서 이진탐색 실패 ----------
+(function(){
+  const arr=[8,3,15,6,1,12,9,4]; const maxV=Math.max(...arr);  // 9가 있지만 정렬 안 돼 이진탐색이 놓침
+  const render=f=>{ document.getElementById('chart2').innerHTML=AL.bars(f.state,{state:f.meta.colors||{},pointers:f.meta.pointers||{},maxV,W:540,H:230}); };
+  AL.transport('#transport2', recBinary(arr,9), render, {interval:750});
+})();
+
+// ---------- STEP 3 : 경주 ----------
+(function(){
+  function render(exp){ const n=Math.pow(2,exp); const lin=n, bin=exp+1; const maxv=n;
+    document.getElementById('bars3').innerHTML=
+      `<div class="ttl" style="color:var(--v)">n = ${n} · 최악 확인 횟수</div>`+
+      VZ.barRow('선형탐색 ≈ n', lin/maxv, {color:'var(--k)', pctText: lin.toLocaleString()+'번'})+
+      VZ.barRow('이진탐색 ≈ log n', bin/maxv, {color:'var(--good)', pctText: bin+'번'})+
+      `<p style="margin:8px 0 0">약 <b>${Math.round(lin/bin)}배</b> 차이. n이 2배 되면 선형은 ${n}→${n*2}, 이진은 ${bin}→${bin+1}(딱 +1).</p>`;
+  }
+  document.getElementById('n3').oninput=e=>{ const exp=+e.target.value; document.getElementById('n3v').textContent=Math.pow(2,exp); render(exp); };
+  render(10);
+})();
+</script>
+</body>
+</html>

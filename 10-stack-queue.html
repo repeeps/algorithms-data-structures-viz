@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>10 스택·큐 · 알고리즘·자료구조, 눈으로 보기</title>
+<link rel="stylesheet" href="shared/theme.css">
+<style>
+  .twocol{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px;}
+  .tok{min-width:42px; text-align:center; padding:10px 14px; border-radius:9px; font-family:'JetBrains Mono',monospace; font-weight:700; background:var(--panel-2); color:var(--ink); border:1px solid var(--line);}
+  .stage{min-height:120px; display:flex; align-items:center; justify-content:center; padding:12px; background:var(--panel-2); border:1px solid var(--line); border-radius:14px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topnav" id="topnav"></div>
+
+  <header>
+    <div class="tag">PART 3 · Chapter 10</div>
+    <h1>스택·큐 — 넣고 빼는 순서의 두 규칙</h1>
+    <p class="intro">데이터를 담는 두 가지 "순서 규칙"이에요. <b>스택</b>은 <b>접시 쌓기</b> — 맨 위에 올리고 맨 위에서 꺼내요(나중에 넣은 게 먼저 나옴, <b>LIFO</b>). <b>큐</b>는 <b>줄서기</b> — 뒤로 들어와 앞에서 빠져요(먼저 온 게 먼저 나옴, <b>FIFO</b>). 단순하지만 실행취소·탐색·작업대기 등 어디에나 쓰여요.</p>
+  </header>
+
+  <nav class="stepper" id="stepper">
+    <button data-s="0" class="active">00 · 스택(LIFO)</button>
+    <button data-s="1">01 · 큐(FIFO)</button>
+    <button data-s="2">02 · 순서 비교</button>
+    <button data-s="3">03 · 정리</button>
+  </nav>
+
+  <!-- STEP 0 -->
+  <section class="panel show" data-panel="0">
+    <span class="kicker" style="color:var(--hot)">Step 00 — Stack (LIFO)</span>
+    <h2>접시 쌓기 — 맨 위로 넣고 맨 위에서 꺼낸다</h2>
+    <p class="lead">접시 더미처럼, 새 값은 <b>맨 위</b>에 쌓이고 꺼낼 때도 <b>맨 위</b>부터예요. 그래서 <b>나중에 넣은 게 먼저 나와요</b>(Last In, First Out). 직접 넣고(push) 빼(pop)보세요.</p>
+    <div class="row" style="gap:8px;margin:6px 0">
+      <button class="btn" id="spush">▲ push (넣기)</button>
+      <button class="btn" id="spop" style="border-color:var(--line);background:var(--panel-2);color:var(--muted)">▼ pop (꺼내기)</button>
+    </div>
+    <div class="stage" id="stackStage"></div>
+    <div id="sinfo" class="legend" style="margin-top:8px"></div>
+    <p class="note" style="margin-top:12px">→ 넣기·꺼내기 모두 <b>맨 위 한 곳</b>만 건드리니 <b>O(1)</b>로 빨라요. 함수 호출(4장 호출 스택!), 웹 브라우저 뒤로가기, 실행취소(undo)가 전부 스택이에요 — "가장 최근 것부터 되돌린다".</p>
+  </section>
+
+  <!-- STEP 1 -->
+  <section class="panel" data-panel="1">
+    <span class="kicker" style="color:var(--q)">Step 01 — Queue (FIFO)</span>
+    <h2>줄서기 — 뒤로 들어와 앞에서 빠진다</h2>
+    <p class="lead">매표소 줄처럼, 새 값은 <b>뒤(back)</b>로 들어오고 빠질 땐 <b>앞(front)</b>에서예요. 그래서 <b>먼저 온 게 먼저 나가요</b>(First In, First Out). 직접 넣고(enqueue) 빼(dequeue)보세요.</p>
+    <div class="row" style="gap:8px;margin:6px 0">
+      <button class="btn" id="qpush">→ enqueue (뒤로 넣기)</button>
+      <button class="btn" id="qpop" style="border-color:var(--line);background:var(--panel-2);color:var(--muted)">→ dequeue (앞에서 빼기)</button>
+    </div>
+    <div class="stage" id="queueStage"></div>
+    <div id="qinfo" class="legend" style="margin-top:8px"></div>
+    <p class="note" style="margin-top:12px">→ 큐도 양 끝만 건드려 <b>O(1)</b>. 프린터 대기열, 작업 스케줄링, 그리고 다음 PART의 <b>그래프 BFS</b>("가까운 곳부터 차례로")가 큐로 동작해요.</p>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="panel" data-panel="2">
+    <span class="kicker" style="color:var(--v)">Step 02 — Order Compared</span>
+    <h2>같은 입력, 뒤집히거나 그대로거나</h2>
+    <p class="lead">똑같이 <b>1 → 2 → 3 → 4</b> 순서로 넣은 뒤 전부 꺼내요. 스택은 순서가 <b>뒤집히고</b>(4 3 2 1), 큐는 <b>그대로</b>(1 2 3 4) 나와요. ▶로 꺼내는 순서를 보세요.</p>
+    <div id="transport2"></div>
+    <div id="chart2" style="margin-top:10px"></div>
+    <p class="note" style="margin-top:12px">→ "마지막 것부터"가 필요하면 스택(되돌리기), "온 순서대로"가 필요하면 큐(공정한 처리). 같은 데이터라도 <b>꺼내는 규칙</b>이 결과를 완전히 바꿔요.</p>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="panel" data-panel="3">
+    <span class="kicker" style="color:var(--good)">Step 03 — Recap</span>
+    <h2>스택과 큐</h2>
+    <div class="twocol">
+      <div class="callout q"><div class="ttl">스택 (LIFO)</div><p style="margin:0">맨 위로 넣고 맨 위에서 꺼냄. 함수 호출·undo·뒤로가기·DFS. push/pop O(1).</p></div>
+      <div class="callout v"><div class="ttl">큐 (FIFO)</div><p style="margin:0">뒤로 넣고 앞에서 꺼냄. 대기열·스케줄링·BFS. enqueue/dequeue O(1).</p></div>
+    </div>
+    <div class="callout good" style="margin-top:14px">
+      <p style="margin:0">둘 다 "어디를 건드리나"만 다른 <b>순서 규칙</b>이에요(배열·연결리스트로 만들죠). 이 규칙이 알고리즘의 성격을 정해요 — 16장에서 <b>BFS는 큐, DFS는 스택</b>을 써서 그래프를 전혀 다르게 훑는 걸 보게 됩니다. 다음은 "찾기"를 거의 한 번에 끝내는 <b>해시</b>예요.</p>
+    </div>
+    <p class="note" style="margin-top:16px">→ <a href="11-hash.html" style="color:var(--q);font-weight:700">CH 11 · 해시테이블</a> · <a href="index.html">목차</a></p>
+  </section>
+
+  <p class="foot">// 코드 없는 직관 입문 · 모든 과정은 브라우저에서 실시간 기록·재생 · <a href="index.html">목차</a></p>
+</div>
+
+<script src="shared/lib.js"></script>
+<script>
+VZ.mountTopnav('#topnav', 'CH 10 · 스택·큐');
+VZ.setupStepper();
+const AL = VZ.AL;
+
+// ---------- STEP 0 : 스택 (live) ----------
+(function(){
+  const seq=['A','B','C','D','E','F']; let pi=0; let stack=[];
+  function render(msg, hiTop){
+    const stg=document.getElementById('stackStage');
+    stg.innerHTML = stack.length
+      ? '<div style="display:flex;flex-direction:column-reverse;gap:5px;align-items:center">'+
+        stack.map((v,i)=>`<div class="tok" style="${(hiTop&&i===stack.length-1)?'background:var(--hot);color:#1a1206;border-color:var(--hot)':''}">${v}</div>`).join('')+
+        '<div style="font-size:10px;color:var(--faint);font-family:JetBrains Mono;margin-top:2px">↑ 바닥(처음 넣은 것)</div></div>'
+      : '<div style="color:var(--faint);font-family:JetBrains Mono;font-size:13px">(빈 스택)</div>';
+    document.getElementById('sinfo').innerHTML = msg || `스택 크기 ${stack.length}. 맨 위 = ${stack[stack.length-1]||'(없음)'}`;
+  }
+  document.getElementById('spush').onclick=()=>{ if(pi>=seq.length){ render('더 넣을 값이 없어요 (데모용 6개 한정)'); return; } const v=seq[pi++]; stack.push(v); render(`<b style="color:var(--hot)">${v}</b>를 맨 위에 쌓았어요 (push).`, true); };
+  document.getElementById('spop').onclick=()=>{ if(!stack.length){ render('빈 스택이라 꺼낼 게 없어요.'); return; } const v=stack.pop(); pi=Math.max(0,pi-1); render(`맨 위 <b style="color:var(--hot)">${v}</b>를 꺼냈어요 (pop) — 가장 나중에 넣은 것!`); };
+  render();
+})();
+
+// ---------- STEP 1 : 큐 (live) ----------
+(function(){
+  const seq=['A','B','C','D','E','F']; let pi=0; let q=[];
+  function render(msg, hiFront){
+    const stg=document.getElementById('queueStage');
+    stg.innerHTML = q.length
+      ? '<div style="display:flex;flex-direction:column;align-items:center;gap:4px"><div style="display:flex;gap:5px;align-items:center">'+
+        q.map((v,i)=>`<div class="tok" style="${(hiFront&&i===0)?'background:var(--hot);color:#1a1206;border-color:var(--hot)':''}">${v}</div>`).join('')+
+        '</div><div style="font-size:10px;color:var(--faint);font-family:JetBrains Mono">← 앞(front, 먼저 빠짐) · 뒤(back) →</div></div>'
+      : '<div style="color:var(--faint);font-family:JetBrains Mono;font-size:13px">(빈 큐)</div>';
+    document.getElementById('qinfo').innerHTML = msg || `큐 크기 ${q.length}. 앞 = ${q[0]||'(없음)'}`;
+  }
+  document.getElementById('qpush').onclick=()=>{ if(pi>=seq.length){ render('더 넣을 값이 없어요 (데모용 6개 한정)'); return; } const v=seq[pi++]; q.push(v); render(`<b style="color:var(--hot)">${v}</b>를 뒤에 붙였어요 (enqueue).`); };
+  document.getElementById('qpop').onclick=()=>{ if(!q.length){ render('빈 큐라 꺼낼 게 없어요.'); return; } const v=q.shift(); pi=Math.max(0,pi-1); render(`앞의 <b style="color:var(--hot)">${v}</b>를 꺼냈어요 (dequeue) — 가장 먼저 넣은 것!`, false); };
+  render();
+})();
+
+// ---------- STEP 2 : 순서 비교 (replay) ----------
+(function(){
+  const rec=AL.recorder(); const input=[1,2,3,4];
+  rec.snap({stackOut:[], queueOut:[]},{note:`1 → 2 → 3 → 4 순서로 둘 다에 넣었어요. 이제 전부 꺼내요`});
+  const st=input.slice(), qu=input.slice(); const sOut=[], qOut=[];
+  for(let k=0;k<input.length;k++){ sOut.push(st.pop()); qOut.push(qu.shift());
+    rec.snap({stackOut:sOut.slice(), queueOut:qOut.slice()},{note:`스택은 맨 위 ${sOut[sOut.length-1]} · 큐는 맨 앞 ${qOut[qOut.length-1]} 꺼냄`}); }
+  rec.snap({stackOut:sOut.slice(), queueOut:qOut.slice(), done:true},{note:`스택 → ${sOut.join(' ')} (뒤집힘) · 큐 → ${qOut.join(' ')} (그대로)`});
+  const frames=rec.frames;
+  const rowHtml=(arr,label,color)=>`<div style="margin:6px 0"><span style="font-size:12px;color:var(--faint);font-family:JetBrains Mono;margin-right:8px">${label}</span>`+
+    arr.map(v=>`<span class="tok" style="background:${color};color:#0b0e14;border-color:${color};margin-right:4px">${v}</span>`).join('')+'</div>';
+  const render=f=>{ document.getElementById('chart2').innerHTML =
+    rowHtml(f.state.stackOut,'스택에서 꺼낸 순서','var(--hot)') + rowHtml(f.state.queueOut,'큐에서 꺼낸 순서','var(--q)'); };
+  AL.transport('#transport2', frames, render, {interval:800});
+})();
+</script>
+</body>
+</html>
