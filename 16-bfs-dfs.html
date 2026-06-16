@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>16 BFS·DFS · 알고리즘·자료구조, 눈으로 보기</title>
+<link rel="stylesheet" href="shared/theme.css">
+<style>
+  .twocol{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px;}
+  .tok{display:inline-block;min-width:24px;text-align:center;padding:4px 9px;border-radius:7px;font-family:'JetBrains Mono',monospace;font-weight:700;background:var(--panel-2);color:var(--ink);border:1px solid var(--line);margin:0 2px;}
+  .qsbox{font-family:'JetBrains Mono',monospace;font-size:13px;margin-top:8px;min-height:30px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topnav" id="topnav"></div>
+
+  <header>
+    <div class="tag">PART 5 · Chapter 16</div>
+    <h1>BFS·DFS — 물결처럼 vs 끝까지 파고들기</h1>
+    <p class="intro">그래프를 빠짐없이 훑는 두 방식이에요. <b>너비우선(BFS)</b>은 시작점에서 <b>가까운 순서로 물결처럼</b> 퍼져요(<b>큐</b> 사용). <b>깊이우선(DFS)</b>은 <b>한 길을 끝까지 파고든</b> 뒤 막히면 되돌아와요(<b>스택</b> 사용). 같은 그래프인데 방문 순서가 완전히 다르고, 그래서 쓰임도 갈려요 — BFS는 <b>최단 거리</b>, DFS는 <b>구석구석 탐색</b>.</p>
+  </header>
+
+  <nav class="stepper" id="stepper">
+    <button data-s="0" class="active">00 · BFS(큐)</button>
+    <button data-s="1">01 · DFS(스택)</button>
+    <button data-s="2">02 · 순서 비교</button>
+    <button data-s="3">03 · 정리</button>
+  </nav>
+
+  <!-- STEP 0 -->
+  <section class="panel show" data-panel="0">
+    <span class="kicker" style="color:var(--hot)">Step 00 — BFS (Queue)</span>
+    <h2>가까운 곳부터 물결처럼</h2>
+    <p class="lead">시작점 A의 이웃을 <b>큐</b>에 넣고, 큐 앞에서 하나씩 꺼내 방문하며 그 이웃을 다시 큐 뒤에 넣어요(10장 큐!). 그러면 <b>시작점에서 가까운 순서</b>(1칸→2칸→…)로 퍼져요. ▶로 노드 위 번호(방문 순서)와 큐를 보세요.</p>
+    <div id="transport0"></div>
+    <div class="chart-wrap" id="g0"></div>
+    <div class="qsbox" id="q0"></div>
+    <p class="note" style="margin-top:12px">→ 방문 순서가 곧 <b>거리 순</b>이라, BFS는 "몇 칸 만에 닿나" = <b>최단 거리</b>(간선 가중치가 같을 때)를 자연히 줘요. 그래서 미로 최단경로·SNS "몇 다리 건너"에 써요.</p>
+  </section>
+
+  <!-- STEP 1 -->
+  <section class="panel" data-panel="1">
+    <span class="kicker" style="color:var(--q)">Step 01 — DFS (Stack)</span>
+    <h2>한 길을 끝까지, 막히면 되돌아</h2>
+    <p class="lead">DFS는 <b>스택</b>을 써요 — 한 이웃으로 들어가 또 그 이웃으로… <b>막다른 곳까지</b> 깊이 파고든 뒤, 더 갈 데 없으면 <b>되돌아와</b> 다른 갈래로. ▶로 같은 그래프를 깊이 우선으로 훑어보세요.</p>
+    <div id="transport1"></div>
+    <div class="chart-wrap" id="g1"></div>
+    <div class="qsbox" id="s1"></div>
+    <p class="note" style="margin-top:12px">→ 깊이 먼저라 시작점에서 멀리까지 단숨에 가요. 미로의 모든 길 탐색, 사이클 찾기, 위상정렬(빌드 순서), 연결 요소 찾기에 써요. 재귀(4장)로 자연스럽게 구현돼요(되돌아옴 = 스택 popping).</p>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="panel" data-panel="2">
+    <span class="kicker" style="color:var(--v)">Step 02 — Order Compared</span>
+    <h2>같은 그래프, 다른 발자국</h2>
+    <p class="lead">같은 그래프를 같은 곳(A)에서 시작했는데 방문 순서가 달라요. 노드 위 번호로 두 순서를 견줘보세요 — BFS는 <b>레벨별로 옆으로</b>, DFS는 <b>한 줄기로 아래로</b> 번호가 매겨져요.</p>
+    <div class="gx" style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div><div class="legend" style="text-align:center;color:var(--hot)">BFS (너비우선)</div><div id="g2b"></div></div><div><div class="legend" style="text-align:center;color:var(--q)">DFS (깊이우선)</div><div id="g2d"></div></div></div>
+    <div id="info2" class="callout v" style="margin-top:8px"></div>
+    <p class="note" style="margin-top:12px">→ <b>가까운 순이 필요하면 BFS(큐), 깊이 탐색이 필요하면 DFS(스택)</b>. 자료구조(큐/스택) 하나 바꿨을 뿐인데 알고리즘의 성격이 완전히 달라지죠 — 자료구조가 알고리즘을 정한다는 좋은 예예요.</p>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="panel" data-panel="3">
+    <span class="kicker" style="color:var(--good)">Step 03 — Recap</span>
+    <h2>BFS와 DFS</h2>
+    <div class="twocol">
+      <div class="callout q"><div class="ttl">BFS · 큐 · 너비</div><p style="margin:0">가까운 순으로 물결처럼. <b>최단 거리</b>(가중치 같을 때). 미로 최단경로·친구 추천.</p></div>
+      <div class="callout v"><div class="ttl">DFS · 스택 · 깊이</div><p style="margin:0">한 길 끝까지 파고들고 되돌아옴. 사이클·연결요소·위상정렬. 재귀로 구현.</p></div>
+    </div>
+    <div class="callout good" style="margin-top:14px">
+      <p style="margin:0">BFS는 "간선 1칸 = 거리 1"일 때 최단경로를 줘요. 그런데 간선마다 <b>거리(가중치)가 다르면</b>(도로 길이처럼) 그대로는 안 되죠. 다음 <b>17장 다익스트라</b>가 이 문제를 <b>우선순위 큐(힙, 13장)</b>로 풀어요 — "지금 가장 가까운 노드부터" 확정하면서요.</p>
+    </div>
+    <p class="note" style="margin-top:16px">→ <a href="17-dijkstra.html" style="color:var(--q);font-weight:700">CH 17 · 최단경로(다익스트라)</a> · <a href="index.html">목차</a></p>
+  </section>
+
+  <p class="foot">// 코드 없는 직관 입문 · 모든 탐색은 브라우저에서 실시간 기록·재생 · <a href="index.html">목차</a></p>
+</div>
+
+<script src="shared/lib.js"></script>
+<script>
+VZ.mountTopnav('#topnav', 'CH 16 · BFS·DFS');
+VZ.setupStepper();
+const AL = VZ.AL;
+const NODES=[{id:'A',x:0.5,y:0.12},{id:'B',x:0.24,y:0.42},{id:'C',x:0.76,y:0.42},{id:'D',x:0.1,y:0.82},{id:'E',x:0.5,y:0.82},{id:'F',x:0.9,y:0.82}];
+const EDGES=[['A','B'],['A','C'],['B','D'],['B','E'],['C','E'],['C','F'],['E','F']];
+const ADJ={}; NODES.forEach(n=>ADJ[n.id]=[]); EDGES.forEach(([a,b])=>{ADJ[a].push(b);ADJ[b].push(a);});
+Object.keys(ADJ).forEach(k=>ADJ[k].sort());  // 알파벳 순 방문
+
+function nsFrom(order, frontier, cur){ const o={}; (frontier||[]).forEach(id=>o[id]='frontier'); Object.keys(order).forEach(id=>o[id]='done'); if(cur)o[cur]='visiting'; return o; }
+function tokRow(label,arr){ return `<span style="color:var(--faint)">${label}:</span> `+(arr.length?arr.map(x=>`<span class="tok">${x}</span>`).join(''):'<span style="color:var(--faint)">(빈)</span>'); }
+
+function recBFS(){ const rec=AL.recorder(); const order={}; const q=['A']; const seen={A:true}; const tree={}; let cnt=0;
+  rec.snap({order:{},frontier:['A'],cur:null,q:['A'],tree:{}},{note:`A에서 시작 — 큐에 A`});
+  while(q.length){ const cur=q.shift(); order[cur]=cnt++;
+    rec.snap({order:{...order},frontier:[...q],cur,q:[...q],tree:{...tree}},{note:`큐 앞에서 ${cur} 꺼내 방문 (${order[cur]+1}번째)`});
+    ADJ[cur].forEach(nb=>{ if(!seen[nb]){ seen[nb]=true; q.push(nb); tree[cur+'-'+nb]=true; } });
+    rec.snap({order:{...order},frontier:[...q],cur:null,q:[...q],tree:{...tree}},{note:`${cur}의 새 이웃을 큐 뒤에 추가 → 큐 [${q.join(',')}]`});
+  }
+  rec.snap({order:{...order},frontier:[],cur:null,q:[],tree:{...tree}},{note:`완료 — 방문 순서 ${Object.keys(order).sort((a,b)=>order[a]-order[b]).join(' → ')}`});
+  return rec.frames;
+}
+function recDFS(){ const rec=AL.recorder(); const order={}; const st=['A']; const tree={}; const parent={}; let cnt=0;
+  rec.snap({order:{},frontier:['A'],cur:null,st:['A'],tree:{}},{note:`A에서 시작 — 스택에 A`});
+  while(st.length){ const cur=st.pop(); if(order[cur]!==undefined) continue; order[cur]=cnt++; if(parent[cur])tree[parent[cur]+'-'+cur]=true;
+    rec.snap({order:{...order},frontier:[...st],cur,st:[...st],tree:{...tree}},{note:`스택 위에서 ${cur} 꺼내 방문 (${order[cur]+1}번째)`});
+    ADJ[cur].slice().reverse().forEach(nb=>{ if(order[nb]===undefined){ st.push(nb); if(!parent[nb])parent[nb]=cur; } });
+    rec.snap({order:{...order},frontier:[...st],cur:null,st:[...st],tree:{...tree}},{note:`${cur}의 안 가본 이웃을 스택에 쌓음 → 스택 [${st.join(',')}]`});
+  }
+  rec.snap({order:{...order},frontier:[],cur:null,st:[],tree:{...tree}},{note:`완료 — 방문 순서 ${Object.keys(order).sort((a,b)=>order[a]-order[b]).join(' → ')}`});
+  return rec.frames;
+}
+function gRender(elId, f){ const s=f.state;
+  const dist={}; Object.keys(s.order).forEach(id=>dist[id]=s.order[id]+1);
+  document.getElementById(elId).innerHTML=AL.graph(NODES, EDGES, {W:380,H:300, nodeState:nsFrom(s.order,s.frontier,s.cur), edgeState:Object.fromEntries(Object.keys(s.tree).map(k=>[k,'tree'])), distances:dist}); }
+
+// ---------- STEP 0 : BFS ----------
+(function(){
+  AL.transport('#transport0', recBFS(), f=>{ gRender('g0',f); document.getElementById('q0').innerHTML=tokRow('큐(앞→뒤)', f.state.q); }, {interval:850});
+})();
+// ---------- STEP 1 : DFS ----------
+(function(){
+  AL.transport('#transport1', recDFS(), f=>{ gRender('g1',f); document.getElementById('s1').innerHTML=tokRow('스택(아래→위)', f.state.st); }, {interval:850});
+})();
+// ---------- STEP 2 : 비교 (최종 순서) ----------
+(function(){
+  const bf=recBFS(), df=recDFS(); const bLast=bf[bf.length-1].state, dLast=df[df.length-1].state;
+  const distB={}; Object.keys(bLast.order).forEach(id=>distB[id]=bLast.order[id]+1);
+  const distD={}; Object.keys(dLast.order).forEach(id=>distD[id]=dLast.order[id]+1);
+  document.getElementById('g2b').innerHTML=AL.graph(NODES,EDGES,{W:300,H:260,nodeState:Object.fromEntries(Object.keys(bLast.order).map(id=>[id,'done'])),distances:distB});
+  document.getElementById('g2d').innerHTML=AL.graph(NODES,EDGES,{W:300,H:260,nodeState:Object.fromEntries(Object.keys(dLast.order).map(id=>[id,'done'])),distances:distD});
+  const bOrd=Object.keys(bLast.order).sort((a,b)=>bLast.order[a]-bLast.order[b]).join(' → ');
+  const dOrd=Object.keys(dLast.order).sort((a,b)=>dLast.order[a]-dLast.order[b]).join(' → ');
+  document.getElementById('info2').innerHTML=`<div class="ttl" style="color:var(--v)">방문 순서</div><p style="margin:0"><b style="color:var(--hot)">BFS</b>: ${bOrd}<br><b style="color:var(--q)">DFS</b>: ${dOrd}<br>같은 시작·같은 그래프인데 큐(BFS) vs 스택(DFS)의 차이로 순서가 갈려요.</p>`;
+})();
+</script>
+</body>
+</html>

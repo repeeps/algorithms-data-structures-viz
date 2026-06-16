@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>18 최소신장트리 · 알고리즘·자료구조, 눈으로 보기</title>
+<link rel="stylesheet" href="shared/theme.css">
+<style>.twocol{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px;}</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topnav" id="topnav"></div>
+
+  <header>
+    <div class="tag">PART 5 · Chapter 18</div>
+    <h1>최소신장트리 — 모두를 가장 싸게 잇기</h1>
+    <p class="intro">도시들을 도로로 <b>모두 연결</b>하되 <b>총 길이를 최소</b>로 하려면? 모든 노드를 잇는 <b>사이클 없는</b> 연결(=신장트리) 중 <b>가중치 합이 가장 작은</b> 것을 <b>최소신장트리(MST)</b>라 해요. <b>크루스칼</b> 알고리즘은 욕심내서 <b>가장 싼 간선부터</b> 고르되, <b>사이클을 만들 간선은 거부</b>해요. 다익스트라처럼 그리디지만 목표가 달라요(최단경로 ✕, 전체 연결 ◯).</p>
+  </header>
+
+  <nav class="stepper" id="stepper">
+    <button data-s="0" class="active">00 · 신장트리</button>
+    <button data-s="1">01 · 싼 것부터(크루스칼)</button>
+    <button data-s="2">02 · 결과·왜 그리디</button>
+    <button data-s="3">03 · 정리</button>
+  </nav>
+
+  <!-- STEP 0 -->
+  <section class="panel show" data-panel="0">
+    <span class="kicker" style="color:var(--hot)">Step 00 — Spanning Tree</span>
+    <h2>모두 잇되, 군더더기 없이</h2>
+    <p class="lead">아래는 도시(노드)와 가능한 도로(간선·거리)예요. 모든 도시를 연결하려면 간선이 <b>딱 (노드 수−1)개</b>면 충분해요 — 그 이상은 <b>사이클(불필요한 우회)</b>이 생기죠. 여러 연결 방법 중 <b>거리 합이 최소</b>인 걸 찾는 게 목표예요.</p>
+    <div class="chart-wrap" id="chart0" style="margin-top:6px"></div>
+    <p class="note" style="margin-top:12px">→ 노드 5개면 간선 4개로 모두 연결돼요(트리!). 어떤 4개를 고르냐에 따라 총 비용이 달라지니, <b>가장 싼 조합</b>을 찾는 게 MST 문제예요. 통신망·전력망·도로망 설계의 고전 문제죠.</p>
+  </section>
+
+  <!-- STEP 1 -->
+  <section class="panel" data-panel="1">
+    <span class="kicker" style="color:var(--q)">Step 01 — Cheapest First</span>
+    <h2>싼 간선부터, 사이클은 거부</h2>
+    <p class="lead">크루스칼은 단순해요: 간선을 <b>거리 싼 순</b>으로 정렬한 뒤, 하나씩 보며 — <b>두 덩어리를 새로 잇는 간선이면 채택</b>(<span style="color:var(--good)">초록</span>), <b>이미 연결된 둘을 잇는(=사이클) 간선이면 거부</b>(<span style="color:var(--k)">빨강</span>). ▶로 보세요. <b>⏭ 전에 "이 간선은 채택? 거부?" 예측</b>해보세요.</p>
+    <div id="transport1"></div>
+    <div class="chart-wrap" id="chart1"></div>
+    <p class="note" style="margin-top:12px">→ "두 덩어리를 잇나, 한 덩어리 안인가"만 보면 돼요(같은 덩어리를 또 이으면 사이클). 노드 수−1개를 채택하면 모두 연결돼 끝나죠. 싼 것부터 고르니 자연히 총합이 최소가 돼요.</p>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="panel" data-panel="2">
+    <span class="kicker" style="color:var(--v)">Step 02 — Result · Why Greedy</span>
+    <h2>완성된 최소신장트리</h2>
+    <p class="lead">초록 간선들이 MST예요 — 모든 노드를 잇고 사이클이 없으며 거리 합이 최소죠. <b>왜 싼 것부터 골라도 최적</b>일까요? 직관: 가장 싼 간선을 빼고 더 비싼 걸 넣으면 총합이 늘 수밖에 없어요. "지금 가장 싼 안전한 선택"이 전체 최선이 되는 <b>그리디</b>의 또 다른 사례예요.</p>
+    <div class="chart-wrap" id="chart2"></div>
+    <div id="info2" class="callout v" style="margin-top:8px"></div>
+    <p class="note" style="margin-top:12px">→ 다익스트라(최단경로)와 크루스칼(MST) 둘 다 그리디지만 목표가 달라요 — 전자는 "한 점에서 각 점까지 최단", 후자는 "전체를 최소 비용으로 연결". 같은 그래프라도 결과 간선 집합이 다를 수 있죠.</p>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="panel" data-panel="3">
+    <span class="kicker" style="color:var(--good)">Step 03 — Recap</span>
+    <h2>최소신장트리</h2>
+    <div class="twocol">
+      <div class="callout q"><div class="ttl">크루스칼</div><p style="margin:0">간선을 싼 순으로 정렬 → 사이클 안 만드는 것만 채택 → 노드−1개면 끝. 그리디.</p></div>
+      <div class="callout v"><div class="ttl">사이클 판별</div><p style="margin:0">"두 끝이 이미 같은 덩어리인가"로 사이클을 감지(유니온-파인드 자료구조). 같으면 거부.</p></div>
+    </div>
+    <div class="callout good" style="margin-top:14px">
+      <p style="margin:0">통신·전력·배관망을 최소 비용으로 까는 데 써요. 이로써 PART 5(그래프)를 마칩니다 — 표현법·BFS/DFS·최단경로·MST까지. 마지막 PART 6은 <b>동적계획법</b>: 겹치는 부분문제를 기억해 폭발하는 계산을 잘라내는 강력한 기법이에요.</p>
+    </div>
+    <p class="note" style="margin-top:16px">→ <a href="19-dp.html" style="color:var(--q);font-weight:700">CH 19 · 동적계획법</a> · <a href="index.html">목차</a></p>
+  </section>
+
+  <p class="foot">// 코드 없는 직관 입문 · 모든 과정은 브라우저에서 실시간 기록·재생 · <a href="index.html">목차</a></p>
+</div>
+
+<script src="shared/lib.js"></script>
+<script>
+VZ.mountTopnav('#topnav', 'CH 18 · MST');
+VZ.setupStepper();
+const AL = VZ.AL;
+const IDS=['A','B','C','D','E'];
+const NODES=[{id:'A',x:0.15,y:0.25},{id:'B',x:0.5,y:0.12},{id:'C',x:0.35,y:0.7},{id:'D',x:0.78,y:0.45},{id:'E',x:0.9,y:0.85}];
+const WEDGES=[['A','B',3],['A','C',1],['B','C',2],['B','D',4],['C','D',5],['D','E',2],['C','E',6]];
+const ekey=(a,b)=>a+'-'+b;
+
+function recKruskal(){ const rec=AL.recorder(); const parent={}; IDS.forEach(id=>parent[id]=id);
+  function find(x){ while(parent[x]!==x){ parent[x]=parent[parent[x]]; x=parent[x]; } return x; }
+  const sorted=WEDGES.slice().sort((a,b)=>a[2]-b[2]); const mst={}; let total=0, cnt=0;
+  rec.snap({mst:{},consider:null,rej:null,total:0},{note:`간선을 싼 순으로 정렬: ${sorted.map(e=>e[0]+e[1]+'('+e[2]+')').join(', ')}`});
+  for(const [a,b,w] of sorted){ if(cnt===IDS.length-1) break; const ra=find(a),rb=find(b);
+    if(ra!==rb){ parent[ra]=rb; mst[ekey(a,b)]=true; total+=w; cnt++;
+      rec.snap({mst:{...mst},consider:[a,b],rej:null,total},{note:`${a}–${b}(${w}) 채택 ✓ — 서로 다른 덩어리를 이음(사이클 없음). 누적 ${total}`}); }
+    else { rec.snap({mst:{...mst},consider:[a,b],rej:[a,b],total},{note:`${a}–${b}(${w}) 거부 ✗ — 이미 같은 덩어리라 이으면 사이클!`}); }
+  }
+  rec.snap({mst:{...mst},consider:null,rej:null,total},{note:`완료 — 노드 ${IDS.length}개를 ${IDS.length-1}개 간선으로 연결, 최소 비용 ${total}`});
+  return rec.frames;
+}
+function edgeStates(s){ const o={}; Object.keys(s.mst).forEach(k=>{ const [a,b]=k.split('-'); o[ekey(a,b)]='path'; o[ekey(b,a)]='path'; });
+  if(s.rej){ o[ekey(s.rej[0],s.rej[1])]='excl'; o[ekey(s.rej[1],s.rej[0])]='excl'; }
+  else if(s.consider){ o[ekey(s.consider[0],s.consider[1])]='visiting'; o[ekey(s.consider[1],s.consider[0])]='visiting'; }
+  return o; }
+
+// ---------- STEP 0 ----------
+(function(){ document.getElementById('chart0').innerHTML=AL.graph(NODES, WEDGES, {W:480,H:300}); })();
+
+// ---------- STEP 1 ----------
+(function(){
+  const render=f=>{ document.getElementById('chart1').innerHTML=AL.graph(NODES, WEDGES, {W:480,H:300, edgeState:edgeStates(f.state)}); };
+  AL.transport('#transport1', recKruskal(), render, {interval:950});
+})();
+
+// ---------- STEP 2 ----------
+(function(){
+  const frames=recKruskal(); const last=frames[frames.length-1].state;
+  document.getElementById('chart2').innerHTML=AL.graph(NODES, WEDGES, {W:480,H:300, edgeState:edgeStates(last)});
+  const mstEdges=Object.keys(last.mst).join(', ');
+  document.getElementById('info2').innerHTML=`<div class="ttl" style="color:var(--v)">MST 간선: ${mstEdges}</div><p style="margin:0">총 비용 = <b>${last.total}</b>. 노드 5개를 간선 4개로 사이클 없이 연결한 가장 싼 방법이에요.</p>`;
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>17 최단경로(다익스트라) · 알고리즘·자료구조, 눈으로 보기</title>
+<link rel="stylesheet" href="shared/theme.css">
+<style>.twocol{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px;}
+  .dtab{font-family:'JetBrains Mono',monospace;font-size:13px;margin-top:6px;}
+  .dtab span{display:inline-block;min-width:62px;}</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topnav" id="topnav"></div>
+
+  <header>
+    <div class="tag">PART 5 · Chapter 17</div>
+    <h1>최단경로 — 다익스트라</h1>
+    <p class="intro">간선마다 <b>거리(가중치)</b>가 다른 그래프(도로망처럼)에서 한 점에서 다른 점까지 <b>가장 짧은 길</b>을 찾아요. BFS는 "1칸=거리1"일 때만 통하니, 여기선 <b>다익스트라</b>를 써요. 핵심은 "<b>지금까지 가장 가까운 미확정 노드</b>"를 매번 골라 확정하고, 그 노드를 거쳐 이웃들의 거리를 더 줄일 수 있는지 갱신(완화)하는 거예요. 우선순위 큐(힙)가 그 "가장 가까운" 선택을 빠르게 해주죠.</p>
+  </header>
+
+  <nav class="stepper" id="stepper">
+    <button data-s="0" class="active">00 · 가중 그래프</button>
+    <button data-s="1">01 · 거리 갱신·확정</button>
+    <button data-s="2">02 · 최단경로 트리</button>
+    <button data-s="3">03 · 정리</button>
+  </nav>
+
+  <!-- STEP 0 -->
+  <section class="panel show" data-panel="0">
+    <span class="kicker" style="color:var(--hot)">Step 00 — Weighted Graph</span>
+    <h2>간선마다 거리가 다르면 BFS로는 안 된다</h2>
+    <p class="lead">아래 그래프는 간선에 <b>거리(숫자)</b>가 붙어 있어요. "A에서 E까지 최단"은 단순히 <b>간선 수</b>가 아니라 <b>거리 합</b>이 가장 작은 길이에요. 칸 수만 세는 BFS로는 못 풀죠. 그래서 거리를 누적해 비교하는 방법이 필요해요.</p>
+    <div class="chart-wrap" id="chart0" style="margin-top:6px"></div>
+    <p class="note" style="margin-top:12px">→ 예: A→B는 직접 가면 4지만, A→C(1)→B(2)로 돌아가면 3! <b>간선 수는 늘어도 거리 합은 짧을</b> 수 있어요. 그래서 "가장 가까운 곳부터 차근차근 확정"하는 다익스트라가 필요합니다.</p>
+  </section>
+
+  <!-- STEP 1 -->
+  <section class="panel" data-panel="1">
+    <span class="kicker" style="color:var(--q)">Step 01 — Relax & Confirm</span>
+    <h2>가장 가까운 곳을 확정하고, 이웃을 갱신</h2>
+    <p class="lead">각 노드에 "<b>현재까지 알아낸 A로부터의 최단거리</b>"를 적어요(처음엔 A만 0, 나머지 ∞). 매 단계: <b>미확정 중 가장 가까운 노드를 확정</b>(<span style="color:var(--good)">초록</span>)하고, 그를 거쳐 이웃 거리를 줄일 수 있으면 <b>갱신</b>해요. ▶로 거리 숫자가 줄며 확정되는 걸 보세요.</p>
+    <div id="transport1"></div>
+    <div class="chart-wrap" id="chart1"></div>
+    <div class="dtab" id="dtab1"></div>
+    <p class="note" style="margin-top:12px">→ "확정"은 <b>되돌리지 않아요</b> — 한 번 가장 가까운 걸로 뽑힌 노드는 더 짧은 길이 없거든요(아래 단계에서 그 이유를). 매번 "가장 가까운 미확정"을 빨리 찾으려고 <b>우선순위 큐(힙)</b>를 써요.</p>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="panel" data-panel="2">
+    <span class="kicker" style="color:var(--v)">Step 02 — Why Nearest First</span>
+    <h2>왜 가장 가까운 걸 확정해도 안전한가</h2>
+    <p class="lead">완성된 <b>최단경로 트리</b>(각 노드로 가는 최단길)예요. 다익스트라가 "가장 가까운 미확정 노드"를 확정할 때, <b>그보다 더 짧은 길은 있을 수 없어요</b> — 다른 길은 반드시 <b>더 먼 노드</b>를 거쳐야 하니까(가중치가 음수만 아니면). 그래서 욕심내어(greedy) 확정해도 안전하죠.</p>
+    <div class="chart-wrap" id="chart2"></div>
+    <div id="info2" class="callout v" style="margin-top:8px"></div>
+    <p class="note" style="margin-top:12px">→ "지금 최선이 곧 전체 최선"이 보장되는 <b>그리디(욕심쟁이)</b> 알고리즘의 대표예요. 단, <b>음수 거리</b>가 있으면 이 보장이 깨져 다른 방법이 필요해요. 다음 18장의 최소신장트리도 그리디랍니다.</p>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="panel" data-panel="3">
+    <span class="kicker" style="color:var(--good)">Step 03 — Recap</span>
+    <h2>다익스트라</h2>
+    <div class="twocol">
+      <div class="callout q"><div class="ttl">거리 갱신 + 확정</div><p style="margin:0">미확정 중 가장 가까운 노드 확정 → 그를 거쳐 이웃 거리 완화. 반복. 우선순위 큐(힙)로 가속.</p></div>
+      <div class="callout v"><div class="ttl">그리디·음수 주의</div><p style="margin:0">"가장 가까운 것부터"가 전체 최적을 보장(양의 가중치). 음수 간선엔 안 통함.</p></div>
+    </div>
+    <div class="callout good" style="margin-top:14px">
+      <p style="margin:0">내비게이션 길찾기, 네트워크 라우팅이 다익스트라(와 그 변형)로 동작해요. 13장의 <b>힙</b>이 여기서 "가장 가까운 노드 뽑기"의 엔진이 됐죠 — 자료구조가 알고리즘을 빠르게 한 예. 다음 <b>18장</b>은 "모든 노드를 가장 싸게 잇기"(최소신장트리)를 또 다른 그리디로 풉니다.</p>
+    </div>
+    <p class="note" style="margin-top:16px">→ <a href="18-mst.html" style="color:var(--q);font-weight:700">CH 18 · 최소신장트리</a> · <a href="index.html">목차</a></p>
+  </section>
+
+  <p class="foot">// 코드 없는 직관 입문 · 모든 경로 계산은 브라우저에서 실시간 기록·재생 · <a href="index.html">목차</a></p>
+</div>
+
+<script src="shared/lib.js"></script>
+<script>
+VZ.mountTopnav('#topnav', 'CH 17 · 다익스트라');
+VZ.setupStepper();
+const AL = VZ.AL;
+const IDS=['A','B','C','D','E'];
+const NODES=[{id:'A',x:0.12,y:0.5},{id:'B',x:0.42,y:0.18},{id:'C',x:0.42,y:0.82},{id:'D',x:0.74,y:0.5},{id:'E',x:0.95,y:0.5}];
+const WEDGES=[['A','B',4],['A','C',1],['C','B',2],['C','D',5],['B','D',1],['D','E',3],['B','E',7]];
+const ADJ={}; IDS.forEach(id=>ADJ[id]=[]); WEDGES.forEach(([a,b,w])=>{ADJ[a].push({to:b,w});ADJ[b].push({to:a,w});});
+const ekey=(a,b)=>a+'-'+b;
+const safe=d=>{ const o={}; IDS.forEach(id=>o[id]= d[id]===Infinity?'∞':d[id]); return o; };
+
+function recDijkstra(){ const rec=AL.recorder(); const dist={}; IDS.forEach(id=>dist[id]=Infinity); dist.A=0; const done={}; const tree={};
+  rec.snap({dist:safe(dist),done:{},cur:null,tree:{}},{note:`시작 A=0, 나머지 ∞`});
+  for(let it=0; it<IDS.length; it++){ let u=null,best=Infinity; IDS.forEach(id=>{ if(!done[id]&&dist[id]<best){best=dist[id];u=id;} });
+    if(u===null) break; done[u]=true;
+    rec.snap({dist:safe(dist),done:{...done},cur:u,tree:{...tree}},{note:`미확정 중 가장 가까운 ${u}(거리 ${dist[u]}) 확정`});
+    ADJ[u].forEach(({to,w})=>{ if(!done[to] && dist[u]+w < dist[to]){ dist[to]=dist[u]+w; tree[to]=u;
+      rec.snap({dist:safe(dist),done:{...done},cur:u,tree:{...tree}},{note:`${u}→${to}: ${dist[u]}+${w}=${dist[to]} 로 ${to} 거리 줄임(완화)`}); } });
+  }
+  rec.snap({dist:safe(dist),done:{...done},cur:null,tree:{...tree}},{note:`완료 — A에서 각 노드까지 최단거리 확정`});
+  return rec.frames;
+}
+function treeEdgeState(tree){ const o={}; Object.keys(tree).forEach(to=>{ o[ekey(tree[to],to)]='tree'; o[ekey(to,tree[to])]='tree'; }); return o; }
+
+// ---------- STEP 0 ----------
+(function(){ document.getElementById('chart0').innerHTML=AL.graph(NODES, WEDGES, {W:480,H:300}); })();
+
+// ---------- STEP 1 ----------
+(function(){
+  const frames=recDijkstra();
+  const render=f=>{ const s=f.state; const ns={}; Object.keys(s.done).forEach(id=>ns[id]='done'); if(s.cur)ns[s.cur]='visiting';
+    document.getElementById('chart1').innerHTML=AL.graph(NODES, WEDGES, {W:480,H:300, nodeState:ns, distances:s.dist, edgeState:treeEdgeState(s.tree)});
+    document.getElementById('dtab1').innerHTML='거리: '+IDS.map(id=>`<span style="color:${s.done[id]?'var(--good)':'var(--faint)'}">${id}=${s.dist[id]}</span>`).join(''); };
+  AL.transport('#transport1', frames, render, {interval:850});
+})();
+
+// ---------- STEP 2 : 최단경로 트리 ----------
+(function(){
+  const frames=recDijkstra(); const last=frames[frames.length-1].state;
+  const ns={}; IDS.forEach(id=>ns[id]='done');
+  document.getElementById('chart2').innerHTML=AL.graph(NODES, WEDGES, {W:480,H:300, nodeState:ns, distances:last.dist, edgeState:treeEdgeState(last.tree)});
+  document.getElementById('info2').innerHTML=`<div class="ttl" style="color:var(--v)">A로부터의 최단거리</div><p style="margin:0">${IDS.map(id=>`${id}=${last.dist[id]}`).join(' · ')}. 굵은 초록 간선이 최단경로 트리예요(예: A→E 최단 = A→C→B→D→E = 1+2+1+3 = 7).</p>`;
+})();
+</script>
+</body>
+</html>

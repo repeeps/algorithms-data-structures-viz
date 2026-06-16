@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>15 그래프 표현법 · 알고리즘·자료구조, 눈으로 보기</title>
+<link rel="stylesheet" href="shared/theme.css">
+<style>
+  .twocol{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px;}
+  .gx{display:grid; grid-template-columns:1fr 1fr; gap:14px; align-items:start;}
+  @media(max-width:620px){.gx{grid-template-columns:1fr;}}
+  table.adj{border-collapse:collapse; font-family:'JetBrains Mono',monospace; font-size:13px; margin:0 auto;}
+  table.adj th,table.adj td{width:28px; height:28px; text-align:center; border:1px solid var(--line);}
+  table.adj th{color:var(--faint); font-weight:600;}
+  .lists{font-family:'JetBrains Mono',monospace; font-size:13px; line-height:2;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topnav" id="topnav"></div>
+
+  <header>
+    <div class="tag">PART 5 · Chapter 15</div>
+    <h1>그래프 표현법 — 점과 선을 숫자로 담기</h1>
+    <p class="intro"><b>그래프</b>는 <b>정점(노드)</b>들을 <b>간선(선)</b>으로 이은 거예요 — 친구 관계, 도로망, 웹 링크처럼 "무엇이 무엇과 연결됐나"를 담죠. 트리도 그래프의 한 종류고요. 컴퓨터에 담는 두 방식이 있어요: <b>인접행렬</b>(칸 표)과 <b>인접리스트</b>(이웃 목록). 같은 그래프를 둘로 나란히 봐요.</p>
+  </header>
+
+  <nav class="stepper" id="stepper">
+    <button data-s="0" class="active">00 · 정점과 간선</button>
+    <button data-s="1">01 · 인접행렬</button>
+    <button data-s="2">02 · 인접리스트</button>
+    <button data-s="3">03 · 정리</button>
+  </nav>
+
+  <!-- STEP 0 -->
+  <section class="panel show" data-panel="0">
+    <span class="kicker" style="color:var(--hot)">Step 00 — Nodes & Edges</span>
+    <h2>연결 관계를 그림으로</h2>
+    <p class="lead">아래는 정점 5개(A~E)와 간선 6개로 이뤄진 그래프예요. <b>간선이 있으면 두 정점은 직접 연결</b>된 거죠(예: A와 B는 친구). 방향이 없으면(무향) 연결은 양쪽 모두를 뜻해요.</p>
+    <div class="chart-wrap" id="chart0" style="margin-top:6px"></div>
+    <p class="note" style="margin-top:12px">→ "A의 이웃은?" "A에서 D로 갈 수 있나?" 같은 질문에 답하려면, 이 연결을 컴퓨터가 읽을 수 있게 <b>숫자/목록</b>으로 담아야 해요. 두 가지 표준 방법을 봅니다.</p>
+  </section>
+
+  <!-- STEP 1 -->
+  <section class="panel" data-panel="1">
+    <span class="kicker" style="color:var(--q)">Step 01 — Adjacency Matrix</span>
+    <h2>인접행렬 — n×n 칸 표</h2>
+    <p class="lead">정점 수만큼의 정사각 표를 만들어, <b>i행 j열 = i와 j가 연결됐으면 1, 아니면 0</b>으로 채워요. ▶로 간선을 하나씩 켜며 <b>그래프의 선</b>과 <b>표의 칸</b>이 동시에 칠해지는 걸 보세요(무향이라 대칭!).</p>
+    <div id="transport1"></div>
+    <div class="gx" style="margin-top:8px"><div class="chart-wrap" id="g1"></div><div id="m1"></div></div>
+    <p class="note" style="margin-top:12px">→ "i와 j가 연결됐나?"를 <b>한 번에(O(1))</b> 답하지만, 정점이 n개면 칸이 <b>n×n</b>이라 메모리를 많이 써요. 연결이 빽빽한(밀집) 그래프에 어울려요.</p>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="panel" data-panel="2">
+    <span class="kicker" style="color:var(--v)">Step 02 — Adjacency List</span>
+    <h2>인접리스트 — 정점마다 이웃 목록</h2>
+    <p class="lead">각 정점이 <b>자기 이웃들만</b> 목록으로 들고 있어요. ▶로 정점을 하나씩 짚으며 그 이웃이 그래프에서 밝아지는 걸 보세요. 연결이 없는 칸을 저장 안 하니 <b>실제 간선 수만큼만</b> 메모리를 써요.</p>
+    <div id="transport2"></div>
+    <div class="gx" style="margin-top:8px"><div class="chart-wrap" id="g2"></div><div id="l2" class="lists"></div></div>
+    <p class="note" style="margin-top:12px">→ "A의 이웃 전부 훑기"가 빨라요(이웃만 있으니). 대신 "i와 j가 연결됐나?"는 목록을 뒤져야 하죠. 연결이 듬성듬성한(희소) 그래프에 어울려, <b>실무에서 더 자주</b> 써요(BFS·DFS·다익스트라가 이걸 씀).</p>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="panel" data-panel="3">
+    <span class="kicker" style="color:var(--good)">Step 03 — Recap</span>
+    <h2>두 표현법</h2>
+    <div class="twocol">
+      <div class="callout q"><div class="ttl">인접행렬</div><p style="margin:0">n×n 표. "연결됐나?" O(1). 메모리 n². <b>밀집 그래프</b>에 유리.</p></div>
+      <div class="callout v"><div class="ttl">인접리스트</div><p style="margin:0">정점마다 이웃 목록. 메모리 = 간선 수. 이웃 훑기 빠름. <b>희소 그래프</b>에 유리(보통 기본).</p></div>
+    </div>
+    <div class="callout good" style="margin-top:14px">
+      <p style="margin:0">표현법을 정했으니, 이제 그래프를 <b>훑는</b> 방법이 필요해요. 다음 <b>16장</b>에서 같은 그래프를 <b>BFS(물결처럼)</b>와 <b>DFS(끝까지 파고들기)</b> 두 방식으로 방문하며, 10장의 <b>큐·스택</b>이 여기서 어떻게 쓰이는지 봅니다.</p>
+    </div>
+    <p class="note" style="margin-top:16px">→ <a href="16-bfs-dfs.html" style="color:var(--q);font-weight:700">CH 16 · BFS·DFS</a> · <a href="index.html">목차</a></p>
+  </section>
+
+  <p class="foot">// 코드 없는 직관 입문 · 모든 그래프는 브라우저에서 실시간 기록·재생 · <a href="index.html">목차</a></p>
+</div>
+
+<script src="shared/lib.js"></script>
+<script>
+VZ.mountTopnav('#topnav', 'CH 15 · 그래프 표현');
+VZ.setupStepper();
+const AL = VZ.AL;
+const IDS=['A','B','C','D','E'];
+const EDGES=[['A','B'],['A','C'],['B','C'],['B','D'],['C','E'],['D','E']];
+const NODES=AL.layoutCircle(IDS, {rad:0.38});
+const idx=id=>IDS.indexOf(id);
+
+function matrixHTML(activeEdges, hiCell){
+  let h='<table class="adj"><tr><th></th>'+IDS.map(id=>`<th>${id}</th>`).join('')+'</tr>';
+  for(let i=0;i<IDS.length;i++){ h+=`<tr><th>${IDS[i]}</th>`;
+    for(let j=0;j<IDS.length;j++){ const on=activeEdges.some(([a,b])=>(idx(a)===i&&idx(b)===j)||(idx(a)===j&&idx(b)===i));
+      const hot=hiCell&&((hiCell[0]===i&&hiCell[1]===j)||(hiCell[0]===j&&hiCell[1]===i));
+      h+=`<td style="background:${hot?'var(--hot)':on?'rgba(52,211,153,.25)':'transparent'};color:${hot?'#1a1206':on?'var(--good)':'var(--faint)'}">${on?1:0}</td>`; }
+    h+='</tr>'; }
+  return h+'</table>';
+}
+
+// ---------- STEP 0 : 정점·간선 ----------
+(function(){ document.getElementById('chart0').innerHTML=AL.graph(NODES, EDGES, {W:440,H:330}); })();
+
+// ---------- STEP 1 : 인접행렬 (sync) ----------
+(function(){
+  const rec=AL.recorder();
+  rec.snap({k:0, edge:null},{note:`빈 표 — 아직 간선 없음`});
+  EDGES.forEach((e,k)=>rec.snap({k:k+1, edge:e},{note:`간선 ${e[0]}–${e[1]} 켜기 → 표의 (${e[0]},${e[1]})·(${e[1]},${e[0]}) 칸을 1로`}));
+  const render=f=>{ const active=EDGES.slice(0,f.state.k); const e=f.state.edge;
+    document.getElementById('g1').innerHTML=AL.graph(NODES, EDGES, {W:340,H:300, edgeState: Object.fromEntries(active.map(x=>[x[0]+'-'+x[1],'tree'])) , nodeState: e?{[e[0]]:'visiting',[e[1]]:'visiting'}:{}});
+    document.getElementById('m1').innerHTML=matrixHTML(active, e?[idx(e[0]),idx(e[1])]:null); };
+  AL.transport('#transport1', rec.frames, render, {interval:850});
+})();
+
+// ---------- STEP 2 : 인접리스트 (sync) ----------
+(function(){
+  const adj={}; IDS.forEach(id=>adj[id]=[]); EDGES.forEach(([a,b])=>{adj[a].push(b);adj[b].push(a);});
+  const rec=AL.recorder();
+  rec.snap({node:null},{note:`각 정점의 이웃 목록을 하나씩 봐요`});
+  IDS.forEach(id=>rec.snap({node:id},{note:`${id}의 이웃: ${adj[id].join(', ')}`}));
+  const render=f=>{ const cur=f.state.node;
+    const ns={}; if(cur){ ns[cur]='visiting'; adj[cur].forEach(nb=>ns[nb]='frontier'); }
+    document.getElementById('g2').innerHTML=AL.graph(NODES, EDGES, {W:340,H:300, nodeState:ns});
+    document.getElementById('l2').innerHTML=IDS.map(id=>`<div style="color:${cur===id?'var(--hot)':'var(--ink)'}">${id} → [ ${adj[id].join(', ')} ]</div>`).join(''); };
+  AL.transport('#transport2', rec.frames, render, {interval:900});
+})();
+</script>
+</body>
+</html>
