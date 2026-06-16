@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>13 힙·우선순위큐 · 알고리즘·자료구조, 눈으로 보기</title>
+<link rel="stylesheet" href="shared/theme.css">
+<style>.twocol{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px;}</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topnav" id="topnav"></div>
+
+  <header>
+    <div class="tag">PART 4 · Chapter 13</div>
+    <h1>힙·우선순위큐 — 최솟값이 늘 꼭대기에</h1>
+    <p class="intro"><b>힙</b>은 단 하나의 규칙을 지키는 트리예요: <b>부모는 자식보다 작거나 같다</b>(최소 힙). 정렬까진 안 하지만, 이 느슨한 규칙만으로 <b>가장 작은 값이 항상 꼭대기(root)</b>에 있게 돼요. 그래서 "지금 가장 급한/작은 것"을 <b>O(log n)</b>에 넣고 꺼내는 <b>우선순위 큐</b>가 되죠. 다익스트라 최단경로의 엔진이기도 해요.</p>
+  </header>
+
+  <nav class="stepper" id="stepper">
+    <button data-s="0" class="active">00 · 힙 규칙</button>
+    <button data-s="1">01 · 넣기(위로)</button>
+    <button data-s="2">02 · 최솟값 꺼내기(아래로)</button>
+    <button data-s="3">03 · 정리</button>
+  </nav>
+
+  <!-- STEP 0 -->
+  <section class="panel show" data-panel="0">
+    <span class="kicker" style="color:var(--hot)">Step 00 — The Heap Rule</span>
+    <h2>부모 ≤ 자식 — 그래서 꼭대기가 최소</h2>
+    <p class="lead">아래는 최소 힙이에요. 어떤 노드를 봐도 <b>자기 자식들보다 작거나 같아요</b>. 이 규칙이 모든 가지에서 지켜지면, 자연히 <b>전체에서 가장 작은 값이 맨 위</b>에 오죠(<span style="color:var(--pink)">분홍</span>=꼭대기 최솟값). 단, 형제끼리·전체가 정렬된 건 <b>아니에요</b> — 그냥 "위가 작다"만 보장해요.</p>
+    <div class="chart-wrap" id="chart0" style="margin-top:6px"></div>
+    <p class="note" style="margin-top:12px">→ 정렬보다 약한 규칙이라 <b>유지가 싸요</b>. "전부 정렬"은 비싸지만 "최솟값만 위로"는 값 하나 넣고 뺄 때마다 <b>log n</b>만에 고칠 수 있죠. 꼭 필요한 것(최솟값)만 빠르게 주는 게 힙의 영리함이에요.</p>
+  </section>
+
+  <!-- STEP 1 -->
+  <section class="panel" data-panel="1">
+    <span class="kicker" style="color:var(--q)">Step 01 — Insert (Bubble Up)</span>
+    <h2>맨 아래에 붙이고, 작으면 위로 올린다</h2>
+    <p class="lead">새 값은 일단 <b>맨 아래 빈자리</b>에 붙여요. 그런 다음 <b>부모와 비교</b>해서, 부모보다 작으면 자리를 바꿔 <b>위로 올라가요</b>(bubble-up). 부모가 더 작아지는 순간 멈추죠. ▶로 새 최솟값이 꼭대기까지 떠오르는 걸 보세요.</p>
+    <div id="transport1"></div>
+    <div class="chart-wrap" id="chart1" style="margin-top:6px"></div>
+    <p class="note" style="margin-top:12px">→ 올라가는 거리는 최대 트리 높이(<b>log n</b>). 그래서 삽입이 O(log n)이에요. 한 가지(부모-자식 사슬)만 따라 고치면 규칙이 다시 지켜져요.</p>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="panel" data-panel="2">
+    <span class="kicker" style="color:var(--v)">Step 02 — Extract Min (Sift Down)</span>
+    <h2>꼭대기를 꺼내고, 빈자리를 메운다</h2>
+    <p class="lead">최솟값(꼭대기)을 꺼낸 뒤, <b>맨 끝 값을 꼭대기로</b> 옮겨요. 그럼 규칙이 깨지니, 이번엔 <b>더 작은 자식과 비교해 아래로 내려보내요</b>(sift-down). 자식들이 더 커지는 순간 멈추죠. ▶로 보세요.</p>
+    <div id="transport2"></div>
+    <div class="chart-wrap" id="chart2" style="margin-top:6px"></div>
+    <p class="note" style="margin-top:12px">→ 내려가는 거리도 최대 log n → 꺼내기 O(log n). "넣기·최솟값 꺼내기"가 모두 빠른 게 힙의 핵심이에요. 이걸 반복하면 <b>정렬</b>도 되고(힙정렬), <b>우선순위 큐</b>도 됩니다.</p>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="panel" data-panel="3">
+    <span class="kicker" style="color:var(--good)">Step 03 — Recap</span>
+    <h2>힙</h2>
+    <div class="twocol">
+      <div class="callout q"><div class="ttl">규칙 하나</div><p style="margin:0">부모 ≤ 자식 → 최솟값이 늘 꼭대기. 정렬보다 약해서 유지가 쌈.</p></div>
+      <div class="callout v"><div class="ttl">넣기·꺼내기 O(log n)</div><p style="margin:0">넣기=위로 올리기, 최솟값 꺼내기=아래로 내리기. 한 가지만 고치면 됨.</p></div>
+    </div>
+    <div class="callout good" style="margin-top:14px">
+      <p style="margin:0"><b>우선순위 큐</b>(가장 급한 것 먼저)가 힙으로 만들어져요 — 작업 스케줄러, 이벤트 시뮬레이션, 그리고 <b>다익스트라 최단경로</b>(17장)에서 "지금 가장 가까운 노드"를 매번 꺼낼 때 힙을 써요. PART 4 마지막 14장에선 BST가 쏠릴 때 스스로 균형을 잡는 <b>회전</b>을 봅니다.</p>
+    </div>
+    <p class="note" style="margin-top:16px">→ <a href="14-balanced-tree.html" style="color:var(--q);font-weight:700">CH 14 · 균형트리</a> · <a href="index.html">목차</a></p>
+  </section>
+
+  <p class="foot">// 코드 없는 직관 입문 · 모든 힙 연산은 브라우저에서 실시간 기록·재생 · <a href="index.html">목차</a></p>
+</div>
+
+<script src="shared/lib.js"></script>
+<script>
+VZ.mountTopnav('#topnav', 'CH 13 · 힙');
+VZ.setupStepper();
+const AL = VZ.AL;
+const C = s => s ? (AL.STATE[s] || s) : 'var(--panel-2)';
+
+// 완전이진트리(배열) 힙 렌더 — index i 부모, 자식 2i+1,2i+2
+function heapSVG(arr, hi, W, H){ W=W||560; H=H||300; const pad=28; hi=hi||{}; const n=arr.length;
+  if(!n) return `<svg width="${W}" height="${H}"></svg>`;
+  const maxL=Math.floor(Math.log2(n));
+  const pos=i=>{ const L=Math.floor(Math.log2(i+1)); const off=i-(Math.pow(2,L)-1); const cnt=Math.pow(2,L); return [(off+0.5)/cnt, maxL? L/maxL : 0.5*0]; };
+  const X=fx=>pad+fx*(W-pad*2), Y=fy=>pad+fy*(H-pad*2);
+  let e='',c='';
+  for(let i=0;i<n;i++){ const [fx,fy]=pos(i); const x=X(fx),y=Y(fy);
+    [2*i+1,2*i+2].forEach(ci=>{ if(ci<n){ const [cx,cy]=pos(ci); e+=`<line x1="${x.toFixed(1)}" y1="${y.toFixed(1)}" x2="${X(cx).toFixed(1)}" y2="${Y(cy).toFixed(1)}" stroke="var(--line)" stroke-width="1.6"/>`; } }); }
+  for(let i=0;i<n;i++){ const [fx,fy]=pos(i); const x=X(fx),y=Y(fy); const st=hi[i];
+    c+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="16" fill="${C(st)}" stroke="${st?'#0b0e14':'var(--line)'}" stroke-width="2"/><text x="${x.toFixed(1)}" y="${(y+4).toFixed(1)}" text-anchor="middle" font-size="13" fill="${st?'#0b0e14':'var(--ink)'}" font-family="JetBrains Mono" font-weight="700">${arr[i]}</text>`; }
+  return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="max-width:100%;display:block">${e}${c}</svg>`;
+}
+
+// ---------- STEP 0 : 힙 규칙 (정적) ----------
+(function(){ document.getElementById('chart0').innerHTML = heapSVG([1,3,2,7,8,4,5], {0:'min'}); })();
+
+// ---------- STEP 1 : 삽입 (bubble up) ----------
+(function(){
+  function recInsert(base, val){ const rec=AL.recorder(); const h=base.slice();
+    rec.snap(h.slice(),{note:`${val} 삽입 — 먼저 맨 아래 끝에 붙여요`, hi:{}});
+    h.push(val); let i=h.length-1; rec.snap(h.slice(),{note:`끝(${i}번)에 ${val} 추가`, hi:{[i]:'special'}});
+    while(i>0){ const p=(i-1)>>1; rec.snap(h.slice(),{note:`부모 ${h[p]} vs ${h[i]} 비교`, hi:{[i]:'compare',[p]:'compare'}});
+      if(h[i]<h[p]){ [h[i],h[p]]=[h[p],h[i]]; rec.snap(h.slice(),{note:`${h[p]} > ${h[i]} → 위로 올림(swap)`, hi:{[p]:'swap',[i]:'swap'}}); i=p; }
+      else { rec.snap(h.slice(),{note:`부모가 더 작거나 같음 → 멈춤`, hi:{[i]:'done'}}); return rec.frames; } }
+    rec.snap(h.slice(),{note:`꼭대기 도착 — 새로운 최솟값!`, hi:{0:'done'}}); return rec.frames;
+  }
+  const render=f=>{ document.getElementById('chart1').innerHTML=heapSVG(f.state, f.meta.hi); };
+  AL.transport('#transport1', recInsert([1,3,2,7,8,4,5], 0), render, {interval:750});
+})();
+
+// ---------- STEP 2 : 최솟값 꺼내기 (sift down) ----------
+(function(){
+  function recExtract(base){ const rec=AL.recorder(); const h=base.slice();
+    rec.snap(h.slice(),{note:`꼭대기 ${h[0]} = 최솟값을 꺼내요`, hi:{0:'min'}});
+    const last=h.pop(); if(h.length){ h[0]=last; rec.snap(h.slice(),{note:`맨 끝 값 ${last}을 꼭대기로 옮김 (규칙이 깨짐)`, hi:{0:'special'}}); }
+    let i=0; const n=h.length;
+    while(n){ let s=i; const l=2*i+1, r=2*i+2; if(l<n&&h[l]<h[s])s=l; if(r<n&&h[r]<h[s])s=r;
+      if(s===i){ rec.snap(h.slice(),{note:`자식들이 더 크거나 같음 → 멈춤`, hi:{[i]:'done'}}); break; }
+      rec.snap(h.slice(),{note:`더 작은 자식 ${h[s]}와 비교 → 아래로 내림(swap)`, hi:{[i]:'swap',[s]:'swap'}});
+      [h[i],h[s]]=[h[s],h[i]]; i=s; }
+    return rec.frames;
+  }
+  const render=f=>{ document.getElementById('chart2').innerHTML=heapSVG(f.state, f.meta.hi); };
+  AL.transport('#transport2', recExtract([1,3,2,7,8,4,5]), render, {interval:800});
+})();
+</script>
+</body>
+</html>

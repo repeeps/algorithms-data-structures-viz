@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>14 균형트리 · 알고리즘·자료구조, 눈으로 보기</title>
+<link rel="stylesheet" href="shared/theme.css">
+<style>.twocol{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px;}</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topnav" id="topnav"></div>
+
+  <header>
+    <div class="tag">PART 4 · Chapter 14</div>
+    <h1>균형트리 — 쏠리면 회전해서 다시 세운다</h1>
+    <p class="intro">BST는 넣는 순서가 나쁘면 한쪽으로 쏠려 높이가 n까지 자라고, 그러면 O(log n)의 장점이 사라졌죠. <b>균형트리</b>는 넣고 지울 때마다 <b>스스로 균형을 점검</b>하고, 한쪽이 너무 무거워지면 <b>회전(rotation)</b>으로 다시 세워요. 그 덕에 <b>최악에도 높이 ≈ log n</b>을 보장합니다.</p>
+  </header>
+
+  <nav class="stepper" id="stepper">
+    <button data-s="0" class="active">00 · 쏠림 문제</button>
+    <button data-s="1">01 · 회전 한 번</button>
+    <button data-s="2">02 · 자동 균형</button>
+    <button data-s="3">03 · 정리</button>
+  </nav>
+
+  <!-- STEP 0 -->
+  <section class="panel show" data-panel="0">
+    <span class="kicker" style="color:var(--hot)">Step 00 — The Skew Problem</span>
+    <h2>같은 값, 정렬된 순서로 넣으면 쏠린다</h2>
+    <p class="lead">1,2,3,…을 순서대로 일반 BST에 넣으면, 매번 오른쪽으로만 내려가 <b>한 줄로 쏠려요</b>(사실상 연결리스트). 높이가 n이라 탐색이 O(n)으로 퇴화하죠. n을 키워 쏠린 트리가 길어지는 걸 보세요.</p>
+    <div class="ctrl"><label>값 개수 n</label><input type="range" id="n0" min="3" max="8" value="6"><span class="val" id="n0v">6</span></div>
+    <div class="chart-wrap" id="chart0" style="margin-top:6px"></div>
+    <p class="note" style="margin-top:12px">→ 높이가 곧 비용이에요(탐색·삽입 = 높이). 쏠린 트리는 BST의 의미가 없죠. 해결책은 넣는 도중 <b>균형이 깨지면 즉시 바로잡는</b> 거예요 — 그 도구가 회전입니다.</p>
+  </section>
+
+  <!-- STEP 1 -->
+  <section class="panel" data-panel="1">
+    <span class="kicker" style="color:var(--q)">Step 01 — One Rotation</span>
+    <h2>가운데를 위로 올리는 회전</h2>
+    <p class="lead">1→2→3을 넣어 오른쪽으로 쏠린 상태예요. <b>회전</b>은 <b>가운데 값(2)을 위로 끌어올리고</b> 양옆(1·3)을 자식으로 다는 동작이에요. BST 규칙(왼&lt;뿌리&lt;오)을 지키면서 높이를 <b>3→2로</b> 낮추죠. ▶로 보세요.</p>
+    <div id="transport1"></div>
+    <div class="chart-wrap" id="chart1" style="margin-top:6px"></div>
+    <p class="note" style="margin-top:12px">→ 회전은 <b>몇 개의 연결만 바꾸는</b> 국소 수술이라 O(1)이에요. 회전 후에도 "왼쪽이 작다"가 유지돼 탐색 규칙이 그대로죠. 이 작은 동작으로 균형을 되찾아요.</p>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="panel" data-panel="2">
+    <span class="kicker" style="color:var(--v)">Step 02 — Self-Balancing</span>
+    <h2>넣을 때마다 스스로 균형</h2>
+    <p class="lead">균형트리에 1,2,3,…을 <b>정렬된 순서로</b> 넣어봐요. 쏠릴 만하면 즉시 회전이 일어나 <b>높이가 log n 근처로 유지</b>돼요. ▶로 삽입과 회전이 번갈아 일어나며 트리가 납작하게 자라는 걸 보고, 같은 입력의 일반 BST 높이와 비교하세요.</p>
+    <div id="transport2"></div>
+    <div class="chart-wrap" id="chart2" style="margin-top:6px"></div>
+    <div id="info2" class="callout v" style="margin-top:8px"></div>
+    <p class="note" style="margin-top:12px">→ 일반 BST면 높이 n(쏠림)인데, 균형트리는 같은 입력에도 높이 ≈ log n! 그래서 <b>최악에도 O(log n)</b>이 보장돼요. 대가는 회전 점검의 약간의 수고죠.</p>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="panel" data-panel="3">
+    <span class="kicker" style="color:var(--good)">Step 03 — Recap</span>
+    <h2>균형트리</h2>
+    <div class="twocol">
+      <div class="callout q"><div class="ttl">회전</div><p style="margin:0">한쪽이 무거우면 가운데를 위로 올리는 국소 수술(O(1)). BST 규칙은 그대로 유지.</p></div>
+      <div class="callout v"><div class="ttl">높이 보장</div><p style="margin:0">넣고 지울 때마다 균형 점검 → <b>최악에도 높이 ≈ log n</b> → 탐색·삽입 O(log n) 보장.</p></div>
+    </div>
+    <div class="callout good" style="margin-top:14px">
+      <p style="margin:0">실제 균형트리(<b>AVL·레드블랙 트리</b>)는 DB 인덱스, 언어의 정렬된 맵/셋(C++ map, Java TreeMap)에서 쓰여요 — "정렬 유지 + 최악 보장"이 필요한 곳이죠. 이것으로 트리(PART 4)를 마치고, 다음 PART 5에선 노드들이 자유롭게 연결된 <b>그래프</b>로 넘어갑니다.</p>
+    </div>
+    <p class="note" style="margin-top:16px">→ <a href="15-graph-repr.html" style="color:var(--q);font-weight:700">CH 15 · 그래프 표현법</a> · <a href="index.html">목차</a></p>
+  </section>
+
+  <p class="foot">// 코드 없는 직관 입문 · 모든 트리·회전은 브라우저에서 실시간 기록·재생 · <a href="index.html">목차</a></p>
+</div>
+
+<script src="shared/lib.js"></script>
+<script>
+VZ.mountTopnav('#topnav', 'CH 14 · 균형트리');
+VZ.setupStepper();
+const AL = VZ.AL;
+const C = s => s ? (AL.STATE[s] || s) : 'var(--panel-2)';
+
+function bstSVG(root, hi, W, H){ W=W||560; H=H||300; const pad=28; hi=hi||{};
+  if(!root) return `<svg width="${W}" height="${H}"></svg>`;
+  let order=0, maxY=0; const ns=[];
+  (function walk(nd,d){ if(!nd)return; walk(nd.left,d+1); nd._x=order++; nd._y=d; maxY=Math.max(maxY,d); ns.push(nd); walk(nd.right,d+1); })(root,0);
+  const mx=Math.max(1,order-1);
+  const X=x=>pad+(mx?x/mx:0.5)*(W-pad*2), Y=y=>pad+(maxY?y/maxY:0)*(H-pad*2);
+  let e='',c='';
+  ns.forEach(nd=>{ [nd.left,nd.right].forEach(ch=>{ if(ch) e+=`<line x1="${X(nd._x).toFixed(1)}" y1="${Y(nd._y).toFixed(1)}" x2="${X(ch._x).toFixed(1)}" y2="${Y(ch._y).toFixed(1)}" stroke="var(--line)" stroke-width="1.6"/>`; });
+    const st=hi[nd.v]; c+=`<circle cx="${X(nd._x).toFixed(1)}" cy="${Y(nd._y).toFixed(1)}" r="15" fill="${C(st)}" stroke="${st?'#0b0e14':'var(--line)'}" stroke-width="2"/><text x="${X(nd._x).toFixed(1)}" y="${(Y(nd._y)+4).toFixed(1)}" text-anchor="middle" font-size="12" fill="${st?'#0b0e14':'var(--ink)'}" font-family="JetBrains Mono" font-weight="700">${nd.v}</text>`; });
+  return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="max-width:100%;display:block">${e}${c}</svg>`;
+}
+function bstInsert(r,v){ if(!r)return{v,left:null,right:null}; if(v<r.v)r.left=bstInsert(r.left,v); else r.right=bstInsert(r.right,v); return r; }
+function height(r){ return r?1+Math.max(height(r.left),height(r.right)):0; }
+// AVL
+function hh(n){return n?n.h:0;} function upd(n){n.h=1+Math.max(hh(n.left),hh(n.right));} function bf(n){return n?hh(n.left)-hh(n.right):0;}
+function rotR(y){const x=y.left;y.left=x.right;x.right=y;upd(y);upd(x);return x;}
+function rotL(x){const y=x.right;x.right=y.left;y.left=x;upd(x);upd(y);return y;}
+function avlInsert(node,val){ if(!node)return{v:val,left:null,right:null,h:1};
+  if(val<node.v)node.left=avlInsert(node.left,val); else node.right=avlInsert(node.right,val);
+  upd(node); const b=bf(node);
+  if(b>1 && val<node.left.v) return rotR(node);
+  if(b<-1 && val>node.right.v) return rotL(node);
+  if(b>1 && val>node.left.v){ node.left=rotL(node.left); return rotR(node); }
+  if(b<-1 && val<node.right.v){ node.right=rotR(node.right); return rotL(node); }
+  return node;
+}
+function strip(n){ return n?{v:n.v,left:strip(n.left),right:strip(n.right)}:null; } // h 제거(렌더용)
+
+// ---------- STEP 0 : 쏠림 ----------
+(function(){
+  function render(n){ let r=null; for(let v=1;v<=n;v++)r=bstInsert(r,v);
+    document.getElementById('chart0').innerHTML=bstSVG(r,{[n]:'excl',1:'compare'},560,300); }
+  document.getElementById('n0').oninput=e=>{ const n=+e.target.value; document.getElementById('n0v').textContent=n; render(n); };
+  render(6);
+})();
+
+// ---------- STEP 1 : 회전 한 번 ----------
+(function(){
+  const rec=AL.recorder();
+  const skew={v:1,left:null,right:{v:2,left:null,right:{v:3,left:null,right:null}}};
+  const bal={v:2,left:{v:1,left:null,right:null},right:{v:3,left:null,right:null}};
+  rec.snap({root:strip(skew)},{note:`1→2→3 순서로 넣어 오른쪽으로 쏠림 (높이 3, 불균형!)`, hi:{1:'excl'}});
+  rec.snap({root:strip(skew)},{note:`가운데 값 2를 위로 끌어올리는 '왼쪽 회전' 적용`, hi:{2:'special'}});
+  rec.snap({root:strip(bal)},{note:`균형! 2가 뿌리, 1·3이 자식 — 높이 3→2로 낮아짐 ✓`, hi:{2:'done'}});
+  const render=f=>{ document.getElementById('chart1').innerHTML=bstSVG(f.state.root, f.meta.hi, 480, 260); };
+  AL.transport('#transport1', rec.frames, render, {interval:1100});
+})();
+
+// ---------- STEP 2 : 자동 균형 (AVL, 정렬 입력) ----------
+(function(){
+  const seq=[1,2,3,4,5,6,7];
+  const rec=AL.recorder(); let root=null;
+  rec.snap({root:null, ins:null},{note:`정렬된 순서 1~7을 균형트리에 넣어요`});
+  seq.forEach(v=>{ const before=height(root); root=avlInsert(root,v); const after=height(root);
+    rec.snap({root:strip(root), ins:v},{note:`${v} 삽입 → 높이 ${after}${after<=before?' (회전으로 균형 유지!)':''}`}); });
+  const render=f=>{ document.getElementById('chart2').innerHTML=bstSVG(f.state.root, f.state.ins!=null?{[f.state.ins]:'done'}:{}, 560, 280); };
+  AL.transport('#transport2', rec.frames, render, {interval:800});
+  // 비교 정보
+  let plain=null; seq.forEach(v=>plain=bstInsert(plain,v)); let avl=null; seq.forEach(v=>avl=avlInsert(avl,v));
+  document.getElementById('info2').innerHTML=`<div class="ttl" style="color:var(--v)">같은 입력 1~7 (n=7)</div><p style="margin:0">일반 BST 높이 = <b style="color:var(--k)">${height(plain)}</b>(완전히 쏠림) · 균형트리 높이 = <b style="color:var(--good)">${height(avl)}</b>(≈ log n). 회전 덕에 납작하게 유지돼요.</p>`;
+})();
+</script>
+</body>
+</html>

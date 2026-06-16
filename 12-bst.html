@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>12 이진트리·BST · 알고리즘·자료구조, 눈으로 보기</title>
+<link rel="stylesheet" href="shared/theme.css">
+<style>
+  .twocol{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px;}
+  .seg{display:inline-flex; gap:4px; margin:4px 0;}
+  .seg .btn{padding:8px 14px;}
+  .seg .btn.on{background:var(--hot); color:#1a1206; border-color:var(--hot);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topnav" id="topnav"></div>
+
+  <header>
+    <div class="tag">PART 4 · Chapter 12</div>
+    <h1>이진트리·BST — 작으면 왼쪽, 크면 오른쪽</h1>
+    <p class="intro"><b>이진탐색트리(BST)</b>는 "절반씩 버리기"(이진탐색)를 자료구조로 굳힌 거예요. 규칙은 단 하나: 어떤 노드든 <b>왼쪽엔 더 작은 값, 오른쪽엔 더 큰 값</b>. 그래서 값을 찾을 때 매 노드에서 한쪽 가지를 통째로 버리며 <b>아래로 내려가요</b>. 균형만 잡히면 탐색·삽입이 모두 <b>O(log n)</b>이죠.</p>
+  </header>
+
+  <nav class="stepper" id="stepper">
+    <button data-s="0" class="active">00 · 트리 만들기</button>
+    <button data-s="1">01 · 탐색</button>
+    <button data-s="2">02 · 균형 vs 쏠림</button>
+    <button data-s="3">03 · 정리</button>
+  </nav>
+
+  <!-- STEP 0 -->
+  <section class="panel show" data-panel="0">
+    <span class="kicker" style="color:var(--hot)">Step 00 — Building</span>
+    <h2>값을 넣으면 제자리로 굴러간다</h2>
+    <p class="lead">새 값을 뿌리부터 비교해요 — <b>작으면 왼쪽 가지, 크면 오른쪽 가지</b>로 내려가 빈자리에 자리잡아요. ▶로 값들이 하나씩 들어가 트리가 자라는 걸 보세요(<span style="color:var(--q)">청록</span>=비교 중, <span style="color:var(--good)">초록</span>=새로 놓인 자리).</p>
+    <div id="transport0"></div>
+    <div class="chart-wrap" id="chart0" style="margin-top:6px"></div>
+    <p class="note" style="margin-top:12px">→ 이 규칙 덕에 트리를 <b>왼→오로 읽으면(중위순회)</b> 항상 <b>정렬된 순서</b>가 나와요. "정렬을 유지하며 담는" 자료구조인 셈이죠.</p>
+  </section>
+
+  <!-- STEP 1 -->
+  <section class="panel" data-panel="1">
+    <span class="kicker" style="color:var(--q)">Step 01 — Search</span>
+    <h2>매 노드에서 한쪽 가지를 버린다</h2>
+    <p class="lead">값을 찾을 때도 같은 규칙. 뿌리부터 비교해 <b>작으면 왼쪽·크면 오른쪽</b>으로만 내려가요. 한 발짝마다 <b>나머지 절반 가지</b>를 통째로 안 보죠. ▶로 한 값을 찾아보세요.</p>
+    <div id="transport1"></div>
+    <div class="chart-wrap" id="chart1" style="margin-top:6px"></div>
+    <p class="note" style="margin-top:12px">→ 내려가는 길이 = 트리의 <b>높이</b>예요. 균형 잡힌 트리는 높이가 <b>log n</b>이라 탐색도 O(log n). 이진탐색과 똑같은 "절반씩"이 트리 모양으로 들어있는 거예요.</p>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="panel" data-panel="2">
+    <span class="kicker" style="color:var(--v)">Step 02 — Balanced vs Skewed</span>
+    <h2>넣는 순서가 트리 모양을 정한다</h2>
+    <p class="lead">같은 값들도 <b>넣는 순서</b>에 따라 트리가 달라져요. <b>이미 정렬된 순서</b>로 넣으면 한쪽으로 쭉 쏠려(사실상 연결리스트!) 높이가 n이 되고, <b>골고루 섞인 순서</b>면 균형 잡혀 높이가 log n이에요. 토글해 높이를 비교하세요.</p>
+    <div class="seg" id="kindSeg">
+      <button class="btn on" data-kind="balanced">골고루 섞인 순서</button>
+      <button class="btn" data-kind="sorted">이미 정렬된 순서</button>
+    </div>
+    <div class="chart-wrap" id="chart2" style="margin-top:6px"></div>
+    <div id="info2" class="callout v" style="margin-top:8px"></div>
+    <p class="note" style="margin-top:12px">→ 쏠린 트리는 탐색이 <b>O(n)</b>까지 느려져요 — BST의 장점이 사라지죠. 그래서 넣는 중에 스스로 균형을 맞추는 <b>균형트리</b>(다음 14장)가 필요해요. 우선 13장에서 "꼭대기만 빠른" 특별한 트리, <b>힙</b>을 봅니다.</p>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="panel" data-panel="3">
+    <span class="kicker" style="color:var(--good)">Step 03 — Recap</span>
+    <h2>BST</h2>
+    <div class="twocol">
+      <div class="callout q"><div class="ttl">한 규칙</div><p style="margin:0">왼쪽 &lt; 노드 &lt; 오른쪽. 그래서 중위순회 = 정렬, 탐색·삽입은 한쪽 가지만 따라 내려감.</p></div>
+      <div class="callout v"><div class="ttl">높이가 전부</div><p style="margin:0">균형이면 높이 log n → 탐색·삽입 O(log n). 쏠리면 높이 n → O(n)으로 퇴화.</p></div>
+    </div>
+    <div class="callout good" style="margin-top:14px">
+      <p style="margin:0">BST는 "정렬을 유지하며 빠르게 찾고 넣는" 자료구조예요. 핵심은 <b>균형</b> — 그게 깨지면 무너지죠. 다음 <b>13장 힙</b>은 완전히 다른 트리 규칙(부모가 자식보다 작다)으로 <b>최솟값을 늘 꼭대기에</b> 두는 우선순위 큐를 만듭니다.</p>
+    </div>
+    <p class="note" style="margin-top:16px">→ <a href="13-heap.html" style="color:var(--q);font-weight:700">CH 13 · 힙·우선순위큐</a> · <a href="index.html">목차</a></p>
+  </section>
+
+  <p class="foot">// 코드 없는 직관 입문 · 모든 트리·탐색은 브라우저에서 실시간 기록·재생 · <a href="index.html">목차</a></p>
+</div>
+
+<script src="shared/lib.js"></script>
+<script>
+VZ.mountTopnav('#topnav', 'CH 12 · BST');
+VZ.setupStepper();
+const AL = VZ.AL;
+const C = s => s ? (AL.STATE[s] || s) : 'var(--panel-2)';
+
+// 중위순회 x좌표 + 깊이 y좌표로 BST를 그린다 (왼쪽=작은 값이 왼쪽에)
+function bstSVG(root, hi, W, H){ W=W||560; H=H||300; const pad=28; hi=hi||{};
+  if(!root) return `<svg width="${W}" height="${H}"></svg>`;
+  let order=0, maxY=0; const ns=[];
+  (function walk(nd,d){ if(!nd)return; walk(nd.left,d+1); nd._x=order++; nd._y=d; maxY=Math.max(maxY,d); ns.push(nd); walk(nd.right,d+1); })(root,0);
+  const mx=Math.max(1,order-1);
+  const X=x=>pad+(mx?x/mx:0.5)*(W-pad*2), Y=y=>pad+(maxY?y/maxY:0)*(H-pad*2);
+  let e='',c='';
+  ns.forEach(nd=>{ [nd.left,nd.right].forEach(ch=>{ if(ch) e+=`<line x1="${X(nd._x).toFixed(1)}" y1="${Y(nd._y).toFixed(1)}" x2="${X(ch._x).toFixed(1)}" y2="${Y(ch._y).toFixed(1)}" stroke="var(--line)" stroke-width="1.6"/>`; });
+    const st=hi[nd.v]; c+=`<circle cx="${X(nd._x).toFixed(1)}" cy="${Y(nd._y).toFixed(1)}" r="16" fill="${C(st)}" stroke="${st?'#0b0e14':'var(--line)'}" stroke-width="2"/><text x="${X(nd._x).toFixed(1)}" y="${(Y(nd._y)+4).toFixed(1)}" text-anchor="middle" font-size="13" fill="${st?'#0b0e14':'var(--ink)'}" font-family="JetBrains Mono" font-weight="700">${nd.v}</text>`; });
+  return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="max-width:100%;display:block">${e}${c}</svg>`;
+}
+function insert(root,val){ if(!root)return {v:val,left:null,right:null}; if(val<root.v)root.left=insert(root.left,val); else root.right=insert(root.right,val); return root; }
+function height(root){ return root? 1+Math.max(height(root.left),height(root.right)) : 0; }
+
+// ---------- STEP 0 : 삽입 ----------
+(function(){
+  function recInsert(vals){ const rec=AL.recorder(); let root=null;
+    vals.forEach(val=>{ if(!root){ root={v:val,left:null,right:null}; rec.snap({root},{note:`${val} — 첫 값이라 뿌리`, hi:{[val]:'done'}}); return; }
+      let cur=root; while(true){ rec.snap({root},{note:`${val} vs ${cur.v} → ${val<cur.v?'작으니 왼쪽':'크니 오른쪽'}`, hi:{[cur.v]:'compare'}});
+        if(val<cur.v){ if(cur.left)cur=cur.left; else { cur.left={v:val,left:null,right:null}; break; } }
+        else { if(cur.right)cur=cur.right; else { cur.right={v:val,left:null,right:null}; break; } } }
+      rec.snap({root},{note:`${val} 자리 찾음`, hi:{[val]:'done'}}); });
+    return rec.frames;
+  }
+  const render=f=>{ document.getElementById('chart0').innerHTML=bstSVG(f.state.root, f.meta.hi); };
+  AL.transport('#transport0', recInsert([8,3,12,1,6,10,14]), render, {interval:700});
+})();
+
+// ---------- STEP 1 : 탐색 ----------
+(function(){
+  let root=null; [8,3,12,1,6,10,14].forEach(v=>root=insert(root,v));
+  function recSearch(target){ const rec=AL.recorder(); let cur=root;
+    while(cur){ if(cur.v===target){ rec.snap({root},{note:`${cur.v} = ${target} 찾았다!`, hi:{[cur.v]:'done'}}); break; }
+      rec.snap({root},{note:`${target} vs ${cur.v} → ${target<cur.v?'작으니 왼쪽으로, 오른쪽 가지는 버림':'크니 오른쪽으로, 왼쪽 가지는 버림'}`, hi:{[cur.v]:'compare'}});
+      cur = target<cur.v?cur.left:cur.right; }
+    if(!cur) rec.snap({root},{note:`${target} 없음`, hi:{}});
+    return rec.frames;
+  }
+  const render=f=>{ document.getElementById('chart1').innerHTML=bstSVG(f.state.root, f.meta.hi); };
+  AL.transport('#transport1', recSearch(10), render, {interval:850});
+})();
+
+// ---------- STEP 2 : 균형 vs 쏠림 ----------
+(function(){
+  const orders={ balanced:[8,4,12,2,6,10,14,1,3,5,7], sorted:[1,2,3,4,5,6,7,8] };
+  function render(kind){ let root=null; orders[kind].forEach(v=>root=insert(root,v)); const h=height(root); const n=orders[kind].length;
+    document.getElementById('chart2').innerHTML=bstSVG(root, {}, 560, 300);
+    document.getElementById('info2').innerHTML=`<div class="ttl" style="color:${kind==='sorted'?'var(--k)':'var(--good)'}">${kind==='sorted'?'이미 정렬된 순서로 삽입':'골고루 섞인 순서로 삽입'} · n=${n}</div><p style="margin:0">트리 높이 = <b>${h}</b>. ${kind==='sorted'?`한쪽으로 쭉 쏠려 거의 연결리스트(높이≈n) → 탐색 <b>O(n)</b>로 느림!`:`균형 잡혀 높이 ≈ log n(${Math.ceil(Math.log2(n+1))}) → 탐색 <b>O(log n)</b>.`}</p>`;
+  }
+  document.getElementById('kindSeg').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b)return;
+    document.querySelectorAll('#kindSeg .btn').forEach(x=>x.classList.toggle('on',x===b)); render(b.dataset.kind); });
+  render('balanced');
+})();
+</script>
+</body>
+</html>
