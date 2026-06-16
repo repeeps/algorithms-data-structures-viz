@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>알고리즘·자료구조, 눈으로 보기</title>
+<link rel="stylesheet" href="shared/theme.css">
+<style>
+  .hero{text-align:center; padding:30px 0 10px;}
+  .hero .tag{font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.25em; text-transform:uppercase; color:var(--q);}
+  .hero h1{font-size:clamp(30px,6vw,52px); font-weight:800; letter-spacing:-.03em; margin:14px 0 12px; line-height:1.06;}
+  .hero p{color:var(--muted); max-width:660px; margin:0 auto; font-size:16px;}
+  .seclabel{font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:var(--faint); margin:28px 0 12px;}
+  .cards{display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:14px;}
+  .ccard{position:relative; display:block; text-decoration:none; background:var(--panel-2); border:1px solid var(--line); border-left:4px solid var(--accent,var(--q)); border-radius:14px; padding:16px 18px; transition:.18s;}
+  .ccard:hover{transform:translateY(-4px); border-color:var(--accent,var(--q)); box-shadow:0 14px 36px rgba(0,0,0,.35);}
+  .ccard .num{font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--accent,var(--q)); font-weight:700;}
+  .ccard h3{margin:6px 0 4px; font-size:16px;}
+  .ccard p{margin:0; font-size:12.5px; color:var(--muted); line-height:1.5;}
+  .ccard .chips{margin-top:10px; display:flex; gap:6px; flex-wrap:wrap;}
+  .chip{font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--faint); border:1px solid var(--line); border-radius:6px; padding:2px 6px;}
+  .ccard.soon{opacity:.5; cursor:not-allowed;}
+  .ccard.soon:hover{transform:none; border-color:var(--line); box-shadow:none;}
+  .ccard.soon::after{content:'🚧 준비 중'; position:absolute; top:12px; right:14px; font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--faint);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero">
+    <div class="tag">Algorithms · Data Structures, 눈으로 보기</div>
+    <h1>알고리즘·자료구조, 눈으로 보기</h1>
+    <p>정렬·탐색·그래프·DP가 한 단계씩 어떻게 풀리는지 — 코드 없이 <b>과정을 직접 재생</b>하며 익히는 20개 화면(0번 입문 + 19챕터).</p>
+  </div>
+
+  <a href="00-intro.html" style="display:block;text-decoration:none;margin:8px 0 4px;padding:18px 22px;border-radius:16px;background:linear-gradient(100deg,rgba(251,191,36,.12),rgba(55,189,248,.08));border:1px solid var(--hot);transition:.2s">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--hot);font-weight:700">👋 처음이세요?</div>
+    <div style="font-size:18px;font-weight:800;color:var(--ink);margin:6px 0 4px">0번 — 좋은 방법과 나쁜 방법은 입력이 커질수록 갈린다 (코드 없는 5분 입문)</div>
+    <div style="font-size:13.5px;color:var(--muted)">▶ 버튼으로 정렬 과정을 직접 재생하고, 카드 64장을 한 장씩 vs 반씩 찾는 차이를 느껴보세요. 코스 지도도 함께. →</div>
+  </a>
+  <p class="note" style="margin:6px 2px 0;color:var(--faint);font-size:13px">📚 이 트랙은 슬라이더가 아니라 <b>▶재생·⏭한 단계·속도 조절</b>로 과정을 봅니다 — "<b>다음에 뭐가 일어날까?</b>" 예측하고 ⏭로 확인하세요. 처음이라면 <b>0번부터 순서대로</b>. 코드는 없어요. 척추는 <b>복잡도(01·02)→정렬(03~07)→자료구조→그래프→DP</b>. 그래프(15~18)와 DP(19)가 조금 고비지만, 작은 예제를 한 단계씩 따라가면 괜찮아요.</p>
+
+  <div class="seclabel">PART 1 · 복잡도 직관</div>
+  <div class="cards">
+    <a class="ccard" style="--accent:var(--q)" href="01-complexity.html"><div class="num">01</div><h3>입력이 2배면 시간은?</h3><p>n을 키우면 방법마다 일의 양이 다른 속도로 불어난다.</p><div class="chips"><span class="chip">growth</span><span class="chip">2배 실험</span></div></a>
+    <a class="ccard" style="--accent:var(--q)" href="02-big-o.html"><div class="num">02</div><h3>Big-O 직관</h3><p>상수·계수는 버리고 "불어나는 모양"만 본다.</p><div class="chips"><span class="chip">O(n)</span><span class="chip">O(n²)</span></div></a>
+  </div>
+
+  <div class="seclabel">PART 2 · 정렬</div>
+  <div class="cards">
+    <a class="ccard" style="--accent:var(--hot)" href="03-slow-sorts.html"><div class="num">03</div><h3>느린 정렬 3형제</h3><p>버블·선택·삽입 — 막대가 비교·교환되며 정렬되는 과정.</p><div class="chips"><span class="chip">bubble</span><span class="chip">insertion</span></div></a>
+    <a class="ccard" style="--accent:var(--hot)" href="04-recursion.html"><div class="num">04</div><h3>재귀·분할정복</h3><p>반으로 쪼개 풀고 합치기. 종료조건과 되돌아옴.</p><div class="chips"><span class="chip">recursion</span><span class="chip">divide</span></div></a>
+    <a class="ccard" style="--accent:var(--hot)" href="05-merge-sort.html"><div class="num">05</div><h3>병합정렬</h3><p>정렬된 두 더미를 화살표로 비교하며 하나로 합친다.</p><div class="chips"><span class="chip">merge</span><span class="chip">O(n log n)</span></div></a>
+    <a class="ccard" style="--accent:var(--hot)" href="06-quick-sort.html"><div class="num">06</div><h3>퀵정렬</h3><p>피벗 기준 좌/우로 갈라 제자리에서 정렬.</p><div class="chips"><span class="chip">pivot</span><span class="chip">partition</span></div></a>
+    <a class="ccard" style="--accent:var(--hot)" href="07-sort-compare.html"><div class="num">07</div><h3>정렬 비교·최악과 평균</h3><p>안정성·제자리, 그리고 운에 따라 빠르고 느림.</p><div class="chips"><span class="chip">stable</span><span class="chip">worst/avg</span></div></a>
+  </div>
+
+  <div class="seclabel">PART 3 · 탐색과 기본 자료구조</div>
+  <div class="cards">
+    <a class="ccard" style="--accent:var(--v)" href="08-search.html"><div class="num">08</div><h3>선형 vs 이진탐색</h3><p>한 칸씩 훑기 vs 매번 절반 버리기. 왜 정렬이 전제인가.</p><div class="chips"><span class="chip">binary</span><span class="chip">log n</span></div></a>
+    <a class="ccard" style="--accent:var(--v)" href="09-array-list.html"><div class="num">09</div><h3>배열 vs 연결리스트</h3><p>줄줄이 밀기 vs 포인터만 바꾸기 — 무엇이 어디서 빠른가.</p><div class="chips"><span class="chip">array</span><span class="chip">linked list</span></div></a>
+    <a class="ccard" style="--accent:var(--v)" href="10-stack-queue.html"><div class="num">10</div><h3>스택·큐</h3><p>접시 쌓기(LIFO) vs 줄서기(FIFO). 순서의 두 규칙.</p><div class="chips"><span class="chip">LIFO</span><span class="chip">FIFO</span></div></a>
+    <a class="ccard" style="--accent:var(--v)" href="11-hash.html"><div class="num">11</div><h3>해시테이블</h3><p>이름을 번호로 바꿔 한 번에 찾기. 충돌은 어떻게.</p><div class="chips"><span class="chip">hash</span><span class="chip">collision</span></div></a>
+  </div>
+
+  <div class="seclabel">PART 4 · 트리</div>
+  <div class="cards">
+    <a class="ccard" style="--accent:var(--good)" href="12-bst.html"><div class="num">12</div><h3>이진트리·BST</h3><p>작으면 왼쪽·크면 오른쪽 — 탐색이 절반씩 줄어든다.</p><div class="chips"><span class="chip">BST</span></div></a>
+    <a class="ccard" style="--accent:var(--good)" href="13-heap.html"><div class="num">13</div><h3>힙·우선순위큐</h3><p>최솟값이 늘 꼭대기. 떠오르고 가라앉으며 유지.</p><div class="chips"><span class="chip">heap</span><span class="chip">priority</span></div></a>
+    <a class="ccard" style="--accent:var(--good)" href="14-balanced-tree.html"><div class="num">14</div><h3>균형트리</h3><p>한쪽으로 쏠린 트리를 회전으로 낮춘다.</p><div class="chips"><span class="chip">rotation</span><span class="chip">balance</span></div></a>
+  </div>
+
+  <div class="seclabel">PART 5 · 그래프</div>
+  <div class="cards">
+    <a class="ccard" style="--accent:var(--pink)" href="15-graph-repr.html"><div class="num">15</div><h3>그래프 표현법</h3><p>노드·엣지 그림 ↔ 인접행렬/리스트를 동시에 본다.</p><div class="chips"><span class="chip">graph</span><span class="chip">adjacency</span></div></a>
+    <a class="ccard" style="--accent:var(--pink)" href="16-bfs-dfs.html"><div class="num">16</div><h3>BFS·DFS</h3><p>물결처럼 퍼지기 vs 끝까지 파고들기. 방문 순서.</p><div class="chips"><span class="chip">BFS</span><span class="chip">DFS</span></div></a>
+    <a class="ccard" style="--accent:var(--pink)" href="17-dijkstra.html"><div class="num">17</div><h3>최단경로 (다익스트라)</h3><p>거리 라벨을 갱신하며 확정 노드를 하나씩 잠근다.</p><div class="chips"><span class="chip">shortest</span><span class="chip">→지도</span></div></a>
+    <a class="ccard" style="--accent:var(--pink)" href="18-mst.html"><div class="num">18</div><h3>최소신장트리</h3><p>가장 싼 엣지부터 욕심내되 사이클은 거부.</p><div class="chips"><span class="chip">MST</span><span class="chip">greedy</span></div></a>
+  </div>
+
+  <div class="seclabel">PART 6 · 동적계획법</div>
+  <div class="cards">
+    <a class="ccard" style="--accent:var(--blue)" href="19-dp.html"><div class="num">19</div><h3>동적계획법</h3><p>겹치는 부분문제를 기억해 중복 계산을 잘라낸다.</p><div class="chips"><span class="chip">memoization</span><span class="chip">편집거리</span></div></a>
+  </div>
+
+  <p class="foot" style="margin-top:30px">// 알고리즘·자료구조 핵심을 직접 만든 비영리 인터랙티브 학습 자료 · 모든 과정은 브라우저에서 실시간 계산·기록·재생</p>
+</div>
+
+<script>
+// 공개된 페이지만 클릭 가능 — 챕터 완성 시 파일명을 READY에 추가
+(function(){
+  const READY = new Set(['00-intro.html']);
+  document.querySelectorAll('a.ccard').forEach(a=>{ if(READY.has(a.getAttribute('href'))) return; a.classList.add('soon'); a.addEventListener('click', e=>e.preventDefault()); });
+})();
+</script>
+</body>
+</html>

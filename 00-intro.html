@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>00 알고리즘·자료구조, 눈으로 보기 — 입문</title>
+<link rel="stylesheet" href="shared/theme.css">
+<style>
+  .legend{font-size:12px; color:var(--faint); line-height:1.7; font-family:'JetBrains Mono',monospace;}
+  .twocol{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px;}
+  .colbox{background:var(--panel-2); border:1px solid var(--line); border-radius:14px; padding:14px;}
+  .cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px;}
+  .uc{background:var(--panel-2); border:1px solid var(--line); border-radius:12px; padding:12px; cursor:pointer; transition:.15s;}
+  .uc:hover{border-color:var(--q);}
+  .uc .reveal{display:none; margin-top:6px; font-size:12.5px; color:var(--muted); line-height:1.6;}
+  .uc.open .reveal{display:block;}
+  .cmap{display:grid; gap:8px;}
+  .cmrow{display:grid; grid-template-columns:84px 1fr; gap:12px; align-items:center; padding:8px 12px; border:1px solid var(--line); border-radius:10px; background:var(--panel-2);}
+  .cmrow .pt{font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topnav" id="topnav"></div>
+
+  <header>
+    <div class="tag">Intro · 왜 보는가</div>
+    <h1>알고리즘 — 같은 문제, 빠른 길과 느린 길</h1>
+    <p class="intro">알고리즘은 "문제를 푸는 <b>절차</b>"예요. 같은 답이라도 <b>어떻게 푸느냐</b>에 따라 데이터가 커질 때 <b>즉답</b>이 되기도, <b>한참 버벅이기도</b> 하죠. 이 코스는 코드를 외우는 대신, 정렬·탐색·그래프·DP가 <b>한 단계씩 풀리는 과정을 직접 ▶재생</b>하며 눈으로 익혀요.</p>
+  </header>
+
+  <nav class="stepper" id="stepper">
+    <button data-s="0" class="active">00 · 어디에나</button>
+    <button data-s="1">01 · 빠른 길 vs 느린 길</button>
+    <button data-s="2">02 · 과정을 재생한다</button>
+    <button data-s="3">03 · 코스 지도</button>
+  </nav>
+
+  <!-- STEP 0 -->
+  <section class="panel show" data-panel="0">
+    <span class="kicker" style="color:var(--hot)">Step 00 — Everywhere</span>
+    <h2>알고리즘은 어디에 쓰이나</h2>
+    <p class="lead">우리가 쓰는 거의 모든 소프트웨어 뒤에 알고리즘이 있어요. 카드를 눌러 보세요.</p>
+    <div class="cards" id="useCards"></div>
+    <p class="note" style="margin-top:14px">→ 공통점: <b>데이터를 정렬·탐색·연결</b>해 가장 <b>빠르고 적은 일</b>로 답을 낸다는 거예요. 이 코스의 척추는 <b>복잡도 → 정렬 → 자료구조 → 그래프 → 동적계획법</b>이에요.</p>
+  </section>
+
+  <!-- STEP 1 -->
+  <section class="panel" data-panel="1">
+    <span class="kicker" style="color:var(--q)">Step 01 — Fast vs Slow</span>
+    <h2>입력이 커질수록 갈린다</h2>
+    <p class="lead">정렬된 카드 더미에서 한 장을 찾아요. <b>한 장씩</b> 넘기면(선형) 운 나쁘면 전부 봐야 하지만, 매번 <b>반씩 버리면</b>(이진) 몇 번이면 끝나죠. 카드 수 n을 키워보세요 — <b>2배로 올리기 전에, 횟수가 어떻게 변할지 먼저 예측</b>해보세요.</p>
+    <div class="ctrl"><label>카드 수 n</label><input type="range" id="nexp" min="3" max="10" value="6"><span class="val" id="nexpv">64</span></div>
+    <div id="search1" class="callout q"></div>
+    <p class="note" style="margin-top:12px">→ n을 2배로 올리면 <b>한 장씩은 횟수도 2배</b>로 뛰지만, <b>반씩은 딱 1번만</b> 늘어요. 이 <b>벌어지는 격차</b>가 "느린 앱"과 "즉답 앱"의 차이예요. 다음 챕터(01·02)에서 이 성장 속도를 더 파봐요.</p>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="panel" data-panel="2">
+    <span class="kicker" style="color:var(--v)">Step 02 — Replay the Process</span>
+    <h2>정렬을 한 단계씩 직접 재생</h2>
+    <p class="lead">이 트랙의 핵심 도구예요. 막대 높이가 값이고, 알고리즘이 막대를 <b>비교(<span style="color:var(--q)">청록</span>)하고 교환(<span style="color:var(--hot)">주황</span>)</b>하며 정렬해요(<span style="color:var(--good)">초록</span>=자리 확정). <b>▶로 재생, ⏭로 한 단계씩</b> — ⏭ 누르기 전에 <b>다음에 어느 막대가 교환될지 예측</b>해보세요.</p>
+    <div id="transport2"></div>
+    <div class="chart-wrap" id="chart2" style="margin-top:6px"></div>
+    <p class="note" style="margin-top:12px">→ 지금 본 건 가장 단순한 <b>버블 정렬</b>이에요. 옆에 큰 수가 있으면 자리를 바꿔 점점 큰 값이 오른쪽으로 "거품처럼" 떠올라요. 느리지만 과정이 가장 잘 보이죠. 더 빠른 정렬들은 PART 2에서 봐요.</p>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="panel" data-panel="3">
+    <span class="kicker" style="color:var(--good)">Step 03 — Course Map</span>
+    <h2>이 코스에서 배울 것</h2>
+    <p class="lead">"빠른 길"을 재는 <b>복잡도</b>로 시작해, <b>정렬</b>로 과정 보는 법을 익히고, 데이터를 담는 <b>자료구조</b>, 연결을 푸는 <b>그래프</b>, 중복을 줄이는 <b>동적계획법</b>까지 — 모두 ▶로 직접 돌려봐요.</p>
+    <div class="cmap" id="courseMap"></div>
+    <p class="note" style="margin-top:16px">→ 첫 챕터로 가볼까요? <a href="01-complexity.html" style="color:var(--q);font-weight:700">CH 01 · 입력이 2배면 시간은?</a>부터 시작하세요. (나머지는 순차 공개)</p>
+  </section>
+
+  <p class="foot">// 코드 없는 직관 입문 · 모든 과정은 브라우저에서 실시간 계산·기록·재생 · <a href="index.html">목차</a></p>
+</div>
+
+<script src="shared/lib.js"></script>
+<script>
+VZ.mountTopnav('#topnav', '00 · Intro');
+VZ.setupStepper();
+const AL = VZ.AL;
+
+// ---------- STEP 0 : 어디에나 ----------
+(function(){
+  const U = [
+    ['🔍','검색·추천','구글 검색·넷플릭스 추천 = 거대한 데이터를 정렬해 빠르게 찾고 골라내기.'],
+    ['🗺️','길찾기','내비게이션 최단경로·배달 동선 = 그래프 알고리즘(다익스트라).'],
+    ['💳','데이터베이스','수억 건에서 즉답 = 정렬된 인덱스·이진탐색·해시테이블.'],
+    ['🧬','생물정보·맞춤법','DNA 서열 비교, 자동 맞춤법(편집거리) = 동적계획법.'],
+    ['📦','압축·전송','파일 압축·네트워크 전송도 영리한 알고리즘이 좌우해요.'],
+    ['🤖','AI·게임','게임 AI 길찾기, 추천 엔진, 데이터 정렬 — 어디에나 깔려 있어요.'],
+  ];
+  document.getElementById('useCards').innerHTML = U.map(u=>
+    `<div class="uc"><div style="font-size:22px">${u[0]}</div><div style="font-weight:700;margin-top:4px;font-size:14px">${u[1]}</div><div class="reveal">${u[2]}</div><div class="note" style="font-size:11px;color:var(--faint);margin-top:6px">클릭 ▾</div></div>`).join('');
+  document.getElementById('useCards').addEventListener('click',e=>{ const c=e.target.closest('.uc'); if(c)c.classList.toggle('open'); });
+})();
+
+// ---------- STEP 1 : 빠른 길 vs 느린 길 (탐색 비유) ----------
+(function(){
+  function render(exp){
+    const n = Math.pow(2, exp);
+    const linear = n;                       // 최악: 전부 본다
+    const binary = exp + 1;                 // 반씩 버리기: 약 log2(n)+1번
+    const lf = 1, bf = binary / n;          // 막대 비율(선형=꽉, 이진=작게)
+    document.getElementById('search1').innerHTML =
+      `<div class="ttl" style="color:var(--q)">카드 ${n}장에서 한 장 찾기 (최악)</div>
+       ${VZ.barRow('한 장씩 (선형)', lf, {color:'var(--k)', pctText: linear + '번'})}
+       ${VZ.barRow('반씩 (이진)', bf, {color:'var(--good)', pctText: binary + '번'})}
+       <p style="margin:8px 0 0">한 장씩은 <b>${linear}번</b>, 반씩은 <b>${binary}번</b> — 약 <b>${Math.round(linear/binary)}배</b> 차이예요.</p>`;
+  }
+  document.getElementById('nexp').oninput=e=>{ const exp=+e.target.value; document.getElementById('nexpv').textContent=Math.pow(2,exp); render(exp); };
+  render(6);
+})();
+
+// ---------- STEP 2 : 정렬 과정 재생 (스텝 플레이어) ----------
+(function(){
+  function recordBubble(arr){
+    const rec = AL.recorder(); const a = arr.slice(); const n = a.length;
+    rec.snap(a, {note:'시작 — 정렬 전', colors:{}});
+    for(let i=0;i<n-1;i++){
+      const sortedStart = n - i;            // 이 인덱스부터는 이미 자리 확정
+      for(let j=0;j<n-1-i;j++){
+        const c1={}; for(let s=sortedStart;s<n;s++)c1[s]='sorted'; c1[j]='compare'; c1[j+1]='compare';
+        rec.snap(a, {note:`${a[j]} 와 ${a[j+1]} 비교 — ${a[j]>a[j+1]?'왼쪽이 더 크다':'순서 OK'}`, colors:c1});
+        if(a[j]>a[j+1]){
+          [a[j],a[j+1]]=[a[j+1],a[j]];
+          const c2={}; for(let s=sortedStart;s<n;s++)c2[s]='sorted'; c2[j]='swap'; c2[j+1]='swap';
+          rec.snap(a, {note:`교환! 큰 값이 오른쪽으로`, colors:c2});
+        }
+      }
+    }
+    const done={}; for(let s=0;s<n;s++)done[s]='sorted';
+    rec.snap(a, {note:'완료 — 모두 정렬됨 ✓', colors:done});
+    return rec.frames;
+  }
+  const arr = [5,2,8,1,9,3,7,4];
+  const frames = recordBubble(arr);
+  const maxV = Math.max(...arr);
+  const render = (f)=>{ document.getElementById('chart2').innerHTML = AL.bars(f.state, {state:f.meta.colors||{}, maxV, W:540, H:230}); };
+  AL.transport('#transport2', frames, render, {interval:650});
+})();
+
+// ---------- STEP 3 : 코스 지도 ----------
+(function(){
+  const MAP = [
+    ['PART 1','복잡도 직관','01 입력 2배면 시간은? · 02 Big-O 직관','var(--q)'],
+    ['PART 2','정렬','03 느린 3형제 · 04 재귀·분할정복 · 05 병합 · 06 퀵 · 07 비교·최악/평균','var(--hot)'],
+    ['PART 3','탐색·자료구조','08 선형/이진탐색 · 09 배열/연결리스트 · 10 스택·큐 · 11 해시','var(--v)'],
+    ['PART 4','트리','12 이진트리·BST · 13 힙·우선순위큐 · 14 균형트리','var(--good)'],
+    ['PART 5','그래프','15 표현법 · 16 BFS·DFS · 17 다익스트라 · 18 최소신장트리','var(--pink)'],
+    ['PART 6','동적계획법','19 메모이제이션 · 편집거리','var(--blue)'],
+  ];
+  document.getElementById('courseMap').innerHTML = MAP.map(r=>
+    `<div class="cmrow"><div class="pt" style="color:${r[3]}">${r[0]}<br><span style="color:var(--muted);font-weight:400">${r[1]}</span></div><div style="font-size:13px">${r[2]}</div></div>`).join('');
+})();
+</script>
+</body>
+</html>
