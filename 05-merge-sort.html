@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>05 병합정렬 · 알고리즘·자료구조, 눈으로 보기</title>
+<link rel="stylesheet" href="shared/theme.css">
+<style>
+  .twocol{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px;}
+  .mrow{display:flex; gap:6px; align-items:center; margin:5px 0;}
+  .mrow .lab{width:54px; color:var(--faint); font-size:12px; font-family:'JetBrains Mono',monospace;}
+  .cell{padding:7px 13px; border-radius:8px; font-family:'JetBrains Mono',monospace; font-weight:700; background:var(--panel-2); color:var(--ink); border:1px solid var(--line);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topnav" id="topnav"></div>
+
+  <header>
+    <div class="tag">PART 2 · Chapter 05</div>
+    <h1>병합정렬 — 정렬된 두 더미를 합친다</h1>
+    <p class="intro">분할정복을 정렬에 쓴 게 <b>병합정렬</b>이에요. 배열을 끝까지 <b>반으로 쪼갠</b> 뒤(크기 1은 이미 정렬됨), <b>정렬된 두 조각을 합치며</b> 거꾸로 올라와요. 핵심은 "<b>합치기(merge)</b>" — 정렬된 두 더미의 <b>앞에서부터 작은 걸 골라</b> 한 줄로 만드는 거죠. 한 번 훑으면 끝나서 빠릅니다.</p>
+  </header>
+
+  <nav class="stepper" id="stepper">
+    <button data-s="0" class="active">00 · 합치기</button>
+    <button data-s="1">01 · 전체 재생</button>
+    <button data-s="2">02 · 왜 빠른가</button>
+    <button data-s="3">03 · 정리</button>
+  </nav>
+
+  <!-- STEP 0 -->
+  <section class="panel show" data-panel="0">
+    <span class="kicker" style="color:var(--hot)">Step 00 — The Merge</span>
+    <h2>정렬된 두 더미를 한 줄로</h2>
+    <p class="lead">이미 정렬된 <b style="color:var(--q)">왼쪽</b>·<b style="color:var(--v)">오른쪽</b> 더미가 있어요. 둘의 <b>맨 앞 카드만 비교</b>해 작은 쪽을 <b style="color:var(--good)">출력</b>으로 옮기길 반복하면, 전체가 정렬된 한 줄이 돼요. ▶로 한 장씩 골라보세요.</p>
+    <div id="transport0"></div>
+    <div id="chart0" style="margin-top:6px"></div>
+    <p class="note" style="margin-top:12px">→ 둘 다 이미 정렬돼 있으니 <b>맨 앞만</b> 보면 돼요. 그래서 두 더미를 합치는 데 <b>전체를 딱 한 번</b>만 훑어요(≈ 두 더미 크기의 합). 이 "싼 합치기"가 병합정렬의 엔진이에요.</p>
+  </section>
+
+  <!-- STEP 1 -->
+  <section class="panel" data-panel="1">
+    <span class="kicker" style="color:var(--q)">Step 01 — Full Replay</span>
+    <h2>쪼개고 → 합치며 올라오기</h2>
+    <p class="lead">전체 배열에 병합정렬을 돌려요. 잘게 쪼갠 뒤, <b style="color:var(--q)">왼쪽 앞</b>과 <b style="color:var(--v)">오른쪽 앞</b>을 비교해 합치고, 구간이 정렬되면 <span style="color:var(--good)">초록</span>으로 확정돼요. ▶재생·⏭한 단계로 "작은 구간부터 점점 큰 구간으로 합쳐지는" 흐름을 보세요.</p>
+    <div id="transport1"></div>
+    <div class="chart-wrap" id="chart1" style="margin-top:6px"></div>
+    <p class="note" style="margin-top:12px">→ 처음엔 길이 1·2짜리 작은 구간이 합쳐지고, 점점 더 큰 구간이 합쳐져 마지막엔 전체가 한 번에 정렬돼요. 비교는 매 구간에서 "두 앞쪽"만 보니 군더더기가 없죠.</p>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="panel" data-panel="2">
+    <span class="kicker" style="color:var(--v)">Step 02 — Why Faster</span>
+    <h2>n log n vs n² — 격차를 숫자로</h2>
+    <p class="lead">병합정렬은 <b>log n번 합치고</b> 각 합치기에 <b>≈n번</b> 비교 → <b>O(n log n)</b>. 느린 버블(<b>≈n²</b>)과 같은 배열에서 비교 횟수를 견줘보세요. n을 키울수록 격차가 벌어져요.</p>
+    <div class="ctrl"><label>배열 크기 n</label><input type="range" id="n2" min="4" max="512" value="64"><span class="val" id="n2v">64</span></div>
+    <div id="bars2" class="callout v"></div>
+    <p class="note" style="margin-top:12px">→ n=64면 약 384 vs 2,016 — 5배쯤. n=512면 약 4,600 vs 13만 — <b>28배!</b> n이 커질수록 "한 단계 위 모양(n²)"이 손쓸 수 없이 뒤처져요. 병합정렬은 <b>최악에도</b> O(n log n)이 보장돼요.</p>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="panel" data-panel="3">
+    <span class="kicker" style="color:var(--good)">Step 03 — Recap</span>
+    <h2>병합정렬</h2>
+    <div class="twocol">
+      <div class="callout q"><div class="ttl">쪼개고 합치기</div><p style="margin:0">끝까지 반으로 쪼갠 뒤, <b>정렬된 두 조각을 한 번 훑어</b> 합친다. 합치기는 앞만 비교해 싸다.</p></div>
+      <div class="callout v"><div class="ttl">O(n log n) 보장</div><p style="margin:0">log n번 합치고 각 ≈n번 → <b>최악에도</b> n log n. 안정 정렬(같은 값 순서 보존)이라는 장점도.</p></div>
+    </div>
+    <div class="callout good" style="margin-top:14px">
+      <p style="margin:0">병합정렬은 빠르고 안정적이지만, 합치는 동안 <b>여분의 공간</b>이 필요해요(출력 더미). 다음 <b>06장 퀵정렬</b>은 같은 O(n log n)이면서 <b>제자리에서</b>(여분 공간 거의 없이) 정렬하는 다른 분할정복 전략을 봅니다.</p>
+    </div>
+    <p class="note" style="margin-top:16px">→ <a href="06-quick-sort.html" style="color:var(--q);font-weight:700">CH 06 · 퀵정렬</a> · <a href="index.html">목차</a></p>
+  </section>
+
+  <p class="foot">// 코드 없는 직관 입문 · 모든 병합 과정은 브라우저에서 실시간 기록·재생 · <a href="index.html">목차</a></p>
+</div>
+
+<script src="shared/lib.js"></script>
+<script>
+VZ.mountTopnav('#topnav', 'CH 05 · 병합정렬');
+VZ.setupStepper();
+const AL = VZ.AL;
+
+// ---------- STEP 0 : 합치기 한 단계 ----------
+(function(){
+  function recMergeTwo(L,R){
+    const rec=AL.recorder(); let i=0,j=0; const out=[];
+    rec.snap({L,R,out:out.slice(),hi:null},{note:'정렬된 두 더미. 맨 앞끼리 비교해요'});
+    while(i<L.length && j<R.length){
+      rec.snap({L,R,out:out.slice(),hi:[i,j]},{note:`${L[i]} vs ${R[j]} → 작은 쪽(${Math.min(L[i],R[j])})을 출력으로`});
+      if(L[i]<=R[j]) out.push(L[i++]); else out.push(R[j++]);
+    }
+    while(i<L.length) out.push(L[i++]);
+    while(j<R.length) out.push(R[j++]);
+    rec.snap({L,R,out:out.slice(),hi:null,done:true},{note:'한쪽이 비면 나머지를 그대로 이어붙여 — 완료 ✓'});
+    return rec.frames;
+  }
+  function render(f){ const s=f.state, hi=s.hi;
+    const row=(arr,k,color,lab)=>`<div class="mrow"><span class="lab">${lab}</span>`+
+      arr.map((v,idx)=>`<div class="cell" style="${(!s.done&&k===idx)?`background:${color};color:#0b0e14`:''}">${v}</div>`).join('')+'</div>';
+    document.getElementById('chart0').innerHTML =
+      row(s.L, hi?hi[0]:-1, 'var(--q)','왼쪽') + row(s.R, hi?hi[1]:-1, 'var(--v)','오른쪽') + row(s.out, -1, 'var(--good)','출력');
+  }
+  AL.transport('#transport0', recMergeTwo([1,4,7],[2,3,5,9]), render, {interval:750});
+})();
+
+// ---------- STEP 1 : 전체 병합정렬 (제자리 표시) ----------
+(function(){
+  function recMerge(arr){
+    const rec=AL.recorder(); const a=arr.slice(); const n=a.length;
+    const fixed={}; // 누적 정렬 확정 표시는 생략, 각 병합 직후 구간만 강조
+    rec.snap(a,{note:'시작 — 정렬 전', colors:{}});
+    function sort(lo,hi){ if(hi-lo<=1) return; const mid=(lo+hi)>>1; sort(lo,mid); sort(mid,hi);
+      let i=lo,j=mid; const tmp=[];
+      while(i<mid&&j<hi){ const c={}; c[i]='compare'; c[j]='pivot';
+        rec.snap(a,{note:`구간 [${lo}~${hi-1}] 병합: ${a[i]} vs ${a[j]}`, colors:c});
+        if(a[i]<=a[j]) tmp.push(a[i++]); else tmp.push(a[j++]); }
+      while(i<mid) tmp.push(a[i++]); while(j<hi) tmp.push(a[j++]);
+      for(let k=0;k<tmp.length;k++) a[lo+k]=tmp[k];
+      const c={}; for(let s=lo;s<hi;s++)c[s]='sorted'; rec.snap(a,{note:`구간 [${lo}~${hi-1}] 정렬 완료`, colors:c});
+    }
+    sort(0,n);
+    const d={}; for(let s=0;s<n;s++)d[s]='sorted'; rec.snap(a,{note:'완료 — 전체 정렬됨 ✓', colors:d});
+    return rec.frames;
+  }
+  const arr=[7,3,9,1,5,2,8,4]; const maxV=Math.max(...arr);
+  const render=f=>{ document.getElementById('chart1').innerHTML=AL.bars(f.state,{state:f.meta.colors||{},maxV,W:540,H:230}); };
+  AL.transport('#transport1', recMerge(arr), render, {interval:600});
+})();
+
+// ---------- STEP 2 : 왜 빠른가 ----------
+(function(){
+  function render(n){
+    const merge = Math.round(n*Math.log2(n));
+    const bubble = Math.round(n*(n-1)/2);
+    const maxv = Math.max(merge,bubble);
+    document.getElementById('bars2').innerHTML =
+      `<div class="ttl" style="color:var(--v)">n = ${n} · 비교 횟수(대략)</div>` +
+      VZ.barRow('병합정렬 ≈ n log n', merge/maxv, {color:'var(--good)', pctText: merge.toLocaleString()}) +
+      VZ.barRow('버블정렬 ≈ n²', bubble/maxv, {color:'var(--k)', pctText: bubble.toLocaleString()}) +
+      `<p style="margin:8px 0 0">버블이 병합보다 약 <b>${(bubble/merge).toFixed(1)}배</b> 더 많이 비교해요.</p>`;
+  }
+  document.getElementById('n2').oninput=e=>{ const n=+e.target.value; document.getElementById('n2v').textContent=n; render(n); };
+  render(64);
+})();
+</script>
+</body>
+</html>

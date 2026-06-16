@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>07 정렬 비교·최악과 평균 · 알고리즘·자료구조, 눈으로 보기</title>
+<link rel="stylesheet" href="shared/theme.css">
+<style>
+  .twocol{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px;}
+  .mrow{display:flex; gap:6px; align-items:center; margin:6px 0; flex-wrap:wrap;}
+  .mrow .lab{width:96px; color:var(--faint); font-size:12px; font-family:'JetBrains Mono',monospace;}
+  .cell{position:relative; padding:8px 13px; border-radius:8px; font-family:'JetBrains Mono',monospace; font-weight:700; background:var(--panel-2); color:var(--ink); border:1px solid var(--line);}
+  .cell sup{font-size:9px; color:var(--hot);}
+  table.cmp{width:100%; border-collapse:collapse; font-size:13px; margin-top:4px;}
+  table.cmp th,table.cmp td{padding:7px 8px; border-bottom:1px solid var(--line); text-align:center;}
+  table.cmp th{color:var(--faint); font-family:'JetBrains Mono',monospace; font-weight:600; font-size:11px;}
+  table.cmp td:first-child,table.cmp th:first-child{text-align:left;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topnav" id="topnav"></div>
+
+  <header>
+    <div class="tag">PART 2 · Chapter 07</div>
+    <h1>정렬 비교 — 안정성·제자리·최악과 평균</h1>
+    <p class="intro">정렬은 "빠르다"만으로 못 고릅니다. <b>같은 값의 순서를 지키나</b>(안정성), <b>여분 메모리를 쓰나</b>(제자리), 그리고 <b>운에 따라 얼마나 느려지나</b>(최악/평균/최선) — 이 세 잣대가 상황별 선택을 가릅니다. 정렬들을 한 표로 정리하며 PART 2를 닫아요.</p>
+  </header>
+
+  <nav class="stepper" id="stepper">
+    <button data-s="0" class="active">00 · 안정성</button>
+    <button data-s="1">01 · 제자리(메모리)</button>
+    <button data-s="2">02 · 최악·평균·최선</button>
+    <button data-s="3">03 · 종합 표</button>
+  </nav>
+
+  <!-- STEP 0 -->
+  <section class="panel show" data-panel="0">
+    <span class="kicker" style="color:var(--hot)">Step 00 — Stability</span>
+    <h2>같은 값의 원래 순서를 지키는가</h2>
+    <p class="lead">값이 같은 항목이 여럿일 때, <b>입력에서의 순서</b>를 결과에서도 지키면 <b>안정 정렬</b>이에요. 아래 입력에서 같은 값(2끼리, 5끼리)에 원래 순서 꼬리표(ᵃ ᵇ ᶜ…)를 달았어요. 두 결과에서 같은 값의 꼬리표 순서를 비교해 보세요.</p>
+    <div id="stab" style="margin-top:8px"></div>
+    <p class="note" style="margin-top:12px">→ 왜 중요할까요? "이름순으로 이미 정렬된 명단"을 "점수순"으로 다시 정렬할 때, 안정 정렬이면 <b>점수가 같은 사람끼리는 이름순이 유지</b>돼요. 병합·삽입은 안정적, 선택·퀵은 보통 불안정해요.</p>
+  </section>
+
+  <!-- STEP 1 -->
+  <section class="panel" data-panel="1">
+    <span class="kicker" style="color:var(--q)">Step 01 — In-Place</span>
+    <h2>여분 메모리를 얼마나 쓰나</h2>
+    <p class="lead"><b>제자리(in-place)</b> 정렬은 입력 배열 안에서 자리만 바꿔 추가 메모리가 거의 없어요(O(1)). 반대로 <b>병합정렬</b>은 합칠 출력 더미가 필요해 입력만큼(O(n)) 더 써요. n을 키워 각 정렬의 추가 메모리를 비교하세요.</p>
+    <div class="ctrl"><label>배열 크기 n</label><input type="range" id="n1" min="8" max="256" value="64"><span class="val" id="n1v">64</span></div>
+    <div id="bars1" class="callout q"></div>
+    <p class="note" style="margin-top:12px">→ 데이터가 메모리에 빠듯할 땐 제자리 정렬(퀵·삽입)이 유리하고, 메모리에 여유가 있고 <b>안정성·최악 보장</b>이 필요하면 병합이 유리해요. "빠르기"만이 기준이 아니에요.</p>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="panel" data-panel="2">
+    <span class="kicker" style="color:var(--v)">Step 02 — Worst · Average · Best</span>
+    <h2>같은 알고리즘도 운에 따라 다르다</h2>
+    <p class="lead">하나의 Big-O로 끝나지 않아요. 같은 <b>퀵정렬</b>도 입력 운에 따라 <b>최선/평균</b>은 n log n인데 <b>최악</b>은 n²이죠. 입력을 바꿔 같은 퀵정렬의 비교 횟수가 얼마나 출렁이는지 보세요.</p>
+    <div class="ctrl"><label>배열 크기 n</label><input type="range" id="n2" min="8" max="64" value="48"><span class="val" id="n2v">48</span></div>
+    <div id="bars2" class="callout v"></div>
+    <p class="note" style="margin-top:12px">→ 그래서 알고리즘을 고를 땐 "평균은 빠른데 최악은?"을 꼭 물어요. 입력이 적의 손에 있거나(보안) 항상 빨라야 하면 <b>최악 보장</b>(병합 O(n log n))이 중요하고, 보통은 <b>평균이 빠른</b> 퀵이 유리하죠.</p>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="panel" data-panel="3">
+    <span class="kicker" style="color:var(--good)">Step 03 — The Table</span>
+    <h2>정렬 한눈에 비교</h2>
+    <div class="colbox" style="background:var(--panel-2);border:1px solid var(--line);border-radius:14px;padding:14px">
+      <table class="cmp">
+        <tr><th>정렬</th><th>평균</th><th>최악</th><th>안정?</th><th>제자리?</th><th>특징</th></tr>
+        <tr><td>버블</td><td>O(n²)</td><td>O(n²)</td><td>✅</td><td>✅</td><td>가장 단순, 교육용</td></tr>
+        <tr><td>선택</td><td>O(n²)</td><td>O(n²)</td><td>❌</td><td>✅</td><td>교환 횟수 최소</td></tr>
+        <tr><td>삽입</td><td>O(n²)</td><td>O(n²)</td><td>✅</td><td>✅</td><td>거의 정렬된 데이터에 빠름</td></tr>
+        <tr><td>병합</td><td>O(n log n)</td><td>O(n log n)</td><td>✅</td><td>❌</td><td>최악 보장·안정, 여분 메모리</td></tr>
+        <tr><td>퀵</td><td>O(n log n)</td><td>O(n²)</td><td>❌</td><td>✅</td><td>평균 가장 빠름·제자리, 최악 주의</td></tr>
+      </table>
+    </div>
+    <div class="callout good" style="margin-top:14px">
+      <p style="margin:0">"만능 정렬"은 없어요 — 상황(메모리·안정성·최악 보장·입력 특성)에 맞춰 고르는 거죠. 실무 라이브러리는 보통 <b>퀵+삽입+힙을 섞은 하이브리드</b>를 써요. 이제 PART 3에서 데이터를 <b>찾고 담는</b> 탐색·자료구조로 넘어갑니다 — 정렬이 왜 그렇게 중요한지(이진탐색!) 곧 보게 돼요.</p>
+    </div>
+    <p class="note" style="margin-top:16px">→ <a href="08-search.html" style="color:var(--q);font-weight:700">CH 08 · 선형 vs 이진탐색</a> · <a href="index.html">목차</a></p>
+  </section>
+
+  <p class="foot">// 코드 없는 직관 입문 · 모든 횟수는 브라우저에서 실시간 계산 · <a href="index.html">목차</a></p>
+</div>
+
+<script src="shared/lib.js"></script>
+<script>
+VZ.mountTopnav('#topnav', 'CH 07 · 정렬 비교');
+VZ.setupStepper();
+
+// ---------- STEP 0 : 안정성 ----------
+(function(){
+  const TAG=['ᵃ','ᵇ','ᶜ','ᵈ','ᵉ'];
+  const input=[{v:5,o:0},{v:2,o:1},{v:5,o:2},{v:1,o:3},{v:2,o:4}];
+  const stable=input.slice().sort((a,b)=> a.v-b.v || a.o-b.o);
+  const unstable=input.slice().sort((a,b)=> a.v-b.v || b.o-a.o); // 같은 값 순서 뒤집힘(시연용)
+  function row(arr,lab,markEq){ return `<div class="mrow"><span class="lab">${lab}</span>`+
+    arr.map(x=>{ const dup=arr.filter(y=>y.v===x.v).length>1;
+      return `<div class="cell" style="${markEq&&dup?'border-color:var(--hot)':''}">${x.v}<sup>${TAG[x.o]}</sup></div>`; }).join('')+'</div>'; }
+  document.getElementById('stab').innerHTML =
+    row(input,'입력',false) + row(stable,'안정 정렬',true) + row(unstable,'불안정 정렬',true) +
+    `<p class="legend" style="margin-top:8px">안정: 2ᵇ→2ᵉ, 5ᵃ→5ᶜ 순서 그대로. 불안정: 2ᵉ→2ᵇ, 5ᶜ→5ᵃ 로 같은 값의 순서가 뒤집힘.</p>`;
+})();
+
+// ---------- STEP 1 : 제자리(메모리) ----------
+(function(){
+  function render(n){
+    const rows=[['버블·선택·삽입·퀵 (제자리)',1,'var(--good)'],['병합 (여분 더미)',n,'var(--k)']];
+    const maxv=n;
+    document.getElementById('bars1').innerHTML=
+      `<div class="ttl" style="color:var(--q)">n = ${n} 일 때 추가로 쓰는 메모리(칸 수, 대략)</div>`+
+      VZ.barRow('제자리 정렬 ≈ 상수', 1/maxv, {color:'var(--good)', pctText:'≈ 1'})+
+      VZ.barRow('병합정렬 ≈ n', 1, {color:'var(--k)', pctText:'≈ '+n})+
+      `<p style="margin:8px 0 0">병합은 제자리 정렬보다 약 <b>${n}배</b> 많은 여분 공간을 써요(입력 크기만큼).</p>`;
+  }
+  document.getElementById('n1').oninput=e=>{ const n=+e.target.value; document.getElementById('n1v').textContent=n; render(n); };
+  render(64);
+})();
+
+// ---------- STEP 2 : 최악·평균·최선 ----------
+(function(){
+  function qcount(a){ a=a.slice(); let cmp=0; function qs(lo,hi){ if(lo>=hi)return; const p=a[hi]; let i=lo;
+    for(let j=lo;j<hi;j++){ cmp++; if(a[j]<p){ if(i!==j)[a[i],a[j]]=[a[j],a[i]]; i++; } } [a[i],a[hi]]=[a[hi],a[i]]; qs(lo,i-1); qs(i+1,hi); } qs(0,a.length-1); return cmp; }
+  function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor((Math.sin(i*53.7)+1)/2*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+  function render(n){
+    const sorted=Array.from({length:n},(_,i)=>i);
+    const worst=qcount(sorted);                     // 이미 정렬 → 최악
+    const avg=qcount(shuffle(sorted.slice()));       // 무작위 → 평균
+    const ideal=n-1;                                 // 최선(완벽 균형 가정 하한 느낌)
+    const maxv=Math.max(worst,avg,1);
+    document.getElementById('bars2').innerHTML=
+      `<div class="ttl" style="color:var(--v)">같은 퀵정렬, n=${n} · 입력만 다름</div>`+
+      VZ.barRow('최선(완벽 균형 피벗) ≈ n log n', Math.round(n*Math.log2(n))/maxv, {color:'var(--good)', pctText: Math.round(n*Math.log2(n)).toLocaleString()})+
+      VZ.barRow('평균(무작위 입력)', avg/maxv, {color:'var(--q)', pctText: avg.toLocaleString()})+
+      VZ.barRow('최악(이미 정렬됨) ≈ n²/2', worst/maxv, {color:'var(--k)', pctText: worst.toLocaleString()})+
+      `<p style="margin:8px 0 0">최악이 평균보다 약 <b>${(worst/Math.max(avg,1)).toFixed(1)}배</b> 더 느려요. 같은 코드인데 입력 운으로 이만큼 갈려요.</p>`;
+  }
+  document.getElementById('n2').oninput=e=>{ const n=+e.target.value; document.getElementById('n2v').textContent=n; render(n); };
+  render(48);
+})();
+</script>
+</body>
+</html>

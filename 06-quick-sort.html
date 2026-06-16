@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>06 퀵정렬 · 알고리즘·자료구조, 눈으로 보기</title>
+<link rel="stylesheet" href="shared/theme.css">
+<style>
+  .twocol{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px;}
+  .seg{display:inline-flex; gap:4px; margin:4px 0;}
+  .seg .btn{padding:8px 14px;}
+  .seg .btn.on{background:var(--hot); color:#1a1206; border-color:var(--hot);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topnav" id="topnav"></div>
+
+  <header>
+    <div class="tag">PART 2 · Chapter 06</div>
+    <h1>퀵정렬 — 피벗 기준으로 좌우를 가른다</h1>
+    <p class="intro"><b>퀵정렬</b>도 분할정복이지만 전략이 달라요. 기준값 <b>피벗</b> 하나를 골라, <b>피벗보다 작은 건 왼쪽·큰 건 오른쪽</b>으로 몰아넣어요(파티션). 그러면 피벗은 <b>제자리</b>를 찾고, 좌·우를 같은 방법으로 또 가르죠. 여분 공간 없이 <b>제자리에서</b> 평균 <b>O(n log n)</b> — 실무에서 가장 널리 쓰는 정렬이에요.</p>
+  </header>
+
+  <nav class="stepper" id="stepper">
+    <button data-s="0" class="active">00 · 파티션 한 번</button>
+    <button data-s="1">01 · 전체 재생</button>
+    <button data-s="2">02 · 피벗 운</button>
+    <button data-s="3">03 · 정리</button>
+  </nav>
+
+  <!-- STEP 0 -->
+  <section class="panel show" data-panel="0">
+    <span class="kicker" style="color:var(--hot)">Step 00 — One Partition</span>
+    <h2>피벗보다 작은 건 왼쪽으로</h2>
+    <p class="lead">맨 오른쪽을 <b style="color:var(--v)">피벗</b>으로 골라요. 왼쪽부터 훑으며(<span style="color:var(--q)">청록</span>) 피벗보다 <b>작은 값</b>을 만나면 <b style="color:var(--pink)">"작은 값 구역"</b> 경계로 보내요. 다 훑은 뒤 피벗을 그 경계에 놓으면, <b>왼쪽엔 작은 값·오른쪽엔 큰 값</b>만 남고 피벗은 영원히 제자리예요. ▶로 보세요.</p>
+    <div id="transport0"></div>
+    <div class="chart-wrap" id="chart0" style="margin-top:6px"></div>
+    <p class="note" style="margin-top:12px">→ 한 번 파티션하면 피벗 하나가 <b>최종 위치에 확정</b>(<span style="color:var(--good)">초록</span>)돼요. 그리고 문제가 "피벗 왼쪽"과 "피벗 오른쪽" 두 개의 더 작은 정렬 문제로 쪼개지죠.</p>
+  </section>
+
+  <!-- STEP 1 -->
+  <section class="panel" data-panel="1">
+    <span class="kicker" style="color:var(--q)">Step 01 — Full Replay</span>
+    <h2>가르고, 또 가르고</h2>
+    <p class="lead">전체 배열에 퀵정렬을 돌려요. 매번 피벗으로 좌우를 가르고, 확정된 피벗(<span style="color:var(--good)">초록</span>)은 그대로 둔 채 양쪽을 또 파티션해요. ▶재생·⏭한 단계로 초록 칸이 하나씩 늘며 전체가 정렬되는 걸 보세요.</p>
+    <div id="transport1"></div>
+    <div class="chart-wrap" id="chart1" style="margin-top:6px"></div>
+    <p class="note" style="margin-top:12px">→ 병합정렬은 "합칠 때" 일했지만, 퀵정렬은 "<b>가를 때</b>" 일해요(합치는 단계가 없죠). 추가 더미 없이 <b>제자리에서</b> 자리를 바꿔가며 정렬하는 게 강점이에요.</p>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="panel" data-panel="2">
+    <span class="kicker" style="color:var(--v)">Step 02 — Pivot Luck</span>
+    <h2>피벗을 잘 고르면 빠르고, 못 고르면 느리다</h2>
+    <p class="lead">피벗이 좌우를 <b>비슷하게 가르면</b> 깊이가 log n으로 얕아 빠르지만, <b>한쪽으로 쏠리면</b> 깊이가 n까지 깊어져 <b>O(n²)</b>로 느려져요. 특히 "맨 오른쪽 피벗"은 <b>이미 정렬된</b> 입력에서 최악이에요. 입력을 바꿔 비교 횟수를 보세요.</p>
+    <div class="seg" id="kindSeg">
+      <button class="btn on" data-kind="random">무작위(운 좋음)</button>
+      <button class="btn" data-kind="sorted">이미 정렬됨(최악)</button>
+    </div>
+    <div class="ctrl"><label>배열 크기 n</label><input type="range" id="n2" min="4" max="64" value="32"><span class="val" id="n2v">32</span></div>
+    <div id="bars2" class="callout v" style="margin-top:8px"></div>
+    <p class="note" style="margin-top:12px">→ 그래서 실무 퀵정렬은 피벗을 <b>무작위로</b> 고르거나 <b>가운데값</b>을 써서 최악을 피해요. "평균은 빠르지만 최악이 있다"가 퀵정렬의 성격이에요(다음 07장에서 최악/평균을 더 봐요).</p>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="panel" data-panel="3">
+    <span class="kicker" style="color:var(--good)">Step 03 — Recap</span>
+    <h2>퀵정렬</h2>
+    <div class="twocol">
+      <div class="callout q"><div class="ttl">가르기(파티션)</div><p style="margin:0">피벗보다 작은 건 왼쪽·큰 건 오른쪽. 피벗은 <b>제자리 확정</b>. 좌우를 재귀로 또 가른다.</p></div>
+      <div class="callout v"><div class="ttl">제자리·평균 O(n log n)</div><p style="margin:0">여분 공간 거의 없이 빠름. 단 피벗이 쏠리면 <b>최악 O(n²)</b> → 무작위/중앙값 피벗으로 회피.</p></div>
+    </div>
+    <div class="callout good" style="margin-top:14px">
+      <p style="margin:0">병합 vs 퀵: 둘 다 평균 O(n log n)이지만 — 병합은 <b>안정·최악 보장</b>이나 여분 공간이 필요하고, 퀵은 <b>제자리·빠른 상수</b>지만 최악이 있어요. 다음 <b>07장</b>에서 안정성·제자리, 그리고 <b>최악/평균/최선</b>이라는 잣대로 정렬들을 정리합니다.</p>
+    </div>
+    <p class="note" style="margin-top:16px">→ <a href="07-sort-compare.html" style="color:var(--q);font-weight:700">CH 07 · 정렬 비교·최악과 평균</a> · <a href="index.html">목차</a></p>
+  </section>
+
+  <p class="foot">// 코드 없는 직관 입문 · 모든 파티션 과정은 브라우저에서 실시간 기록·재생 · <a href="index.html">목차</a></p>
+</div>
+
+<script src="shared/lib.js"></script>
+<script>
+VZ.mountTopnav('#topnav', 'CH 06 · 퀵정렬');
+VZ.setupStepper();
+const AL = VZ.AL;
+
+function recQuick(arr){
+  const rec=AL.recorder(); const a=arr.slice(); const n=a.length; const done=new Set();
+  rec.snap(a,{note:'시작 — 정렬 전', colors:{}});
+  function baseCols(extra){ const c={}; done.forEach(d=>c[d]='sorted'); return Object.assign(c, extra||{}); }
+  function qs(lo,hi){ if(lo>hi) return; if(lo===hi){ done.add(lo); rec.snap(a,{note:`한 칸짜리 — 자동 확정`, colors:baseCols()}); return; }
+    const pivot=a[hi]; let i=lo;
+    rec.snap(a,{note:`구간 [${lo}~${hi}] · 피벗 = ${pivot} (맨 오른쪽)`, colors:baseCols({[hi]:'pivot'})});
+    for(let j=lo;j<hi;j++){
+      rec.snap(a,{note:`${a[j]} < 피벗 ${pivot}? ${a[j]<pivot?'예 → 작은 값 구역으로':'아니오 → 그대로 둠'}`, colors:baseCols({[hi]:'pivot',[j]:'compare',[i]:'min'})});
+      if(a[j]<pivot){ if(i!==j)[a[i],a[j]]=[a[j],a[i]]; i++; }
+    }
+    [a[i],a[hi]]=[a[hi],a[i]]; done.add(i);
+    rec.snap(a,{note:`피벗 ${pivot}을 제자리(${i}번)에 — 왼쪽은 작고 오른쪽은 큼`, colors:baseCols()});
+    qs(lo,i-1); qs(i+1,hi);
+  }
+  qs(0,n-1);
+  const d={}; for(let s=0;s<n;s++)d[s]='sorted'; rec.snap(a,{note:'완료 — 전체 정렬됨 ✓', colors:d});
+  return rec.frames;
+}
+
+// ---------- STEP 0 : 파티션 한 번 (작은 배열) ----------
+(function(){
+  const arr=[3,7,2,6,4]; const maxV=Math.max(...arr);
+  const render=f=>{ document.getElementById('chart0').innerHTML=AL.bars(f.state,{state:f.meta.colors||{},maxV,W:520,H:210}); };
+  AL.transport('#transport0', recQuick(arr), render, {interval:700});
+})();
+
+// ---------- STEP 1 : 전체 재생 ----------
+(function(){
+  const arr=[6,2,8,3,9,1,7,4]; const maxV=Math.max(...arr);
+  const render=f=>{ document.getElementById('chart1').innerHTML=AL.bars(f.state,{state:f.meta.colors||{},maxV,W:540,H:230}); };
+  AL.transport('#transport1', recQuick(arr), render, {interval:550});
+})();
+
+// ---------- STEP 2 : 피벗 운 ----------
+(function(){
+  function qcount(a){ a=a.slice(); let cmp=0; function qs(lo,hi){ if(lo>=hi)return; const p=a[hi]; let i=lo;
+    for(let j=lo;j<hi;j++){ cmp++; if(a[j]<p){ if(i!==j)[a[i],a[j]]=[a[j],a[i]]; i++; } } [a[i],a[hi]]=[a[hi],a[i]]; qs(lo,i-1); qs(i+1,hi); } qs(0,a.length-1); return cmp; }
+  let kind='random';
+  function render(){
+    const n=+document.getElementById('n2').value;
+    const arr = kind==='sorted' ? Array.from({length:n},(_,i)=>i) : shuffle(Array.from({length:n},(_,i)=>i));
+    const cmp=qcount(arr); const worst=n*(n-1)/2; const best=Math.round(n*Math.log2(n));
+    const maxv=Math.max(worst,cmp,1);
+    document.getElementById('bars2').innerHTML=
+      `<div class="ttl" style="color:var(--v)">n=${n} · ${kind==='sorted'?'이미 정렬된':'무작위'} 입력 · 비교 ${cmp.toLocaleString()}번</div>`+
+      VZ.barRow('이번 퀵정렬', cmp/maxv, {color: kind==='sorted'?'var(--k)':'var(--good)', pctText: cmp.toLocaleString()})+
+      VZ.barRow('이상적 ≈ n log n', best/maxv, {color:'var(--q)', pctText: best.toLocaleString()})+
+      VZ.barRow('최악 ≈ n²/2', worst/maxv, {color:'var(--faint)', pctText: worst.toLocaleString()})+
+      `<p style="margin:8px 0 0">${kind==='sorted'?'<b style="color:var(--k)">이미 정렬된 입력 → 피벗이 늘 한쪽 끝 → 최악 O(n²)에 가까워요!</b>':'무작위 입력 → 좌우가 고르게 갈려 n log n에 가까워요.'}</p>`;
+  }
+  function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor((Math.sin(i*97.13)+1)/2*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+  document.getElementById('kindSeg').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b)return;
+    document.querySelectorAll('#kindSeg .btn').forEach(x=>x.classList.toggle('on',x===b)); kind=b.dataset.kind; render(); });
+  document.getElementById('n2').oninput=e=>{ document.getElementById('n2v').textContent=e.target.value; render(); };
+  render();
+})();
+</script>
+</body>
+</html>

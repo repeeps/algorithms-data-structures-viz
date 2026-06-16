@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>03 느린 정렬 3형제 · 알고리즘·자료구조, 눈으로 보기</title>
+<link rel="stylesheet" href="shared/theme.css">
+<style>
+  .twocol{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px;}
+  .seg{display:inline-flex; gap:4px; margin:4px 0 2px;}
+  .seg .btn{padding:8px 14px;}
+  .seg .btn.on{background:var(--hot); color:#1a1206; border-color:var(--hot);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topnav" id="topnav"></div>
+
+  <header>
+    <div class="tag">PART 2 · Chapter 03</div>
+    <h1>느린 정렬 3형제 — 버블·선택·삽입</h1>
+    <p class="intro">손으로 카드를 정렬하는 방법은 여러 가지예요. <b>옆과 비교해 큰 걸 뒤로 미는</b> 버블, <b>가장 작은 걸 골라 앞에 놓는</b> 선택, <b>한 장씩 뽑아 제자리에 끼우는</b> 삽입. 셋 다 단순하고 셋 다 느려요(<b>O(n²)</b>). 하지만 과정이 또렷이 보여 "정렬이 무엇인지" 익히기엔 최고예요. ▶로 직접 돌려보세요.</p>
+  </header>
+
+  <nav class="stepper" id="stepper">
+    <button data-s="0" class="active">00 · 한 번의 비교</button>
+    <button data-s="1">01 · 세 방법 재생</button>
+    <button data-s="2">02 · 횟수 비교</button>
+    <button data-s="3">03 · 정리</button>
+  </nav>
+
+  <!-- STEP 0 -->
+  <section class="panel show" data-panel="0">
+    <span class="kicker" style="color:var(--hot)">Step 00 — One Comparison</span>
+    <h2>정렬의 기본 동작: 비교하고, 필요하면 바꾼다</h2>
+    <p class="lead">모든 정렬의 핵심은 <b>두 값을 비교</b>해 순서가 틀렸으면 <b>바꾸는</b> 것이에요. ▶ 한 번 눌러 가장 단순한 버블 정렬이 이웃끼리 비교·교환하는 한 단계를 보세요. (<span style="color:var(--q)">청록</span>=비교 중, <span style="color:var(--hot)">주황</span>=교환, <span style="color:var(--good)">초록</span>=자리 확정)</p>
+    <div id="transport0"></div>
+    <div class="chart-wrap" id="chart0" style="margin-top:6px"></div>
+    <p class="note" style="margin-top:12px">→ 이웃한 두 칸을 비교해 왼쪽이 더 크면 교환 — 이걸 끝까지 반복하면 가장 큰 값이 맨 오른쪽으로 "거품처럼" 올라와 자리를 잡아요. 그래서 <b>버블(거품) 정렬</b>이에요.</p>
+  </section>
+
+  <!-- STEP 1 -->
+  <section class="panel" data-panel="1">
+    <span class="kicker" style="color:var(--q)">Step 01 — Replay Three Ways</span>
+    <h2>같은 배열, 세 가지 정렬</h2>
+    <p class="lead">같은 배열을 세 방법으로 정렬해요. 방법을 바꿔가며 ▶재생·⏭한 단계로 비교하세요. <b>⏭ 누르기 전에 "다음에 무엇이 바뀔까" 예측</b>해보면 훨씬 빨리 이해돼요.</p>
+    <div class="seg" id="algoSeg">
+      <button class="btn on" data-algo="bubble">버블</button>
+      <button class="btn" data-algo="selection">선택</button>
+      <button class="btn" data-algo="insertion">삽입</button>
+    </div>
+    <div id="algoDesc" class="legend" style="margin:4px 0 8px"></div>
+    <div id="transport1"></div>
+    <div class="chart-wrap" id="chart1" style="margin-top:6px"></div>
+    <p class="note" style="margin-top:12px">→ <b>버블</b>: 이웃 비교·교환을 반복. <b>선택</b>: 매번 남은 것 중 최솟값을 찾아 앞으로. <b>삽입</b>: 한 장씩 뽑아 이미 정렬된 왼쪽에 끼워넣기(손으로 카드 정렬하는 법과 똑같아요).</p>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="panel" data-panel="2">
+    <span class="kicker" style="color:var(--v)">Step 02 — Counting the Work</span>
+    <h2>세 방법, 일의 양 비교</h2>
+    <p class="lead">같은 배열(크기 n)에 대해 각 방법이 하는 <b>비교</b>와 <b>교환·이동</b> 횟수예요. 입력의 "정렬된 정도"를 바꿔보세요 — <b>거의 정렬된</b> 입력에선 삽입이 확 빨라지는 게 보여요(이게 트레이드오프!).</p>
+    <div class="seg" id="kindSeg">
+      <button class="btn on" data-kind="random">무작위</button>
+      <button class="btn" data-kind="sorted">거의 정렬됨</button>
+      <button class="btn" data-kind="reversed">역순(최악)</button>
+    </div>
+    <div id="bars2" class="callout v" style="margin-top:8px"></div>
+    <p class="note" style="margin-top:12px">→ 셋 다 평균적으로 <b>O(n²)</b>이지만 상수가 달라요. <b>선택</b>은 입력과 무관하게 비교 횟수가 거의 일정, <b>삽입</b>은 거의 정렬된 데이터에서 <b>거의 O(n)</b>까지 빨라져요. "상황에 맞는 방법"이 따로 있다는 게 핵심이에요.</p>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="panel" data-panel="3">
+    <span class="kicker" style="color:var(--good)">Step 03 — Recap</span>
+    <h2>단순하지만 느린 셋</h2>
+    <div class="twocol">
+      <div class="callout q"><div class="ttl">공통점</div><p style="margin:0">모두 <b>비교+교환</b>의 반복이고, 모두 평균 <b>O(n²)</b>. 작은 데이터엔 충분하고, 구현이 쉬워요.</p></div>
+      <div class="callout v"><div class="ttl">차이점(트레이드오프)</div><p style="margin:0">삽입은 거의 정렬된 데이터에 강하고, 선택은 교환을 최소로(메모리 쓰기 비쌀 때 유리). "정렬은 하나"가 아니에요.</p></div>
+    </div>
+    <div class="callout good" style="margin-top:14px">
+      <p style="margin:0">n²은 큰 데이터엔 너무 느려요(1만 개면 1억 번!). 더 빠른 <b>O(n log n)</b> 정렬이 필요하죠. 그 비결은 "<b>문제를 반으로 쪼개기</b>" — 다음 <b>04장 재귀·분할정복</b>에서 그 마법을 익히고, 05·06장에서 병합·퀵 정렬로 직접 봅니다.</p>
+    </div>
+    <p class="note" style="margin-top:16px">→ <a href="04-recursion.html" style="color:var(--q);font-weight:700">CH 04 · 재귀·분할정복</a> · <a href="index.html">목차</a></p>
+  </section>
+
+  <p class="foot">// 코드 없는 직관 입문 · 모든 정렬 과정은 브라우저에서 실시간 기록·재생 · <a href="index.html">목차</a></p>
+</div>
+
+<script src="shared/lib.js"></script>
+<script>
+VZ.mountTopnav('#topnav', 'CH 03 · 느린 정렬');
+VZ.setupStepper();
+const AL = VZ.AL;
+
+// ===== 레코더들 (각 정렬을 한 번 돌리며 상태 스냅샷 + 색·내레이션) =====
+function recBubble(arr){
+  const rec=AL.recorder(); const a=arr.slice(); const n=a.length;
+  rec.snap(a,{note:'시작 — 정렬 전', colors:{}});
+  for(let i=0;i<n-1;i++){ const sortedStart=n-i;
+    for(let j=0;j<n-1-i;j++){
+      const c={}; for(let s=sortedStart;s<n;s++)c[s]='sorted'; c[j]='compare'; c[j+1]='compare';
+      rec.snap(a,{note:`${a[j]} 와 ${a[j+1]} 비교`, colors:c});
+      if(a[j]>a[j+1]){ [a[j],a[j+1]]=[a[j+1],a[j]];
+        const c2={}; for(let s=sortedStart;s<n;s++)c2[s]='sorted'; c2[j]='swap'; c2[j+1]='swap';
+        rec.snap(a,{note:`왼쪽이 더 커서 교환`, colors:c2}); }
+    }
+  }
+  const d={}; for(let s=0;s<n;s++)d[s]='sorted'; rec.snap(a,{note:'완료 ✓', colors:d}); return rec.frames;
+}
+function recSelection(arr){
+  const rec=AL.recorder(); const a=arr.slice(); const n=a.length;
+  rec.snap(a,{note:'시작 — 정렬 전', colors:{}});
+  for(let i=0;i<n-1;i++){ let mn=i; const base={}; for(let s=0;s<i;s++)base[s]='sorted';
+    for(let j=i;j<n;j++){ const c=Object.assign({},base); c[mn]='min'; c[j]='compare';
+      rec.snap(a,{note:`남은 칸 중 최솟값 찾기: 현재 후보 ${a[mn]}, 검사 ${a[j]}`, colors:c});
+      if(a[j]<a[mn]) mn=j; }
+    if(mn!==i){ [a[i],a[mn]]=[a[mn],a[i]]; }
+    const c=Object.assign({},base); c[i]='sorted'; rec.snap(a,{note:`최솟값 ${a[i]}을 ${i+1}번째 자리에 확정`, colors:c});
+  }
+  const d={}; for(let s=0;s<n;s++)d[s]='sorted'; rec.snap(a,{note:'완료 ✓', colors:d}); return rec.frames;
+}
+function recInsertion(arr){
+  const rec=AL.recorder(); const a=arr.slice(); const n=a.length;
+  rec.snap(a,{note:'시작 — 첫 칸은 정렬된 것으로 봄', colors:{0:'sorted'}});
+  for(let i=1;i<n;i++){ const key=a[i]; let j=i-1;
+    const base=()=>{ const c={}; for(let s=0;s<i;s++)c[s]='sorted'; return c; };
+    let c=base(); c[i]='swap'; rec.snap(a,{note:`${key}를 뽑아 왼쪽 정렬 구간에 끼울 자리 찾기`, colors:c});
+    while(j>=0 && a[j]>key){ const cc=base(); cc[j]='compare'; cc[i]='swap';
+      rec.snap(a,{note:`${a[j]} > ${key} → ${key}는 더 왼쪽으로`, colors:cc}); j--; }
+    a.splice(i,1); a.splice(j+1,0,key);
+    const cc={}; for(let s=0;s<=i;s++)cc[s]='sorted'; rec.snap(a,{note:`${key} 삽입 완료`, colors:cc});
+  }
+  return rec.frames;
+}
+
+// ---------- STEP 0 : 한 번의 비교 (버블, 짧은 배열) ----------
+(function(){
+  const arr=[5,2,8,1,6]; const frames=recBubble(arr); const maxV=Math.max(...arr);
+  const render=f=>{ document.getElementById('chart0').innerHTML=AL.bars(f.state,{state:f.meta.colors||{},maxV,W:520,H:200}); };
+  AL.transport('#transport0', frames, render, {interval:700});
+})();
+
+// ---------- STEP 1 : 세 방법 재생 ----------
+(function(){
+  const arr=[5,2,8,3,9,1,6,4]; const maxV=Math.max(...arr);
+  const recs={bubble:recBubble, selection:recSelection, insertion:recInsertion};
+  const descs={bubble:'버블: 이웃을 비교해 왼쪽이 크면 교환, 큰 값이 오른쪽으로 떠오름.', selection:'선택: 남은 것 중 최솟값을 찾아 앞자리에 하나씩 확정.', insertion:'삽입: 한 장씩 뽑아 이미 정렬된 왼쪽 구간의 제자리에 끼움.'};
+  const render=f=>{ document.getElementById('chart1').innerHTML=AL.bars(f.state,{state:f.meta.colors||{},maxV,W:540,H:230}); };
+  function build(algo){ document.getElementById('algoDesc').textContent=descs[algo]; AL.transport('#transport1', recs[algo](arr), render, {interval:600}); }
+  document.getElementById('algoSeg').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b)return;
+    document.querySelectorAll('#algoSeg .btn').forEach(x=>x.classList.toggle('on',x===b)); build(b.dataset.algo); });
+  build('bubble');
+})();
+
+// ---------- STEP 2 : 횟수 비교 ----------
+(function(){
+  function countBubble(a){ a=a.slice(); let cmp=0,sw=0; const n=a.length;
+    for(let i=0;i<n-1;i++)for(let j=0;j<n-1-i;j++){ cmp++; if(a[j]>a[j+1]){[a[j],a[j+1]]=[a[j+1],a[j]];sw++;} } return [cmp,sw]; }
+  function countSelection(a){ a=a.slice(); let cmp=0,sw=0; const n=a.length;
+    for(let i=0;i<n-1;i++){ let mn=i; for(let j=i+1;j<n;j++){cmp++; if(a[j]<a[mn])mn=j;} if(mn!==i){[a[i],a[mn]]=[a[mn],a[i]];sw++;} } return [cmp,sw]; }
+  function countInsertion(a){ a=a.slice(); let cmp=0,mv=0; const n=a.length;
+    for(let i=1;i<n;i++){ const key=a[i]; let j=i-1; while(j>=0&&a[j]>key){cmp++;a[j+1]=a[j];j--;mv++;} if(j>=0)cmp++; a[j+1]=key; } return [cmp,mv]; }
+  const inputs={
+    random:[5,2,8,3,9,1,6,4,7,0,11,10],
+    sorted:[0,1,2,3,5,4,6,7,8,9,10,11],
+    reversed:[11,10,9,8,7,6,5,4,3,2,1,0],
+  };
+  function render(kind){
+    const a=inputs[kind]; const n=a.length;
+    const B=countBubble(a), S=countSelection(a), I=countInsertion(a);
+    const maxv=Math.max(B[0],S[0],I[0],B[1],S[1],I[1],1);
+    document.getElementById('bars2').innerHTML=
+      `<div class="ttl" style="color:var(--v)">n=${n} · ${kind==='random'?'무작위':kind==='sorted'?'거의 정렬됨':'역순(최악)'} 입력</div>
+       <div style="font-size:12px;color:var(--faint);margin-bottom:4px">비교 횟수</div>`+
+      VZ.barRow('버블', B[0]/maxv,{color:'var(--q)',pctText:B[0]})+
+      VZ.barRow('선택', S[0]/maxv,{color:'var(--hot)',pctText:S[0]})+
+      VZ.barRow('삽입', I[0]/maxv,{color:'var(--good)',pctText:I[0]})+
+      `<div style="font-size:12px;color:var(--faint);margin:8px 0 4px">교환·이동 횟수</div>`+
+      VZ.barRow('버블', B[1]/maxv,{color:'var(--q)',pctText:B[1]})+
+      VZ.barRow('선택', S[1]/maxv,{color:'var(--hot)',pctText:S[1]})+
+      VZ.barRow('삽입', I[1]/maxv,{color:'var(--good)',pctText:I[1]});
+  }
+  document.getElementById('kindSeg').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b)return;
+    document.querySelectorAll('#kindSeg .btn').forEach(x=>x.classList.toggle('on',x===b)); render(b.dataset.kind); });
+  render('random');
+})();
+</script>
+</body>
+</html>

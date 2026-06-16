@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>04 재귀·분할정복 · 알고리즘·자료구조, 눈으로 보기</title>
+<link rel="stylesheet" href="shared/theme.css">
+<style>
+  .twocol{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px;}
+  .seg{display:inline-flex; gap:4px; margin:4px 0;}
+  .seg .btn{padding:8px 14px;}
+  .seg .btn.on{background:var(--hot); color:#1a1206; border-color:var(--hot);}
+  .stackbox{min-height:220px; display:flex; align-items:flex-end; justify-content:center; padding:10px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topnav" id="topnav"></div>
+
+  <header>
+    <div class="tag">PART 2 · Chapter 04</div>
+    <h1>재귀·분할정복 — 더 작은 같은 문제로 떠넘기기</h1>
+    <p class="intro"><b>재귀</b>는 "문제를 <b>더 작은 같은 문제</b>로 떠넘기고, 가장 작은 경우(<b>종료조건</b>)에 닿으면 거꾸로 답을 쌓아 올리는" 방법이에요. 여기에 "<b>반으로 쪼개기</b>"를 더한 게 <b>분할정복</b> — 정렬·탐색을 <b>O(n log n)</b>으로 끌어내리는 빠른 알고리즘의 비결이죠.</p>
+  </header>
+
+  <nav class="stepper" id="stepper">
+    <button data-s="0" class="active">00 · 내려갔다 올라오기</button>
+    <button data-s="1">01 · 종료조건 함정</button>
+    <button data-s="2">02 · 반으로 쪼개기</button>
+    <button data-s="3">03 · 정리</button>
+  </nav>
+
+  <!-- STEP 0 -->
+  <section class="panel show" data-panel="0">
+    <span class="kicker" style="color:var(--hot)">Step 00 — Down then Up</span>
+    <h2>f(4)를 풀려면 먼저 f(3)을 알아야 한다</h2>
+    <p class="lead">팩토리얼 f(n)=n×f(n−1)을 예로 봐요. f(4)는 f(3)이 필요하고, f(3)은 f(2)가… <b>바닥(f(1)=1)</b>까지 내려간 뒤, 거기서부터 <b>거꾸로 곱하며 올라와요</b>. ▶로 내려갔다(<span style="color:var(--hot)">주황</span>) 올라오는(<span style="color:var(--good)">초록</span>) 두 위상을 보세요.</p>
+    <div id="transport0"></div>
+    <div class="chart-wrap" id="chart0" style="margin-top:6px"></div>
+    <p class="note" style="margin-top:12px">→ <b>내려갈 때</b>는 "아직 답을 모르니 더 작은 걸 부른다", <b>바닥</b>에서 종료조건으로 답이 정해지고, <b>올라올 때</b> 그 답들을 합쳐 최종 답이 돼요. 재귀는 늘 이 "내려갔다 올라오는" 모양이에요.</p>
+  </section>
+
+  <!-- STEP 1 -->
+  <section class="panel" data-panel="1">
+    <span class="kicker" style="color:var(--q)">Step 01 — The Base-Case Trap</span>
+    <h2>종료조건이 없으면 영영 안 끝난다</h2>
+    <p class="lead">재귀 호출은 <b>호출 스택</b>이라는 더미에 차곡차곡 쌓여요(맨 위가 지금 실행 중). <b>종료조건</b>이 있으면 바닥에서 멈추고 되돌아오지만, <b>없으면</b> 끝없이 쌓이다 <b>넘쳐요</b>(스택 오버플로). 토글하고 ▶로 직접 확인하세요.</p>
+    <div class="seg" id="baseSeg">
+      <button class="btn on" data-base="1">종료조건 ON</button>
+      <button class="btn" data-base="0">종료조건 OFF</button>
+    </div>
+    <div id="transport1"></div>
+    <div class="stackbox" id="chart1"></div>
+    <p class="note" style="margin-top:12px">→ 종료조건은 재귀의 <b>안전장치</b>예요. "더 못 쪼개는 가장 작은 경우"를 정해두지 않으면 무한 반복이 돼요. 재귀를 짤 땐 늘 <b>"언제 멈추지?"</b>부터 정합니다.</p>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="panel" data-panel="2">
+    <span class="kicker" style="color:var(--v)">Step 02 — Halving</span>
+    <h2>반으로, 또 반으로 — 그래서 log n</h2>
+    <p class="lead">분할정복은 문제를 <b>절반씩</b> 쪼개요. 크기 n을 반으로 가르길 반복하면 <b>딱 log₂n 번</b>만에 크기 1짜리 조각이 되죠. 아래는 배열을 절반씩 나눈 트리예요(숫자=조각 크기). n을 바꿔 <b>높이(레벨 수)</b>를 보세요.</p>
+    <div class="ctrl"><label>배열 크기 n</label><input type="range" id="nexp" min="1" max="4" value="3"><span class="val" id="nexpv">8</span></div>
+    <div class="chart-wrap" id="chart2" style="margin-top:6px"></div>
+    <div id="info2" class="callout v" style="margin-top:8px"></div>
+    <p class="note" style="margin-top:12px">→ 트리의 <b>높이 = log₂n</b>. 각 레벨에서 조각들을 합치는 데 모두 합쳐 약 <b>n번</b> 일하니, 전체는 <b>n × log₂n</b> = <b>O(n log n)</b>! 느린 정렬의 n²보다 훨씬 빠른 비결이 바로 이 "절반씩"이에요.</p>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="panel" data-panel="3">
+    <span class="kicker" style="color:var(--good)">Step 03 — Recap</span>
+    <h2>재귀와 분할정복</h2>
+    <div class="twocol">
+      <div class="callout q"><div class="ttl">재귀 3요소</div><p style="margin:0">① 더 작은 같은 문제로 떠넘기기 ② <b>종료조건</b>(언제 멈추나) ③ 올라오며 답 합치기.</p></div>
+      <div class="callout v"><div class="ttl">분할정복</div><p style="margin:0">반으로 쪼개 → 각각 풀고 → 합친다. 절반씩이라 <b>log n 깊이</b> → 전체 <b>O(n log n)</b>.</p></div>
+    </div>
+    <div class="callout good" style="margin-top:14px">
+      <p style="margin:0">이 "쪼개고 합치기"를 정렬에 쓴 게 <b>병합정렬</b>이에요. 끝까지 쪼갠 뒤 <b>정렬된 조각들을 합쳐</b> 올라오죠. 다음 <b>05장</b>에서 그 "합치는" 과정을 직접 재생해 봅니다. (재귀는 트리·그래프·DP에서도 계속 만나요.)</p>
+    </div>
+    <p class="note" style="margin-top:16px">→ <a href="05-merge-sort.html" style="color:var(--q);font-weight:700">CH 05 · 병합정렬</a> · <a href="index.html">목차</a></p>
+  </section>
+
+  <p class="foot">// 코드 없는 직관 입문 · 모든 호출·분할은 브라우저에서 실시간 기록·재생 · <a href="index.html">목차</a></p>
+</div>
+
+<script src="shared/lib.js"></script>
+<script>
+VZ.mountTopnav('#topnav', 'CH 04 · 재귀');
+VZ.setupStepper();
+const AL = VZ.AL;
+
+// ---------- STEP 0 : 팩토리얼 호출 트리 (내려갔다 올라오기) ----------
+(function(){
+  function recFactorial(n){
+    const rec=AL.recorder();
+    function build(k){ return {label:'f('+k+')', children: k>1?[build(k-1)]:[], state:''}; }
+    const root=build(n);
+    function nodeAt(d){ let nd=root; for(let i=0;i<d;i++) nd=nd.children[0]; return nd; }
+    rec.snap(root,{note:`f(${n}) 부터 시작`});
+    for(let d=0; d<n; d++){ const k=n-d; nodeAt(d).state = (k===1?'special':'active');
+      rec.snap(root,{note: k===1 ? `f(1)=1 — 종료조건! 더 안 내려가고 돌려줌` : `f(${k}) 호출 → 먼저 f(${k-1})이 필요`}); }
+    let kk=1, val=1;
+    for(let d=n-1; d>=0; d--){ const nd=nodeAt(d); nd.state='done'; nd.label='f('+kk+')='+val;
+      rec.snap(root,{note:`f(${kk}) = ${kk}×${kk>1?(val/kk):1} = ${val} 반환`}); kk++; val=val*kk; }
+    return rec.frames;
+  }
+  const frames=recFactorial(4);
+  const render=f=>{ document.getElementById('chart0').innerHTML=AL.tree(f.state,{W:300,H:300,r:22}); };
+  AL.transport('#transport0', frames, render, {interval:750});
+})();
+
+// ---------- STEP 1 : 종료조건 함정 (호출 스택) ----------
+(function(){
+  function recStack(n, hasBase){
+    const rec=AL.recorder(); const stack=[];
+    rec.snap(stack,{note:'시작 — 빈 호출 스택', colors:{}});
+    let k=n;
+    for(let guard=0; guard<10; guard++){
+      stack.push('f('+k+')'); const top=stack.length-1;
+      if(hasBase && k===1){ rec.snap(stack,{note:`f(1) = 종료조건! 1 반환 → 되돌아가기 시작`, colors:{[top]:'special'}}); break; }
+      if(!hasBase && stack.length>=8){ rec.snap(stack,{note:`💥 멈추질 않아요 — 스택이 넘쳐요! 종료조건이 없으면 무한 재귀`, colors:{[top]:'excl'}}); return rec.frames; }
+      rec.snap(stack,{note:`f(${k}) 호출 → 스택에 쌓임 (f(${k-1})이 필요)`, colors:{[top]:'active'}});
+      k--;
+    }
+    if(hasBase){ let kk=1, val=1;
+      while(stack.length){ const idx=stack.length-1;
+        rec.snap(stack,{note:`f(${kk}) = ${val} 반환 → 스택에서 빠짐`, colors:{[idx]:'done'}});
+        stack.pop(); kk++; val=val*kk; }
+      rec.snap(stack,{note:'완료 — 스택이 다시 비었어요 ✓', colors:{}}); }
+    return rec.frames;
+  }
+  const STC={done:'var(--good)', active:'var(--hot)', special:'var(--q)', excl:'var(--k)'};
+  const render=f=>{ const s=f.state, cols=f.meta.colors||{};
+    document.getElementById('chart1').innerHTML = s.length
+      ? '<div style="display:flex;flex-direction:column-reverse;gap:4px;align-items:center;width:100%">'+
+        s.map((lab,i)=>`<div style="padding:8px 22px;border-radius:9px;background:${cols[i]?STC[cols[i]]:'var(--panel-2)'};color:${cols[i]?'#0b0e14':'var(--ink)'};border:1px solid var(--line);font-family:JetBrains Mono;font-size:14px;font-weight:700">${lab}</div>`).join('')+'</div>'
+      : '<div style="color:var(--faint);font-family:JetBrains Mono;font-size:13px">(빈 스택)</div>'; };
+  function build(hasBase){ AL.transport('#transport1', recStack(4, hasBase), render, {interval:650}); }
+  document.getElementById('baseSeg').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b)return;
+    document.querySelectorAll('#baseSeg .btn').forEach(x=>x.classList.toggle('on',x===b)); build(b.dataset.base==='1'); });
+  build(true);
+})();
+
+// ---------- STEP 2 : 반으로 쪼개기 (분할 트리) ----------
+(function(){
+  function buildDivide(lo,hi){ const size=hi-lo; const node={label:String(size), children:[]};
+    if(size>1){ const mid=Math.floor((lo+hi)/2); node.children=[buildDivide(lo,mid),buildDivide(mid,hi)]; }
+    else node.state='special'; return node; }
+  function render(exp){ const n=Math.pow(2,exp);
+    document.getElementById('chart2').innerHTML=AL.tree(buildDivide(0,n),{W:600,H:300,r:Math.max(10,18-exp*2)});
+    document.getElementById('info2').innerHTML=`<div class="ttl" style="color:var(--v)">n = ${n}</div><p style="margin:0">높이(레벨 수) = log₂${n} = <b>${exp}</b>. 각 레벨 일 ≈ ${n} → 전체 ≈ ${n}×${exp} = <b>${n*exp}</b> (= n log n).</p>`; }
+  document.getElementById('nexp').oninput=e=>{ const exp=+e.target.value; document.getElementById('nexpv').textContent=Math.pow(2,exp); render(exp); };
+  render(3);
+})();
+</script>
+</body>
+</html>
