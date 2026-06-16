@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>02 Big-O 직관 · 알고리즘·자료구조, 눈으로 보기</title>
+<link rel="stylesheet" href="shared/theme.css">
+<style>
+  .twocol{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px;}
+  .colbox{background:var(--panel-2); border:1px solid var(--line); border-radius:14px; padding:14px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topnav" id="topnav"></div>
+
+  <header>
+    <div class="tag">PART 1 · Chapter 02</div>
+    <h1>Big-O — 상수는 버리고 모양만 본다</h1>
+    <p class="intro"><b>Big-O</b>는 "커지는 속도"에 붙이는 <b>이름표</b>예요. 핵심은 <b>큰 입력에서의 모양만</b> 본다는 것 — 앞에 붙은 계수(×5)나 더한 상수(+3)는 떼버려요. 왜냐면 n이 충분히 커지면 <b>모양</b>이 모든 걸 압도하거든요. 그래서 5n+3도, 100n도 그냥 <b>O(n)</b>이라 부릅니다.</p>
+  </header>
+
+  <nav class="stepper" id="stepper">
+    <button data-s="0" class="active">00 · 상수를 버린다</button>
+    <button data-s="1">01 · 성장 곡선 겹쳐보기</button>
+    <button data-s="2">02 · 서열</button>
+    <button data-s="3">03 · 정리</button>
+  </nav>
+
+  <!-- STEP 0 -->
+  <section class="panel show" data-panel="0">
+    <span class="kicker" style="color:var(--hot)">Step 00 — Drop the Constants</span>
+    <h2>왜 100n도 그냥 O(n)인가</h2>
+    <p class="lead">계수가 큰 <b>100n</b>(선형이지만 무거움)과 <b>n²</b>(제곱)을 비교해요. n이 작을 땐 100n이 훨씬 크지만, n이 커지면 <b>n²이 따라잡고 추월</b>해요. 즉 큰 입력에선 <b>모양(제곱)</b>이 <b>계수(100)</b>를 이겨요 — 그래서 상수는 버리고 모양만 봅니다.</p>
+    <div class="ctrl"><label>입력 크기 n</label><input type="range" id="n0" min="10" max="200" value="40"><span class="val" id="n0v">40</span></div>
+    <div id="bars0" class="callout q"></div>
+    <p class="note" style="margin-top:12px">→ 두 곡선은 <b>n=100</b>에서 만나요(100n = n²). 그 전엔 100n이, 그 후엔 n²이 더 커지죠. 아무리 계수가 커도 <b>모양이 한 단계 위면</b> 결국 진다 — 이게 Big-O가 계수를 무시하는 이유예요.</p>
+  </section>
+
+  <!-- STEP 1 -->
+  <section class="panel" data-panel="1">
+    <span class="kicker" style="color:var(--q)">Step 01 — Curves Overlaid</span>
+    <h2>커지는 속도, 한눈에</h2>
+    <p class="lead">대표적인 다섯 가지 성장 곡선을 겹쳐 그려요. 보는 범위(n의 최대값)를 늘려보세요. 작은 범위에선 엇비슷하지만, 범위가 커질수록 <b>제곱(n²)</b>이 하늘로 치솟고 나머지는 바닥에 깔리며 <b>서열</b>이 뚜렷해져요.</p>
+    <div class="ctrl"><label>보는 범위 n</label><input type="range" id="nmax" min="6" max="40" value="16"><span class="val" id="nmaxv">16</span></div>
+    <div class="chart-wrap" id="chart1" style="margin-top:6px"></div>
+    <p class="note" style="margin-top:12px">→ 위에서 아래로: <b style="color:var(--k)">n²</b>(제곱) > <b style="color:var(--pink)">n log n</b> > <b style="color:var(--hot)">n</b>(선형) > <b style="color:var(--q)">log n</b>(로그) > <b style="color:var(--good)">1</b>(상수). 좋은 알고리즘은 가능한 <b>아래쪽 곡선</b>에 살려고 해요.</p>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="panel" data-panel="2">
+    <span class="kicker" style="color:var(--v)">Step 02 — The Ranking</span>
+    <h2>큰 입력에서의 서열</h2>
+    <p class="lead">충분히 큰 n에서 각 Big-O가 실제로 몇 번 일하는지 줄세워 봐요. 맨 아래 <b>지수 O(2ⁿ)</b>도 넣었어요 — 이건 n이 조금만 커져도 우주적으로 폭발해서, <b>무슨 수를 써서라도 피해야 할</b> 모양이에요.</p>
+    <div class="ctrl"><label>입력 크기 n</label><input type="range" id="n2" min="4" max="30" value="16"><span class="val" id="n2v">16</span></div>
+    <div id="bars2" class="callout v"></div>
+    <p class="note" style="margin-top:12px">→ 서열은 <b>O(1) &lt; O(log n) &lt; O(n) &lt; O(n log n) &lt; O(n²) &lt; O(2ⁿ)</b>로 굳어져 있어요. 알고리즘을 고를 때 "이건 이 줄에서 어디쯤?"을 먼저 묻는 게 시작이에요.</p>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="panel" data-panel="3">
+    <span class="kicker" style="color:var(--good)">Step 03 — Recap</span>
+    <h2>Big-O라는 공용어</h2>
+    <div class="twocol">
+      <div class="callout q"><div class="ttl">모양만 본다</div><p style="margin:0">5n+3, 100n, n/2 → 전부 <b>O(n)</b>. 계수·상수·낮은 항은 떼고 <b>가장 빨리 크는 모양</b>만 남겨요.</p></div>
+      <div class="callout v"><div class="ttl">큰 입력 기준</div><p style="margin:0">작은 n에선 상수가 이길 수도 있지만, Big-O는 <b>n→충분히 큰</b> 경우의 이야기예요.</p></div>
+    </div>
+    <div class="callout good" style="margin-top:14px">
+      <p style="margin:0">이제 모든 알고리즘을 같은 잣대로 비교할 수 있어요. 다음 PART에서 <b>정렬</b>을 다루는데, 느린 정렬은 <b>O(n²)</b>, 빠른 정렬은 <b>O(n log n)</b> — 바로 이 서열의 두 칸 차이가 "1초 vs 1시간"을 만든다는 걸 직접 보게 됩니다.</p>
+    </div>
+    <p class="note" style="margin-top:16px">→ <a href="03-slow-sorts.html" style="color:var(--q);font-weight:700">CH 03 · 느린 정렬 3형제</a> · <a href="index.html">목차</a></p>
+  </section>
+
+  <p class="foot">// 코드 없는 직관 입문 · 모든 곡선·횟수는 브라우저에서 실시간 계산 · <a href="index.html">목차</a></p>
+</div>
+
+<script src="shared/lib.js"></script>
+<script>
+VZ.mountTopnav('#topnav', 'CH 02 · Big-O');
+VZ.setupStepper();
+
+// ---------- STEP 0 : 상수를 버린다 (100n vs n²) ----------
+(function(){
+  function render(n){
+    const a = 100*n, b = n*n, maxv = Math.max(a,b);
+    const cross = n < 100 ? '아직 100n이 더 커요' : n > 100 ? 'n²이 추월했어요!' : '딱 같아요 (교차점 n=100)';
+    document.getElementById('bars0').innerHTML =
+      `<div class="ttl" style="color:var(--q)">n = ${n}</div>` +
+      VZ.barRow('100n (선형, 무거운 계수)', a/maxv, {color:'var(--hot)', pctText: a.toLocaleString()}) +
+      VZ.barRow('n² (제곱)', b/maxv, {color:'var(--k)', pctText: b.toLocaleString()}) +
+      `<p style="margin:8px 0 0">${cross}.</p>`;
+  }
+  document.getElementById('n0').oninput=e=>{ const n=+e.target.value; document.getElementById('n0v').textContent=n; render(n); };
+  render(40);
+})();
+
+// ---------- STEP 1 : 성장 곡선 겹쳐보기 ----------
+(function(){
+  function render(nmax){
+    const xs = []; for(let x=1;x<=nmax;x++) xs.push(x);
+    const series = [
+      {pts: xs.map(x=>[x, x*x]), color:'var(--k)', label:'n²'},
+      {pts: xs.map(x=>[x, x*Math.log2(x)]), color:'var(--pink)', label:'n log n'},
+      {pts: xs.map(x=>[x, x]), color:'var(--hot)', label:'n'},
+      {pts: xs.map(x=>[x, Math.log2(x)]), color:'var(--q)', label:'log n'},
+      {pts: xs.map(x=>[x, 1]), color:'var(--good)', label:'1'},
+    ];
+    document.getElementById('chart1').innerHTML = VZ.linePlot(series, {W:560, H:300, xmin:1, xmax:nmax, ymin:0, xlab:'입력 크기 n', ylab:'연산 횟수'});
+  }
+  document.getElementById('nmax').oninput=e=>{ const v=+e.target.value; document.getElementById('nmaxv').textContent=v; render(v); };
+  render(16);
+})();
+
+// ---------- STEP 2 : 서열 ----------
+(function(){
+  function render(n){
+    const rows = [
+      ['O(1) 상수', 1, 'var(--good)'],
+      ['O(log n) 로그', Math.max(1,Math.round(Math.log2(n))), 'var(--q)'],
+      ['O(n) 선형', n, 'var(--hot)'],
+      ['O(n log n)', Math.round(n*Math.log2(n)), 'var(--pink)'],
+      ['O(n²) 제곱', n*n, 'var(--k)'],
+      ['O(2ⁿ) 지수', Math.pow(2,n), '#ef4444'],
+    ];
+    const maxv = rows[5][1];
+    document.getElementById('bars2').innerHTML =
+      `<div class="ttl" style="color:var(--v)">n = ${n} 일 때 (작은 값 → 큰 값 순)</div>` +
+      rows.map(r=>VZ.barRow(r[0], r[1]/maxv, {color:r[2], pctText: r[1]>1e9 ? r[1].toExponential(1) : r[1].toLocaleString()})).join('');
+  }
+  document.getElementById('n2').oninput=e=>{ const n=+e.target.value; document.getElementById('n2v').textContent=n; render(n); };
+  render(16);
+})();
+</script>
+</body>
+</html>

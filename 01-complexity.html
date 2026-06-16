@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>01 입력이 2배면 시간은? · 알고리즘·자료구조, 눈으로 보기</title>
+<link rel="stylesheet" href="shared/theme.css">
+<style>
+  .twocol{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px;}
+  .colbox{background:var(--panel-2); border:1px solid var(--line); border-radius:14px; padding:14px;}
+  .pbtn{font-family:'Pretendard'; font-size:13px; font-weight:700; padding:8px 14px; border-radius:9px; border:1px solid var(--line); background:var(--panel-2); color:var(--muted); cursor:pointer;}
+  .pbtn:hover{border-color:var(--q);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topnav" id="topnav"></div>
+
+  <header>
+    <div class="tag">PART 1 · Chapter 01</div>
+    <h1>입력이 2배면 시간은? — 커지는 속도가 갈린다</h1>
+    <p class="intro">알고리즘이 "빠르다/느리다"는 한 번 돌린 초(秒)가 아니라, <b>입력이 커질 때 일의 양이 얼마나 빨리 불어나는가</b>로 따져요. 어떤 방법은 입력이 2배여도 거의 그대로, 어떤 방법은 2배, 또 어떤 방법은 4배로 폭발하죠. 이 "<b>커지는 속도</b>"가 알고리즘의 운명을 가릅니다.</p>
+  </header>
+
+  <nav class="stepper" id="stepper">
+    <button data-s="0" class="active">00 · 네 가지 속도</button>
+    <button data-s="1">01 · 2배 실험</button>
+    <button data-s="2">02 · 경주: n vs n²</button>
+    <button data-s="3">03 · 정리</button>
+  </nav>
+
+  <!-- STEP 0 -->
+  <section class="panel show" data-panel="0">
+    <span class="kicker" style="color:var(--hot)">Step 00 — Four Speeds</span>
+    <h2>같은 일도 방법마다 커지는 속도가 다르다</h2>
+    <p class="lead">대표적인 네 가지 "커지는 속도"가 있어요. 입력 크기 <b>n</b>을 키우며 각 방법이 하는 <b>일의 양(연산 횟수)</b>을 막대로 비교해 보세요. (막대 길이는 가장 큰 것 기준 비율, 옆 숫자가 실제 횟수예요.)</p>
+    <div class="ctrl"><label>입력 크기 n</label><input type="range" id="n0" min="1" max="10" value="6"><span class="val" id="n0v">64</span></div>
+    <div id="bars0" class="callout q"></div>
+    <p class="note" style="margin-top:12px">→ n이 작을 땐 다 비슷해 보여요. 그런데 n을 키우면 <b>제곱(n²)</b>이 다른 셋을 압도하며 폭발하고, <b>로그(log n)</b>는 거의 늘지 않죠. 이 차이가 큰 데이터에서 "즉답 vs 멈춤"을 가릅니다.</p>
+  </section>
+
+  <!-- STEP 1 -->
+  <section class="panel" data-panel="1">
+    <span class="kicker" style="color:var(--q)">Step 01 — The Doubling Test</span>
+    <h2>n을 2배로 하면 일은 몇 배?</h2>
+    <p class="lead">가장 직관적인 시험: <b>입력을 2배로 늘리면 일의 양이 몇 배가 될까요?</b> 먼저 마음속으로 예측한 뒤(또는 버튼으로 골라본 뒤) <b>2배로 →</b>를 눌러 확인하세요.</p>
+    <div class="row" style="gap:8px;margin:6px 0;flex-wrap:wrap">
+      <span style="color:var(--muted);font-size:13px;align-self:center">예측 — 선형 O(n)은 n이 2배면?</span>
+      <button class="pbtn" data-g="2">2배</button>
+      <button class="pbtn" data-g="4">4배</button>
+      <button class="pbtn" data-g="1">그대로</button>
+    </div>
+    <div class="row" style="gap:8px;margin:6px 0">
+      <button class="btn" id="dbl">2배로 →</button>
+      <button class="btn" id="resetD" style="border-color:var(--line);background:var(--panel-2);color:var(--muted)">↺ 리셋</button>
+    </div>
+    <div id="info1" class="callout q"></div>
+    <p class="note" style="margin-top:12px">→ <b>상수 O(1)</b>은 그대로(×1), <b>로그 O(log n)</b>는 딱 <b>+1번</b>, <b>선형 O(n)</b>은 <b>2배</b>, <b>제곱 O(n²)</b>은 <b>4배</b>로 뛰어요. "2배면 4배"가 제곱이 무서운 이유예요.</p>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="panel" data-panel="2">
+    <span class="kicker" style="color:var(--v)">Step 02 — Race: n vs n²</span>
+    <h2>중복 찾기: 한 번 훑기 vs 모든 쌍 비교</h2>
+    <p class="lead">"이 목록에 중복이 있나?"를 푸는 두 방법. <b>똑똑한 방법</b>은 한 번 훑으며 본 걸 기억(≈n번), <b>단순한 방법</b>은 모든 두 개 짝을 다 비교(≈n²번)해요. n을 키워 둘의 일의 양이 벌어지는 걸 보세요.</p>
+    <div class="ctrl"><label>목록 크기 n</label><input type="range" id="n2" min="2" max="40" value="8"><span class="val" id="n2v">8</span></div>
+    <div id="bars2" class="callout v"></div>
+    <p class="note" style="margin-top:12px">→ n=8이면 8 vs 28로 별 차이 없어 보여도, n=40이면 40 vs 780 — <b>20배 가까이</b> 벌어져요. n=1000이면 1,000 vs 약 50만! 큰 입력에서 n²은 사실상 못 쓸 정도로 느려지죠.</p>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="panel" data-panel="3">
+    <span class="kicker" style="color:var(--good)">Step 03 — Recap</span>
+    <h2>커지는 속도가 알고리즘의 운명</h2>
+    <div class="twocol">
+      <div class="callout q"><div class="ttl">핵심 질문</div><p style="margin:0">"한 번 돌린 시간"이 아니라 <b>"n이 커질 때 일이 몇 배로 느나"</b>가 빠름/느림의 기준이에요.</p></div>
+      <div class="callout v"><div class="ttl">2배의 법칙</div><p style="margin:0">O(1)→그대로 · O(log n)→+1 · O(n)→2배 · O(n²)→4배. 모양마다 폭발 속도가 달라요.</p></div>
+    </div>
+    <div class="callout good" style="margin-top:14px">
+      <p style="margin:0">이 "커지는 속도"를 깔끔하게 부르는 이름표가 바로 <b>Big-O</b>예요(다음 02장). 상수·계수는 떼고 <b>모양만</b> 보죠. 앞으로 모든 알고리즘을 이 잣대로 — "이건 n번? n²번? log n번?" — 비교하게 됩니다.</p>
+    </div>
+    <p class="note" style="margin-top:16px">→ <a href="02-big-o.html" style="color:var(--q);font-weight:700">CH 02 · Big-O 직관</a> · <a href="index.html">목차</a></p>
+  </section>
+
+  <p class="foot">// 코드 없는 직관 입문 · 모든 횟수는 브라우저에서 실시간 계산 · <a href="index.html">목차</a></p>
+</div>
+
+<script src="shared/lib.js"></script>
+<script>
+VZ.mountTopnav('#topnav', 'CH 01 · 복잡도');
+VZ.setupStepper();
+
+// ---------- STEP 0 : 네 가지 속도 ----------
+(function(){
+  function render(exp){
+    const n = Math.pow(2, exp);
+    const rows = [
+      ['상수 O(1)', 1, 'var(--good)'],
+      ['로그 O(log n)', Math.max(1, Math.round(Math.log2(n))), 'var(--q)'],
+      ['선형 O(n)', n, 'var(--hot)'],
+      ['제곱 O(n²)', n*n, 'var(--k)'],
+    ];
+    const maxv = rows[3][1];
+    document.getElementById('bars0').innerHTML =
+      `<div class="ttl" style="color:var(--q)">n = ${n} 일 때 연산 횟수</div>` +
+      rows.map(r=>VZ.barRow(r[0], r[1]/maxv, {color:r[2], pctText: r[1].toLocaleString()+'번'})).join('');
+  }
+  document.getElementById('n0').oninput=e=>{ const exp=+e.target.value; document.getElementById('n0v').textContent=Math.pow(2,exp); render(exp); };
+  render(6);
+})();
+
+// ---------- STEP 1 : 2배 실험 ----------
+(function(){
+  let n = 16, doubled = false, guess = null;
+  const classes = [
+    ['상수 O(1)', n=>1, 'var(--good)'],
+    ['로그 O(log n)', n=>Math.max(1,Math.round(Math.log2(n))), 'var(--q)'],
+    ['선형 O(n)', n=>n, 'var(--hot)'],
+    ['제곱 O(n²)', n=>n*n, 'var(--k)'],
+  ];
+  function render(){
+    const cur = n, nxt = n*2;
+    let html = `<div class="ttl" style="color:var(--q)">n = ${cur}${doubled?` → ${nxt} (2배)`:''}</div>`;
+    if(!doubled){
+      html += `<p style="margin:0">현재 각 방법의 횟수: ` + classes.map(c=>`${c[0].split(' ')[0]} <b>${c[1](cur)}</b>`).join(' · ') + `. <b>2배로 →</b>를 눌러 어떻게 변하는지 보세요.</p>`;
+    } else {
+      html += `<table style="width:100%;border-collapse:collapse;font-size:13px;margin-top:4px">
+        <tr style="color:var(--faint)"><td style="padding:3px 6px">방법</td><td style="padding:3px 6px">n=${cur}</td><td style="padding:3px 6px">n=${nxt}</td><td style="padding:3px 6px">배율</td></tr>` +
+        classes.map(c=>{ const a=c[1](cur), b=c[1](nxt), mul=(b/a);
+          return `<tr><td style="padding:3px 6px;color:${c[2]}">${c[0]}</td><td style="padding:3px 6px">${a}</td><td style="padding:3px 6px"><b>${b}</b></td><td style="padding:3px 6px;color:${c[2]}">${c[0].includes('log')?'+1번':'×'+mul.toFixed(0)}</td></tr>`;
+        }).join('') + `</table>`;
+      const verdict = guess===2 ? '<b style="color:var(--good)">정답! 선형은 정확히 2배예요.</b>' : guess===4 ? '아쉬워요 — 4배는 <b>제곱</b>이에요. 선형은 2배!' : guess===1 ? '아쉬워요 — 그대로는 <b>상수</b>예요. 선형은 2배!' : '';
+      if(verdict) html += `<p style="margin:8px 0 0">${verdict}</p>`;
+    }
+    document.getElementById('info1').innerHTML = html;
+  }
+  document.querySelectorAll('.pbtn').forEach(b=>b.onclick=()=>{ guess=+b.dataset.g; document.querySelectorAll('.pbtn').forEach(x=>x.style.borderColor=x===b?'var(--q)':'var(--line)'); });
+  document.getElementById('dbl').onclick=()=>{ doubled=true; render(); };
+  document.getElementById('resetD').onclick=()=>{ doubled=false; guess=null; document.querySelectorAll('.pbtn').forEach(x=>x.style.borderColor='var(--line)'); render(); };
+  render();
+})();
+
+// ---------- STEP 2 : 경주 n vs n² ----------
+(function(){
+  function render(n){
+    const smart = n;                       // 한 번 훑기(+해시 기억)
+    const naive = n*(n-1)/2;               // 모든 쌍 비교
+    const maxv = Math.max(smart, naive);
+    document.getElementById('bars2').innerHTML =
+      `<div class="ttl" style="color:var(--v)">n = ${n} 개 목록에서 중복 찾기</div>` +
+      VZ.barRow('똑똑한 방법 ≈ n', smart/maxv, {color:'var(--good)', pctText: smart+'번'}) +
+      VZ.barRow('단순한 방법 ≈ n²', naive/maxv, {color:'var(--k)', pctText: naive+'번'}) +
+      `<p style="margin:8px 0 0">단순한 방법이 똑똑한 방법보다 <b>${(naive/smart).toFixed(1)}배</b> 더 많은 일을 해요.</p>`;
+  }
+  document.getElementById('n2').oninput=e=>{ const n=+e.target.value; document.getElementById('n2v').textContent=n; render(n); };
+  render(8);
+})();
+</script>
+</body>
+</html>
