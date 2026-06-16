@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>19 동적계획법 · 알고리즘·자료구조, 눈으로 보기</title>
+<link rel="stylesheet" href="shared/theme.css">
+<style>.twocol{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px;}</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topnav" id="topnav"></div>
+
+  <header>
+    <div class="tag">PART 6 · Chapter 19</div>
+    <h1>동적계획법 — 겹치는 문제를 기억한다</h1>
+    <p class="intro">어떤 문제는 풀다 보면 <b>똑같은 작은 문제를 수없이 반복</b>해서 풀어요. <b>동적계획법(DP)</b>의 핵심은 단순해요: <b>한 번 푼 답을 적어두고(메모이제이션), 두 번 다시 풀지 않는다.</b> 이 "기억하기" 하나로 폭발하던 계산이 확 줄죠. 자동완성·맞춤법(편집거리), 경로 최적화 등에 쓰여요.</p>
+  </header>
+
+  <nav class="stepper" id="stepper">
+    <button data-s="0" class="active">00 · 겹치는 부분문제</button>
+    <button data-s="1">01 · 기억하면 빨라진다</button>
+    <button data-s="2">02 · 표 채우기(편집거리)</button>
+    <button data-s="3">03 · 정리</button>
+  </nav>
+
+  <!-- STEP 0 -->
+  <section class="panel show" data-panel="0">
+    <span class="kicker" style="color:var(--hot)">Step 00 — Overlapping Subproblems</span>
+    <h2>같은 계산을 몇 번이나 반복한다</h2>
+    <p class="lead">피보나치 f(n)=f(n−1)+f(n−2)를 그냥 재귀로 풀면, 호출 트리에 <b>똑같은 f(2)·f(3)이 여러 번</b> 나와요 — 다 따로 계산하면 엄청난 낭비죠. 아래 f(5) 트리에서 반복되는 노드를 보세요(<span style="color:var(--q)">청록</span>=중복 호출되는 값).</p>
+    <div class="chart-wrap" id="chart0" style="margin-top:6px"></div>
+    <p class="note" style="margin-top:12px">→ f(5) 하나에 f(2)가 <b>3번</b>, f(1)·f(0)이 더 여러 번 계산돼요. n이 커지면 이 중복이 기하급수로 불어나(거의 O(2ⁿ)!) 금세 못 쓰게 되죠. "겹치는 부분문제"가 보이면 DP를 떠올릴 신호예요.</p>
+  </section>
+
+  <!-- STEP 1 -->
+  <section class="panel" data-panel="1">
+    <span class="kicker" style="color:var(--q)">Step 01 — Remember</span>
+    <h2>한 번 푼 건 적어두고 재사용</h2>
+    <p class="lead">메모이제이션: f(2)를 처음 계산하면 <b>메모지에 적어두고</b>, 다음에 f(2)가 필요하면 <b>계산 없이 꺼내</b> 써요. 그러면 각 f(k)는 <b>딱 한 번만</b> 계산되죠. 순진한 재귀와 메모 버전의 <b>호출 횟수</b>를 n을 키워 비교하세요.</p>
+    <div class="ctrl"><label>피보나치 n</label><input type="range" id="n1" min="3" max="25" value="15"><span class="val" id="n1v">15</span></div>
+    <div id="bars1" class="callout q"></div>
+    <p class="note" style="margin-top:12px">→ 순진한 재귀는 거의 <b>O(2ⁿ)</b>(폭발), 메모 버전은 <b>O(n)</b>(각 값 한 번씩)! n=25만 돼도 수만 배 차이예요. 빨라진 비결은 마법이 아니라 단지 <b>중복 제거</b>죠.</p>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="panel" data-panel="2">
+    <span class="kicker" style="color:var(--v)">Step 02 — Filling a Table</span>
+    <h2>편집거리: 표를 채워 올라간다</h2>
+    <p class="lead">DP의 또 다른 모습은 <b>표 채우기</b>예요. "cat"을 "cut"으로 바꾸는 <b>최소 편집 횟수</b>(추가/삭제/교체)를 구해요. 각 칸은 작은 부분문제의 답이고, <b>위·왼쪽·대각선</b> 칸(이미 푼 답)으로 채워져요. ▶로 한 칸씩 채워지는 걸 보세요.</p>
+    <div id="transport2"></div>
+    <div class="chart-wrap" id="chart2" style="margin-top:6px"></div>
+    <p class="note" style="margin-top:12px">→ 글자가 <b>같으면</b> 대각선 값 그대로, <b>다르면</b> 위·왼·대각 중 최소+1. 각 칸을 한 번만 채우니 <b>O(글자수×글자수)</b>로 빨라요. 맨 오른쪽아래 칸이 답(<b>1</b>: a→u 한 번). 자동 맞춤법·DNA 비교가 이걸 써요.</p>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="panel" data-panel="3">
+    <span class="kicker" style="color:var(--good)">Step 03 — Recap</span>
+    <h2>동적계획법, 그리고 완주</h2>
+    <div class="twocol">
+      <div class="callout q"><div class="ttl">DP의 조건</div><p style="margin:0">① 겹치는 부분문제 ② 작은 답으로 큰 답을 만듦. 그러면 <b>한 번 푼 건 기억</b>해 재사용.</p></div>
+      <div class="callout v"><div class="ttl">두 모습</div><p style="margin:0">위에서 아래로 <b>메모이제이션</b>(재귀+캐시), 아래에서 위로 <b>표 채우기</b>. 같은 아이디어.</p></div>
+    </div>
+    <div class="callout good" style="margin-top:14px">
+      <p style="margin:0">🎉 이로써 전체 코스를 마쳤어요! <b>복잡도</b>로 빠름을 재고, <b>정렬·탐색</b>으로 기본기를, <b>자료구조</b>(배열·리스트·스택·큐·해시·트리·힙)로 데이터를 담고, <b>그래프</b>로 연결을, <b>DP</b>로 중복을 정복했죠. 알고리즘은 결국 "<b>같은 문제를 더 적은 일로</b>" 푸는 기술이에요 — 그 눈을 이제 가지셨어요.</p>
+    </div>
+    <p class="note" style="margin-top:16px">→ <a href="index.html" style="color:var(--q);font-weight:700">전체 목차로</a> · 수고했어요!</p>
+  </section>
+
+  <p class="foot">// 코드 없는 직관 입문 · 모든 과정은 브라우저에서 실시간 기록·재생 · <a href="index.html">목차</a></p>
+</div>
+
+<script src="shared/lib.js"></script>
+<script>
+VZ.mountTopnav('#topnav', 'CH 19 · DP');
+VZ.setupStepper();
+const AL = VZ.AL;
+
+// ---------- STEP 0 : 겹치는 부분문제 (fib 트리) ----------
+(function(){
+  function fibTree(n){ const node={label:'f'+n}; if(n>1){ node.children=[fibTree(n-1),fibTree(n-2)]; if(n===2||n===3) node.state='compare'; } else node.state='special'; return node; }
+  document.getElementById('chart0').innerHTML=AL.tree(fibTree(5), {W:620,H:300,r:13});
+})();
+
+// ---------- STEP 1 : 메모이제이션 (호출 횟수) ----------
+(function(){
+  function naiveCalls(n){ return n<=1?1:1+naiveCalls(n-1)+naiveCalls(n-2); }
+  function render(n){ const naive=naiveCalls(n); const memo=2*n-1; const maxv=Math.max(naive,memo,1);
+    document.getElementById('bars1').innerHTML=
+      `<div class="ttl" style="color:var(--q)">f(${n}) 계산에 필요한 호출 횟수</div>`+
+      VZ.barRow('순진한 재귀 ≈ 2ⁿ', naive/maxv, {color:'var(--k)', pctText: naive.toLocaleString()})+
+      VZ.barRow('메모이제이션 ≈ n', memo/maxv, {color:'var(--good)', pctText: memo.toLocaleString()})+
+      `<p style="margin:8px 0 0">순진한 재귀가 <b>${Math.round(naive/memo).toLocaleString()}배</b> 더 많이 계산해요. n을 더 키우면 격차가 폭발하죠.</p>`;
+  }
+  document.getElementById('n1').oninput=e=>{ const n=+e.target.value; document.getElementById('n1v').textContent=n; render(n); };
+  render(15);
+})();
+
+// ---------- STEP 2 : 편집거리 DP 표 ----------
+(function(){
+  const A='cat', B='cut'; const m=A.length, n=B.length;
+  function recEdit(){ const rec=AL.recorder(); const dp=Array.from({length:m+1},()=>Array(n+1).fill('')); const fill={};
+    const grid=()=>dp.map(r=>r.map(v=>v===''?'':v));
+    const snap=(note,active,deps)=>rec.snap({grid:grid(),fill:{...fill},active:active||null,deps:deps||[]},{note});
+    snap('빈 표 — 세로 "cat", 가로 "cut". 각 칸 = 두 접두사를 같게 만드는 최소 편집 수');
+    for(let i=0;i<=m;i++){ dp[i][0]=i; fill[i+',0']='sorted'; }
+    for(let j=0;j<=n;j++){ dp[0][j]=j; fill['0,'+j]='sorted'; }
+    snap('맨 윗줄·왼쪽열 = 한쪽이 빈 문자열 → 글자 수만큼 추가/삭제');
+    for(let i=1;i<=m;i++) for(let j=1;j<=n;j++){
+      const same=A[i-1]===B[j-1];
+      snap(`'${A[i-1]}'(세로) vs '${B[j-1]}'(가로) → ${same?'같음! 대각선 값 그대로':'다름 → 위·왼·대각 중 최소 +1'}`, [i,j], [[i-1,j],[i,j-1],[i-1,j-1]]);
+      dp[i][j]= same? dp[i-1][j-1] : 1+Math.min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1]); fill[i+','+j]='done';
+      snap(`이 칸 = ${dp[i][j]}`, [i,j], []);
+    }
+    snap(`완료! 오른쪽아래 = 편집거리 ${dp[m][n]} ("cat"→"cut": a를 u로 교체 1번)`, [m,n], []);
+    return rec.frames;
+  }
+  const rowLabels=['∅',...A.split('')], colLabels=['∅',...B.split('')];
+  const render=f=>{ document.getElementById('chart2').innerHTML=AL.dpTable(f.state.grid, {rowLabels, colLabels, fill:f.state.fill, active:f.state.active, deps:f.state.deps, W:360, H:300}); };
+  AL.transport('#transport2', recEdit(), render, {interval:650});
+})();
+</script>
+</body>
+</html>
