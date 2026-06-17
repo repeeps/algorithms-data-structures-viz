@@ -95,8 +95,9 @@ function bstInsert(r,v){ if(!r)return{v,left:null,right:null}; if(v<r.v)r.left=b
 function height(r){ return r?1+Math.max(height(r.left),height(r.right)):0; }
 // AVL
 function hh(n){return n?n.h:0;} function upd(n){n.h=1+Math.max(hh(n.left),hh(n.right));} function bf(n){return n?hh(n.left)-hh(n.right):0;}
-function rotR(y){const x=y.left;y.left=x.right;x.right=y;upd(y);upd(x);return x;}
-function rotL(x){const y=x.right;x.right=y.left;y.left=x;upd(x);upd(y);return y;}
+let _rotated=false; // 직전 avlInsert 호출에서 실제 회전이 일어났는지 기록
+function rotR(y){_rotated=true;const x=y.left;y.left=x.right;x.right=y;upd(y);upd(x);return x;}
+function rotL(x){_rotated=true;const y=x.right;x.right=y.left;y.left=x;upd(x);upd(y);return y;}
 function avlInsert(node,val){ if(!node)return{v:val,left:null,right:null,h:1};
   if(val<node.v)node.left=avlInsert(node.left,val); else node.right=avlInsert(node.right,val);
   upd(node); const b=bf(node);
@@ -133,8 +134,8 @@ function strip(n){ return n?{v:n.v,left:strip(n.left),right:strip(n.right)}:null
   const seq=[1,2,3,4,5,6,7];
   const rec=AL.recorder(); let root=null;
   rec.snap({root:null, ins:null},{note:`정렬된 순서 1~7을 균형트리에 넣어요`});
-  seq.forEach(v=>{ const before=height(root); root=avlInsert(root,v); const after=height(root);
-    rec.snap({root:strip(root), ins:v},{note:`${v} 삽입 → 높이 ${after}${after<=before?' (회전으로 균형 유지!)':''}`}); });
+  seq.forEach(v=>{ _rotated=false; root=avlInsert(root,v); const after=height(root);
+    rec.snap({root:strip(root), ins:v},{note:`${v} 삽입 → 높이 ${after}${_rotated?' (회전으로 균형!)':''}`}); });
   const render=f=>{ document.getElementById('chart2').innerHTML=bstSVG(f.state.root, f.state.ins!=null?{[f.state.ins]:'done'}:{}, 560, 280); };
   AL.transport('#transport2', rec.frames, render, {interval:800});
   // 비교 정보

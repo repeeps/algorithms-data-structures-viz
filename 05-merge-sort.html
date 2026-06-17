@@ -110,7 +110,6 @@ const AL = VZ.AL;
 (function(){
   function recMerge(arr){
     const rec=AL.recorder(); const a=arr.slice(); const n=a.length;
-    const fixed={}; // 누적 정렬 확정 표시는 생략, 각 병합 직후 구간만 강조
     rec.snap(a,{note:'시작 — 정렬 전', colors:{}});
     function sort(lo,hi){ if(hi-lo<=1) return; const mid=(lo+hi)>>1; sort(lo,mid); sort(mid,hi);
       let i=lo,j=mid; const tmp=[];

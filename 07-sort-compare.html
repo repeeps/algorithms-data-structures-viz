@@ -130,7 +130,6 @@ VZ.setupStepper();
     const sorted=Array.from({length:n},(_,i)=>i);
     const worst=qcount(sorted);                     // 이미 정렬 → 최악
     const avg=qcount(shuffle(sorted.slice()));       // 무작위 → 평균
-    const ideal=n-1;                                 // 최선(완벽 균형 가정 하한 느낌)
     const maxv=Math.max(worst,avg,1);
     document.getElementById('bars2').innerHTML=
       `<div class="ttl" style="color:var(--v)">같은 퀵정렬, n=${n} · 입력만 다름</div>`+
